@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="AnotherTestPlugin.UserControl1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AnotherTestPlugin"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="SteelBlue" Offset="0.0"/>
+                <GradientStop Color="LightSteelBlue" Offset="0.9"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Canvas>
+            <Button x:Name="button" Content="Click Me!" Height="37" Canvas.Left="60" Canvas.Top="10" Width="179" RenderTransformOrigin="0.911,1.568" Command="{Binding ClickMeButton}"/>
+            <TextBox x:Name="textBoxPathInput" Height="31" Canvas.Left="30" TextWrapping="Wrap" Text="{Binding TextField}" Canvas.Top="116" Width="145"/>
+            <CheckBox x:Name="checkBoxPathInput" Content="Enable" IsChecked="{Binding CheckBoxState}" Canvas.Left="202" Canvas.Top="124" Height="23"/>
+            <TextBlock x:Name="buttonTextField" Canvas.Left="60" TextWrapping="Wrap" Text="{Binding MessageBlock}" Canvas.Top="204" Height="29" Width="179"/>
+            <Button x:Name="buttonLongAction" Content="Long running action" Height="37" Canvas.Left="60" Canvas.Top="64" Width="179" RenderTransformOrigin="0.911,1.568" Command="{Binding LongRunningActionButton}"/>
+        </Canvas>
+    </Grid>
+</UserControl>

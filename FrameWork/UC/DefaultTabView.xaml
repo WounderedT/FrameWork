@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="FrameWork.UC.DefaultTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FrameWork.UC"
+             xmlns:FrameWork="clr-namespace:FrameWork"
+             xmlns:viewModel="clr-namespace:FrameWork.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="800">
+    <Grid>
+        <Canvas HorizontalAlignment="Left" Height="650" VerticalAlignment="Top" Width="800">
+            <Button x:Name="button" Canvas.Left="750" Canvas.Top="15" Width="30" Height="30">
+                <StackPanel>
+                    <Image Source="/FrameWork;component/Resources/ConfigurationButton.png" />
+                </StackPanel>
+            </Button>
+            <Grid Height="605" Canvas.Top="45" Width="800">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding PluginButtons}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewModel:PluginButtonViewModel}">
+                                <local:PluginButtonView/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Canvas>
+    </Grid>
+</UserControl>
