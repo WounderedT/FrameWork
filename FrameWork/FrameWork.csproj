@@ -73,6 +73,7 @@
     <Compile Include="IOProxy.cs" />
     <Compile Include="NewTabPlaceholder.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="UC\DefaultTabView.xaml.cs">
       <DependentUpon>DefaultTabView.xaml</DependentUpon>
     </Compile>
@@ -94,6 +95,7 @@
     <Compile Include="ViewModel\NewPasswordViewModel.cs" />
     <Compile Include="ViewModel\PasswordViewModel.cs" />
     <Compile Include="ViewModel\PluginButtonViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TabCloseViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
