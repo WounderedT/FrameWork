@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FrameWork.DataModels;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -9,12 +11,54 @@ using System.Windows.Controls;
 namespace FrameWork.ViewModel
 {
     /*TODO:
-    1. Update NewPasswordView to work with view model(button state must be changed from view model, not from view!)
-    2  Update CheckPasswordView to work with view model(button state must be changed from view model, not from view!)
-    3. Update button state as in MVVM pattern example(must be set via property state based on password content check)
+    1. http://stackoverflow.com/questions/13955013/how-can-i-validate-a-passwordbox-using-idataerrorinfo-without-an-attachedpropert
+    2. https://tarundotnet.wordpress.com/2011/03/03/wpf-tutorial-how-to-use-idataerrorinfo-in-wpf/
     */
-    class NewPasswordViewModel: PasswordViewModel
+    class NewPasswordViewModel : PasswordViewModel, IDataErrorInfo, INotifyPropertyChanged
     {
+        new private event EventHandler PropertyChanged;
+        private PasswordString _newPassword;
+        private PasswordString _newPasswordReEnter;
+
+        public void SetNewPassword(SecureString password)
+        {
+            if (_newPassword == null)
+                _newPassword = new PasswordString(password);
+            else
+                _newPassword.Password = password;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SetNewPassword"));
+        }
+
+        public void SetNewPasswordReEnter(SecureString password)
+        {
+            if (_newPasswordReEnter == null)
+                _newPasswordReEnter = new PasswordString(password);
+            else
+                _newPasswordReEnter.Password = password;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SetNewPasswordReEnter"));
+        }
+
+        public string Error
+        {
+            get { return string.Empty; }
+        }
+
+        public string this[string propertyName]
+        {
+            get
+            {
+                string errorMessage = string.Empty;
+                switch (propertyName)
+                {
+                    case "SetNewPassword":
+                        break;
+                    case "SetNewPasswordReEnter":
+                        break;
+                }
+                return errorMessage;
+            }
+        }
+
         public void SubmitNewPassword(PasswordBox box)
         {
             SecureString str = new SecureString();

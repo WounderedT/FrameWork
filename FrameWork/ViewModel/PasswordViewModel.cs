@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -16,7 +17,7 @@ namespace FrameWork.ViewModel
 
         private Brush _passwordFrame;
         private bool _submitButton = false;
-        private string _errorMessage = "Hidden";
+        private Visibility _errorMessage = Visibility.Hidden;
 
         private string _passwordTips = "Enter your password here. You may use any password of your choice(yep, even '1' will do the tick).";
 
@@ -25,7 +26,7 @@ namespace FrameWork.ViewModel
             get { return _passwordTips; }
         }
 
-        public string ErrorMessage
+        public Visibility ErrorMessage
         {
             get { return _errorMessage; }
             set
