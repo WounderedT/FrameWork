@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace FrameWork.DataModels
 {
-    public class PasswordString
+    public class PasswordString: Object
     {
         private SecureString _password;
 
@@ -33,6 +33,14 @@ namespace FrameWork.DataModels
             }
         }
 
+        public int Length
+        {
+            get
+            {
+                return _password.Length;
+            }
+        }
+
         public PasswordString(): this(new SecureString()) { }
 
         public PasswordString(SecureString password)
@@ -49,8 +57,12 @@ namespace FrameWork.DataModels
             }
         }
 
-        public unsafe bool Equals(SecureString compareTo)
+        public override unsafe bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+
+            var compareTo = (obj as PasswordString).Password;
             if(_password.Length != compareTo.Length)
             {
                 return false;

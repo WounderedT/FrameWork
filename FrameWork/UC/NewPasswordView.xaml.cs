@@ -33,30 +33,12 @@ namespace FrameWork.UC
 
         private void passwordBoxMain_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            viewModel.SetNewPassword((sender as PasswordBox).SecurePassword);
-            if (passwordBoxRe_enter.Password != string.Empty)
-            {
-                passwordBoxRe_enter.Password = string.Empty;
-            }
+            viewModel.NewPassword.Password = (sender as PasswordBox).SecurePassword;
         }
 
         private void passwordBoxRe_enter_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (passwordBoxMain.Password != string.Empty && passwordBoxRe_enter.Password == passwordBoxMain.Password)
-            {
-                viewModel.ChangePasswordFrame(Colors.LimeGreen);
-                viewModel.SubmitButton = true;
-            }
-            else
-            {
-                viewModel.ChangePasswordFrame(Colors.Red);
-                viewModel.SubmitButton = false;
-            }
-        }
-
-        private void buttonSubmit_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.SubmitNewPassword(passwordBoxMain);
+            viewModel.NewPasswordReEnter.Password = (sender as PasswordBox).SecurePassword;
         }
     }
 }

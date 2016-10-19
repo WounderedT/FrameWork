@@ -6,75 +6,105 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace FrameWork.ViewModel
 {
-    /*TODO:
-    1. http://stackoverflow.com/questions/13955013/how-can-i-validate-a-passwordbox-using-idataerrorinfo-without-an-attachedpropert
-    2. https://tarundotnet.wordpress.com/2011/03/03/wpf-tutorial-how-to-use-idataerrorinfo-in-wpf/
-    */
-    class NewPasswordViewModel : PasswordViewModel, IDataErrorInfo, INotifyPropertyChanged
+    class NewPasswordViewModel : PasswordViewModel
     {
-        new private event EventHandler PropertyChanged;
-        private PasswordString _newPassword;
-        private PasswordString _newPasswordReEnter;
+        public PasswordString NewPassword { get; set; }
+        public PasswordString NewPasswordReEnter { get; set; }
+        private Visibility _newPasswordErrorFrame = Visibility.Hidden;
+        private Visibility _newPasswordReEnterErrorFrame = Visibility.Hidden;
+        private RelayCommand _submitNewPasswod;
 
-        public void SetNewPassword(SecureString password)
+        public NewPasswordViewModel()
         {
-            if (_newPassword == null)
-                _newPassword = new PasswordString(password);
-            else
-                _newPassword.Password = password;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PasswordExtra"));
+            NewPassword = new PasswordString();
+            NewPasswordReEnter = new PasswordString();
         }
 
-        public void SetNewPasswordReEnter(SecureString password)
-        {
-            if (_newPasswordReEnter == null)
-                _newPasswordReEnter = new PasswordString(password);
-            else
-                _newPasswordReEnter.Password = password;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PasswordExtra"));
-        }
-
-        public string Error
-        {
-            get { return string.Empty; }
-        }
-
-        public bool PasswordExtra
-        {
-            get { return false; }
-        }
-
-        public string this[string propertyName]
+        public Visibility NewPasswordErrorFrame
         {
             get
             {
-                string errorMessage = string.Empty;
-                switch (propertyName)
+                return _newPasswordErrorFrame;
+            }
+            set
+            {
+                if(_newPasswordErrorFrame != value)
                 {
-                    case "PasswordExtra":
-                        if (_newPassword == null)
-                            return string.Empty;
-                        if (_newPassword.Password.Length < 8)
-                            return "Password must be at least 8 symbols long!";
-                        break;
+                    _newPasswordErrorFrame = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("NewPasswordErrorFrame"));
                 }
-                return errorMessage;
             }
         }
 
-        public void SubmitNewPassword(PasswordBox box)
+        public Visibility NewPasswordReEnterErrorFrame
         {
-            SecureString str = new SecureString();
-            foreach (char c in box.Password)
+            get
             {
-                str.AppendChar(c);
+                return _newPasswordReEnterErrorFrame;
             }
-            Authentification.NewMasterPassword(str);
-            str.Dispose();
+            set
+            {
+                if (_newPasswordReEnterErrorFrame != value)
+                {
+                    _newPasswordReEnterErrorFrame = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("NewPasswordReEnterErrorFrame"));
+                }
+            }
+        }
+
+        public ICommand SubmitNewPassword
+        {
+            get
+            {
+                if(_submitNewPasswod == null)
+                {
+                    _submitNewPasswod = new RelayCommand(param => OnSubmitPassword());
+                }
+                return _submitNewPasswod;
+            }
+        }
+
+        public void OnSubmitPassword()
+        {
+            if(ValidateNewPassword() && ValidateNewPasswordReEnter())
+            {
+                Authentification.NewMasterPassword(NewPassword.Password);
+            }
+        }
+
+        private bool ValidateNewPassword()
+        {
+            if(NewPassword.Length == 0)
+            {
+                PasswordError = "Password cannot be empty!";
+                NewPasswordErrorFrame = Visibility.Visible;
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateNewPasswordReEnter()
+        {
+            if (NewPasswordReEnter.Length == 0)
+            {
+                PasswordError = "Please re-enter the password";
+                NewPasswordErrorFrame = Visibility.Hidden;
+                NewPasswordReEnterErrorFrame = Visibility.Visible;
+                return false;
+            }
+            if (!NewPassword.Equals(NewPasswordReEnter))
+            {
+                PasswordError = "Passwords don't match!";
+                NewPasswordReEnterErrorFrame = Visibility.Visible;
+                return false;
+            }
+            return true;
         }
     }
 }

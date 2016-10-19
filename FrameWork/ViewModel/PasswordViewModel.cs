@@ -17,7 +17,7 @@ namespace FrameWork.ViewModel
 
         private Brush _passwordFrame;
         private bool _submitButton = false;
-        private Visibility _errorMessage = Visibility.Hidden;
+        private string _errorMessage = string.Empty;
 
         private string _passwordTips = "Enter your password here. You may use any password of your choice(yep, even '1' will do the tick).";
 
@@ -26,7 +26,7 @@ namespace FrameWork.ViewModel
             get { return _passwordTips; }
         }
 
-        public Visibility ErrorMessage
+        public string PasswordError
         {
             get { return _errorMessage; }
             set
@@ -34,45 +34,14 @@ namespace FrameWork.ViewModel
                 if (_errorMessage != value)
                 {
                     _errorMessage = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ErrorMessage"));
+                    OnPropertyChanged(new PropertyChangedEventArgs("PasswordError"));
                 }
             }
         }
 
-        public Brush PasswordFrame
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            get
-            {
-                return _passwordFrame;
-            }
-            set
-            {
-                if (_passwordFrame != value)
-                {
-                    _passwordFrame = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PasswordFrame"));
-                }
-            }
-        }
-
-        public bool SubmitButton
-        {
-            get { return _submitButton; }
-            set
-            {
-                if(_submitButton != value)
-                {
-                    _submitButton = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SubmitButton"));
-                }
-            }
-        }
-
-        public void ChangePasswordFrame(Color color)
-        {
-            SolidColorBrush scb = new SolidColorBrush();
-            scb.Color = color;
-            PasswordFrame = scb;
+            PropertyChanged?.Invoke(this, args);
         }
     }
 }

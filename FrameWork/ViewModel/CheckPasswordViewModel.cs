@@ -21,7 +21,7 @@ namespace FrameWork.ViewModel
             }
             if (!Authentification.CheckMasterPassword(str))
             {
-                ErrorMessage = Visibility.Visible;
+                //ErrorMessage = Visibility.Visible;
             }
             str.Dispose();
         }

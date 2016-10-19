@@ -20,14 +20,14 @@ namespace FrameWork.UC
 
         private void passwordBoxMain_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (passwordBoxMain.Password != string.Empty)
-            {
-                viewModel.SubmitButton = true;
-            }
-            else
-            {
-                viewModel.SubmitButton = false;
-            }
+            //if (passwordBoxMain.Password != string.Empty)
+            //{
+            //    viewModel.SubmitButton = true;
+            //}
+            //else
+            //{
+            //    viewModel.SubmitButton = false;
+            //}
         }
 
         private void buttonSubmit_Click(object sender, RoutedEventArgs e)
