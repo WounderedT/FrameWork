@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace FrameWork.ViewModel
 {
-    class CheckPasswordViewModel: PasswordViewModel, IDataErrorInfo
+    class CheckPasswordViewModel: PasswordViewModel
     {
         public void SubmitPassword(PasswordBox box)
         {

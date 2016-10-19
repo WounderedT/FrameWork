@@ -33,6 +33,7 @@ namespace FrameWork.UC
 
         private void passwordBoxMain_PasswordChanged(object sender, RoutedEventArgs e)
         {
+            viewModel.SetNewPassword((sender as PasswordBox).SecurePassword);
             if (passwordBoxRe_enter.Password != string.Empty)
             {
                 passwordBoxRe_enter.Password = string.Empty;

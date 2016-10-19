@@ -26,7 +26,7 @@ namespace FrameWork.ViewModel
                 _newPassword = new PasswordString(password);
             else
                 _newPassword.Password = password;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SetNewPassword"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PasswordExtra"));
         }
 
         public void SetNewPasswordReEnter(SecureString password)
@@ -35,12 +35,17 @@ namespace FrameWork.ViewModel
                 _newPasswordReEnter = new PasswordString(password);
             else
                 _newPasswordReEnter.Password = password;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SetNewPasswordReEnter"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PasswordExtra"));
         }
 
         public string Error
         {
             get { return string.Empty; }
+        }
+
+        public bool PasswordExtra
+        {
+            get { return false; }
         }
 
         public string this[string propertyName]
@@ -50,9 +55,11 @@ namespace FrameWork.ViewModel
                 string errorMessage = string.Empty;
                 switch (propertyName)
                 {
-                    case "SetNewPassword":
-                        break;
-                    case "SetNewPasswordReEnter":
+                    case "PasswordExtra":
+                        if (_newPassword == null)
+                            return string.Empty;
+                        if (_newPassword.Password.Length < 8)
+                            return "Password must be at least 8 symbols long!";
                         break;
                 }
                 return errorMessage;
