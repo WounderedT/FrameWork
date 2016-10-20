@@ -85,6 +85,9 @@
     <Compile Include="UC\PluginButtonView.xaml.cs">
       <DependentUpon>PluginButtonView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UC\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UC\TabCloseView.xaml.cs">
       <DependentUpon>TabCloseView.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,7 @@
     <Compile Include="ViewModel\PluginButtonViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TabCloseViewModel.cs" />
+    <Compile Include="ViewModel\UpdatePasswordViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,6 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UC\PluginButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

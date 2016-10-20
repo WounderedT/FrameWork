@@ -15,8 +15,7 @@ namespace FrameWork.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Brush _passwordFrame;
-        private bool _submitButton = false;
+        private const int _passwordLength = 1;
         private string _errorMessage = string.Empty;
 
         private string _passwordTips = "Enter your password here. You may use any password of your choice(yep, even '1' will do the tick).";
@@ -37,6 +36,27 @@ namespace FrameWork.ViewModel
                     OnPropertyChanged(new PropertyChangedEventArgs("PasswordError"));
                 }
             }
+        }
+
+        protected bool BasePasswordCheck(SecureString password, string passwordType = "")
+        {
+            if (password.Length == 0)
+            {
+                if (string.IsNullOrEmpty(passwordType))
+                    PasswordError = "Password cannot be empty!";
+                else
+                    PasswordError = passwordType + " password cannot be empty!";
+                return false;
+            }
+            if(password.Length < _passwordLength)
+            {
+                if (string.IsNullOrEmpty(passwordType))
+                    PasswordError = "Password must be at least " + _passwordLength + " symbols long!";
+                else
+                    PasswordError = passwordType + " password must be at least " + _passwordLength + " symbols long!";
+                return false;
+            }
+            return true;
         }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)

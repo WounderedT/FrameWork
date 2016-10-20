@@ -11,8 +11,6 @@ using System.Windows.Input;
 
 namespace FrameWork.ViewModel
 {
-    /*https://www.amazon.com/Dependency-Injection-NET-Mark-Seemann/dp/1935182501
-    */
     class CheckPasswordViewModel: PasswordViewModel
     {
         private RelayCommand _submitPassword;
@@ -48,7 +46,9 @@ namespace FrameWork.ViewModel
 
         public void OnSubmitPassword(object box)
         {
-            if (!Authentification.CheckMasterPassword((box as PasswordBox).SecurePassword))
+            if(!BasePasswordCheck((box as PasswordBox).SecurePassword))
+                CheckPasswordError = Visibility.Visible;
+            else if (!Authentification.CheckMasterPassword((box as PasswordBox).SecurePassword))
             {
                 CheckPasswordError = Visibility.Visible;
             }

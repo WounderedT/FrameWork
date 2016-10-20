@@ -14,17 +14,12 @@ namespace FrameWork.ViewModel
 {
     class NewPasswordViewModel : PasswordViewModel
     {
-        public PasswordString NewPassword { get; set; }
-        public PasswordString NewPasswordReEnter { get; set; }
         private Visibility _newPasswordErrorFrame = Visibility.Hidden;
         private Visibility _newPasswordReEnterErrorFrame = Visibility.Hidden;
         private RelayCommand _submitNewPasswod;
 
-        public NewPasswordViewModel()
-        {
-            NewPassword = new PasswordString();
-            NewPasswordReEnter = new PasswordString();
-        }
+        public PasswordString NewPassword { get; set; }
+        public PasswordString NewPasswordReEnter { get; set; }
 
         public Visibility NewPasswordErrorFrame
         {
@@ -70,6 +65,12 @@ namespace FrameWork.ViewModel
             }
         }
 
+        public NewPasswordViewModel()
+        {
+            NewPassword = new PasswordString();
+            NewPasswordReEnter = new PasswordString();
+        }
+
         public void OnSubmitPassword()
         {
             if(ValidateNewPassword() && ValidateNewPasswordReEnter())
@@ -80,13 +81,14 @@ namespace FrameWork.ViewModel
 
         private bool ValidateNewPassword()
         {
-            if(NewPassword.Length == 0)
+            if (BasePasswordCheck(NewPassword.Password))
+                return true;
+            else
             {
-                PasswordError = "Password cannot be empty!";
                 NewPasswordErrorFrame = Visibility.Visible;
+                NewPasswordReEnterErrorFrame = Visibility.Hidden;
                 return false;
             }
-            return true;
         }
 
         private bool ValidateNewPasswordReEnter()

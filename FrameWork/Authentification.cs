@@ -98,7 +98,7 @@ namespace FrameWork
             OnAuthentificationComplete(new AuthentificationEventArgs());
         }
 
-        public static bool CheckMasterPassword(SecureString password)
+        public static bool CheckMasterPassword(SecureString password, bool shortCheck = false)
         {
             EncryptedPassword created = new EncryptedPassword();
             created.GetPasswordFromFile(".key");
@@ -114,6 +114,8 @@ namespace FrameWork
             }
             else
             {
+                if (shortCheck)
+                    return true;
                 if (IOProxy.Exists(".bak_key"))
                 {
                     EncryptedPassword appHash = new EncryptedPassword();
@@ -133,8 +135,11 @@ namespace FrameWork
             }
         }
 
-        private static void GenerateAppPassword()
+        private static void GenerateAppPassword(bool force = false)
         {
+            if (_appPassword != null)
+                if (_appPassword.isValid() && !force)
+                    return;
             _appPassword = new PasswordObject();
             foreach(char c in Membership.GeneratePassword(_appPasswordLenght, 7))
             {
@@ -211,6 +216,15 @@ namespace FrameWork
         {
             Password = password;
             Salt = salt;
+        }
+
+        public bool isValid()
+        {
+            if (Password == null || Salt == null)
+                return false;
+            if (Password.Length == 0 || Salt.Length == 0)
+                return false;
+            return true;
         }
     }
 
