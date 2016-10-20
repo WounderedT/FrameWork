@@ -17,22 +17,5 @@ namespace FrameWork.UC
             InitializeComponent();
             DataContext = viewModel;
         }
-
-        private void passwordBoxMain_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            //if (passwordBoxMain.Password != string.Empty)
-            //{
-            //    viewModel.SubmitButton = true;
-            //}
-            //else
-            //{
-            //    viewModel.SubmitButton = false;
-            //}
-        }
-
-        private void buttonSubmit_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.SubmitPassword(passwordBoxMain);
-        }
     }
 }
