@@ -37,14 +37,9 @@ namespace FrameWork
         {
             Tabs = new ObservableCollection<ClosableTab>();
             if (IOProxy.Exists(".session"))
-            {
                 await LoadSession();
-            }
             else
-            {
                 await NewTab();
-            }
-            
         }
 
         public static async Task<bool> SaveSession()
@@ -98,12 +93,12 @@ namespace FrameWork
             return Tabs.Where(w => w.IsSelected == true).FirstOrDefault();
         }
 
-        private static async void GetPluginUI(object sender, GetPluginUIRequestEventArgs args)
+        public static async void GetPluginUI(PluginEntry sourcePlugin)
         {
-            ClosableTab requestedPlugin = isOpened(args.SourcePlugin.Name);
+            ClosableTab requestedPlugin = isOpened(sourcePlugin.Name);
             if (requestedPlugin == null)
             {
-                await UpdateTabContent(args.SourcePlugin, GetSelectedTab());
+                await UpdateTabContent(sourcePlugin, GetSelectedTab());
             }
             else
             {
@@ -112,7 +107,7 @@ namespace FrameWork
             }
         }
 
-        private static async void GetSettingsTab(object sender, EventArgs args)
+        public static async void GetSettingsTab()
         {
             ClosableTab settingsTab = isOpened("Settings");
             if (settingsTab == null)
@@ -151,8 +146,6 @@ namespace FrameWork
         {
             await Task.Factory.StartNew(() => {
                 DefaultTabViewModel defaultTabVM = new DefaultTabViewModel();
-                defaultTabVM.GetPluginUIRequest += GetPluginUI;
-                defaultTabVM.GetSettingsTabRequest += GetSettingsTab;
                 if(tab == null)
                 {
                     ClosableTab defaultTab = new ClosableTab() { Title = "Default", Content = defaultTabVM };

@@ -20,8 +20,6 @@ namespace FrameWork.ViewModel
 {
     public class DefaultTabViewModel
     {
-        public event GetPluginUIRequestEventHalder GetPluginUIRequest;
-        public delegate void GetPluginUIRequestEventHalder(object sender, GetPluginUIRequestEventArgs args);
         public event EventHandler GetSettingsTabRequest;
 
         public Dictionary<string, PluginEntry> Plugins { get; set; }
@@ -35,7 +33,7 @@ namespace FrameWork.ViewModel
             {
                 if(_settingsButton == null)
                 {
-                    _settingsButton = new RelayCommand(param => OnGetSettingsTabRequest(new EventArgs()));
+                    _settingsButton = new RelayCommand(param => OnGetSettingsTabRequest());
                 }
                 return _settingsButton;
             }
@@ -61,36 +59,14 @@ namespace FrameWork.ViewModel
             }
         }
 
-
-
-        public void EnablePluginUI(string sourcePluginName)
+        private void EnablePluginUI(string sourcePluginName)
         {
-            OnGetPluginUIReques(new GetPluginUIRequestEventArgs(Plugins[sourcePluginName]));
+            Session.GetPluginUI(Plugins[sourcePluginName]);
         }
 
-        protected virtual void OnGetPluginUIReques(GetPluginUIRequestEventArgs args)
+        private void OnGetSettingsTabRequest()
         {
-            GetPluginUIRequest?.Invoke(this, args);
-        }
-
-        protected virtual void OnGetSettingsTabRequest(EventArgs args)
-        {
-            GetSettingsTabRequest?.Invoke(this, args);
+            Session.GetSettingsTab();
         }
     }
-
-    public class GetPluginUIRequestEventArgs: EventArgs
-    {
-        public PluginEntry SourcePlugin
-        {
-            get; set;
-        }
-
-        public GetPluginUIRequestEventArgs(PluginEntry sourcePlugin)
-        {
-            SourcePlugin = sourcePlugin;
-        }
-    }
-
-
 }
