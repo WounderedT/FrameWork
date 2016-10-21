@@ -91,6 +91,9 @@
     <Compile Include="UC\TabCloseView.xaml.cs">
       <DependentUpon>TabCloseView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UC\UpdatePasswordView.xaml.cs">
+      <DependentUpon>UpdatePasswordView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\CheckPasswordViewModel.cs" />
     <Compile Include="ViewModel\DefaultTabViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -138,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UC\TabCloseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\UpdatePasswordView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

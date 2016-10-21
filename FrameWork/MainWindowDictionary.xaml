@@ -7,15 +7,15 @@
     <DataTemplate DataType="{x:Type viewModel:DefaultTabViewModel}">
         <view:DefaultTabView/>
     </DataTemplate>
-    <!--<DataTemplate DataType="{x:Type viewModel:CheckPasswordViewModel}">
+    <DataTemplate DataType="{x:Type viewModel:CheckPasswordViewModel}">
         <view:CheckPasswordView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type viewModel:NewPasswordViewModel}">
-        <view:NewPasswordView/>
+    <!--<DataTemplate DataType="{x:Type viewModel:UpdatePasswordViewModel}">
+        <view:UpdatePasswordView/>
     </DataTemplate>-->
-    <!--<DataTemplate DataType="{x:Type viewModel:PluginButtonViewModel}">
-        <view:PluginButtonView/>
-    </DataTemplate>-->
+    <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+        <view:SettingsView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewModel:TabCloseViewModel}">
         <view:TabCloseView/>
     </DataTemplate>

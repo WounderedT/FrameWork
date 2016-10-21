@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace FrameWork.ViewModel
 {
-    class UpdatePasswordViewModel: PasswordViewModel
+    public class UpdatePasswordViewModel: PasswordViewModel
     {
         private Visibility _checkPasswordErrorFrame = Visibility.Hidden;
         private Visibility _newPasswordErrorFrame = Visibility.Hidden;

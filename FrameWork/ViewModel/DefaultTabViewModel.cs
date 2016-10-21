@@ -20,8 +20,26 @@ namespace FrameWork.ViewModel
 {
     public class DefaultTabViewModel
     {
+        public event GetPluginUIRequestEventHalder GetPluginUIRequest;
+        public delegate void GetPluginUIRequestEventHalder(object sender, GetPluginUIRequestEventArgs args);
+        public event EventHandler GetSettingsTabRequest;
+
         public Dictionary<string, PluginEntry> Plugins { get; set; }
         public ObservableCollection<PluginButtonViewModel> PluginButtons { get; set; }
+
+        private RelayCommand _settingsButton;
+
+        public ICommand SettingsButton
+        {
+            get
+            {
+                if(_settingsButton == null)
+                {
+                    _settingsButton = new RelayCommand(param => OnGetSettingsTabRequest(new EventArgs()));
+                }
+                return _settingsButton;
+            }
+        }
 
         public DefaultTabViewModel()
         {
@@ -43,8 +61,7 @@ namespace FrameWork.ViewModel
             }
         }
 
-        public event GetPluginUIRequestEventHalder GetPluginUIRequest;
-        public delegate void GetPluginUIRequestEventHalder(object sender, GetPluginUIRequestEventArgs args);
+
 
         public void EnablePluginUI(string sourcePluginName)
         {
@@ -54,6 +71,11 @@ namespace FrameWork.ViewModel
         protected virtual void OnGetPluginUIReques(GetPluginUIRequestEventArgs args)
         {
             GetPluginUIRequest?.Invoke(this, args);
+        }
+
+        protected virtual void OnGetSettingsTabRequest(EventArgs args)
+        {
+            GetSettingsTabRequest?.Invoke(this, args);
         }
     }
 

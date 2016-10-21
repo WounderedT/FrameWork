@@ -103,8 +103,7 @@ namespace FrameWork
             ClosableTab requestedPlugin = isOpened(args.SourcePlugin.Name);
             if (requestedPlugin == null)
             {
-                int index = Tabs.IndexOf(GetSelectedTab());
-                await UpdateTabContent(args.SourcePlugin, Tabs[index]);
+                await UpdateTabContent(args.SourcePlugin, GetSelectedTab());
             }
             else
             {
@@ -112,6 +111,22 @@ namespace FrameWork
                 SelectedTab = requestedPlugin;
             }
         }
+
+        private static async void GetSettingsTab(object sender, EventArgs args)
+        {
+            ClosableTab settingsTab = isOpened("Settings");
+            if (settingsTab == null)
+            {
+                int index = Tabs.IndexOf(GetSelectedTab());
+                Tabs[index].Content = new SettingsViewModel();
+                Tabs[index].Title = "Settings";
+            }
+            else
+            {
+                await CloseTabAsync(GetSelectedTab());
+                SelectedTab = settingsTab;
+            }
+        }        
 
         private static async Task UpdateTabContent(PluginEntry pluginEntry, ClosableTab tab, SessionEntry? entry = null)
         {
@@ -137,6 +152,7 @@ namespace FrameWork
             await Task.Factory.StartNew(() => {
                 DefaultTabViewModel defaultTabVM = new DefaultTabViewModel();
                 defaultTabVM.GetPluginUIRequest += GetPluginUI;
+                defaultTabVM.GetSettingsTabRequest += GetSettingsTab;
                 if(tab == null)
                 {
                     ClosableTab defaultTab = new ClosableTab() { Title = "Default", Content = defaultTabVM };

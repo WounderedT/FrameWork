@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,25 @@ namespace FrameWork.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         private bool _encryptFiles;
-        private RelayCommand _changePassword;
+        private bool _changePasswordButtonEnable;
         private List<object> _colorThemes;
+        private RelayCommand _changePassword;
         private RelayCommand _saveSettings;
         private RelayCommand _cancel;
+
+        private ObservableCollection<UpdatePasswordViewModel> _updatePasswordObject;
+        public ObservableCollection<UpdatePasswordViewModel> UpdatePasswordObject
+        {
+            get { return _updatePasswordObject; }
+            set
+            {
+                if (_updatePasswordObject != value)
+                {
+                    _updatePasswordObject = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UpdatePasswordObject")); 
+                }
+            }
+        }
 
         public bool EncryptFiles
         {
@@ -31,6 +47,24 @@ namespace FrameWork.ViewModel
             }
         }
 
+        public bool ChangePasswordButtonEnable
+        {
+            get { return _changePasswordButtonEnable; }
+            set
+            {
+                if (_changePasswordButtonEnable != value)
+                {
+                    _changePasswordButtonEnable = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ChangePasswordButtonEnable"));
+                }
+            }
+        }
+
+        public List<object> ColorThemes
+        {
+            get { return _colorThemes; }
+        }
+
         public ICommand ChangePasswordButton
         {
             get
@@ -41,11 +75,6 @@ namespace FrameWork.ViewModel
                 }
                 return _changePassword;
             }
-        }
-
-        public List<object> ColorThemes
-        {
-            get { return _colorThemes; }
         }
 
         public ICommand SaveSettingsButton
@@ -72,9 +101,16 @@ namespace FrameWork.ViewModel
             }
         }
 
+        public SettingsViewModel()
+        {
+            ChangePasswordButtonEnable = true;
+        }
+
         private void ChangePassword()
         {
-
+            UpdatePasswordObject = new ObservableCollection<UpdatePasswordViewModel>();
+            UpdatePasswordObject.Add(new UpdatePasswordViewModel());
+            ChangePasswordButtonEnable = false;
         }
 
         private void SaveSettings()

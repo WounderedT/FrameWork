@@ -87,11 +87,11 @@ namespace FrameWork.ViewModel
         {
             if (Tabs.Count == 1)
             {
-                App.Current.Shutdown();
+                Application.Current.Shutdown();
                 return;
             }
             if (await Session.SaveSession())
-                App.Current.Shutdown();
+                Application.Current.Shutdown();
             else
                 args.Cancel = true;
         }
