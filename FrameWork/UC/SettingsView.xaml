@@ -28,11 +28,11 @@
                 />
             <Grid Grid.Row="2" Grid.Column="0" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <ItemsControl ItemsSource="{Binding UpdatePasswordObject}" >
-                    <ItemsControl.ItemTemplate>
+                    <!--<ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModel:UpdatePasswordViewModel}">
                             <local:UpdatePasswordView/>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                    </ItemsControl.ItemTemplate>-->
                 </ItemsControl>
             </Grid>
             <Grid
@@ -76,11 +76,11 @@
             </Grid.ColumnDefinitions>
             <Button 
                 Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="30"
-                Content="OK" Command="{Binding SettingsOKButton}"
+                Content="OK" Command="{Binding SaveSettingsButton}"
                 />
             <Button 
                 Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Height="30"
-                Content="Cancel" Command="{Binding SettingsCancelButton}"
+                Content="Cancel" Command="{Binding CancelButton}"
                 />
         </Grid>
     </Grid>

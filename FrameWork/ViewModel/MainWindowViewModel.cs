@@ -61,6 +61,7 @@ namespace FrameWork.ViewModel
 
         public MainWindowViewModel()
         {
+            Settings.LoadSettings();
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Authentification.GetAuthentificationTab();
             Tabs = Authentification.Tabs;

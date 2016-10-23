@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrameWork.UC;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,13 +16,13 @@ namespace FrameWork.ViewModel
 
         private bool _encryptFiles;
         private bool _changePasswordButtonEnable;
-        private List<object> _colorThemes;
+        private List<object> _colorSchemes;
         private RelayCommand _changePassword;
         private RelayCommand _saveSettings;
         private RelayCommand _cancel;
 
-        private ObservableCollection<UpdatePasswordViewModel> _updatePasswordObject;
-        public ObservableCollection<UpdatePasswordViewModel> UpdatePasswordObject
+        private ObservableCollection<UpdatePasswordView> _updatePasswordObject;
+        public ObservableCollection<UpdatePasswordView> UpdatePasswordObject
         {
             get { return _updatePasswordObject; }
             set
@@ -34,7 +35,7 @@ namespace FrameWork.ViewModel
             }
         }
 
-        public bool EncryptFiles
+        public bool EnableEncryption
         {
             get { return _encryptFiles; }
             set
@@ -42,7 +43,7 @@ namespace FrameWork.ViewModel
                 if(_encryptFiles != value)
                 {
                     _encryptFiles = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("EncryptFiles"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("EnableEncryption"));
                 }
             }
         }
@@ -60,9 +61,10 @@ namespace FrameWork.ViewModel
             }
         }
 
-        public List<object> ColorThemes
+        public List<object> ColorSchemes
         {
-            get { return _colorThemes; }
+            get { return _colorSchemes; }
+            set { _colorSchemes = value; }
         }
 
         public ICommand ChangePasswordButton
@@ -104,23 +106,39 @@ namespace FrameWork.ViewModel
         public SettingsViewModel()
         {
             ChangePasswordButtonEnable = true;
+            EnableEncryption = Settings.EncryptFiles;
+            ColorSchemes = Settings.ColorSchemes;
         }
 
         private void ChangePassword()
         {
-            UpdatePasswordObject = new ObservableCollection<UpdatePasswordViewModel>();
-            UpdatePasswordObject.Add(new UpdatePasswordViewModel());
+            UpdatePasswordObject = new ObservableCollection<UpdatePasswordView>();
+            UpdatePasswordView view = new UpdatePasswordView();
+            view.viewModel.passwordUpdateComplete += PasswordUpdateComplete;
+            UpdatePasswordObject.Add(view);
             ChangePasswordButtonEnable = false;
+        }
+
+        private void PasswordUpdateComplete(object sender, EventArgs args)
+        {
+            UpdatePasswordObject.RemoveAt(0);
+            ChangePasswordButtonEnable = true;
         }
 
         private void SaveSettings()
         {
-
+            if (UpdatePasswordObject != null)
+                if (UpdatePasswordObject[0].viewModel.isChanged)
+                    if (!UpdatePasswordObject[0].viewModel.OnSubmitPassword())
+                        return;
+            Settings.EncryptFiles = EnableEncryption;
+            Settings.SaveSettings();
+            Session.CloseTab();
         }
 
         private void Cancel()
         {
-
+            Session.CloseTab();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace FrameWork
     public static class Session
     {
         public static event UpdateSelectedTabEventHandler UpdateSelectedTab;
-        public delegate void  UpdateSelectedTabEventHandler(EventArgs args);
+        public delegate void UpdateSelectedTabEventHandler(EventArgs args);
 
         private static TabItem _selectedTab;
 
@@ -49,7 +49,12 @@ namespace FrameWork
 
         private static async Task LoadSession()
         {
-            var ms = IOProxy.GetMemoryStreamFromFile(".session");
+            var encryptedStream = IOProxy.GetMemoryStreamFromFile(".session");
+            var array = await Authentification.Cryptography.DecryptMemoryStreamAsync(encryptedStream,
+                Authentification.AppPassword.Password, Authentification.AppPassword.Salt);
+            MemoryStream ms = new MemoryStream();
+            await ms.WriteAsync(array, 0, array.Length);
+            ms.Position = 0;
             BinaryFormatter formatter = new BinaryFormatter();
             List<SessionEntry> lastSessionTabs = (List<SessionEntry>)formatter.Deserialize(ms);
             var plugins = PluginEntryCollection.Plugins;
@@ -60,11 +65,11 @@ namespace FrameWork
                 tab.PluginTabClose += CloseTab;
                 Tabs.Add(tab);
             }
-            for(int ind = 0; ind < Tabs.Count; ind++)
+            for (int ind = 0; ind < Tabs.Count; ind++)
             {
-                if (lastSessionTabs[ind].Name.Equals("Default"))
-                    loadTasks[ind] = AddDefaultTab(lastSessionTabs[ind], Tabs[ind]);
-                else 
+                if (isSystemTab(lastSessionTabs[ind].Name))
+                    loadTasks[ind] = LoadSystemTab(lastSessionTabs[ind], Tabs[ind]);
+                else
                     loadTasks[ind] = UpdateTabContent(plugins[lastSessionTabs[ind].Name], Tabs[ind], lastSessionTabs[ind]);
             }
             await Task.WhenAll(loadTasks);
@@ -83,6 +88,11 @@ namespace FrameWork
             await CloseTabAsync((ClosableTab)sender);
         }
 
+        public static async void CloseTab()
+        {
+            await CloseTabAsync(GetSelectedTab());
+        }
+
         public static ClosableTab isOpened(string tabTitle)
         {
             return Tabs.Where(w => w.Title == tabTitle).FirstOrDefault();
@@ -91,6 +101,28 @@ namespace FrameWork
         public static ClosableTab GetSelectedTab()
         {
             return Tabs.Where(w => w.IsSelected == true).FirstOrDefault();
+        }
+
+        public static bool isSystemTab(string name)
+        {
+            if(name.Equals("Default") || name.Equals("Settings"))
+                return true;
+            return false;
+        }
+
+        public static Task LoadSystemTab(SessionEntry entry, ClosableTab tab)
+        {
+            Task load = null;
+            switch (entry.Name)
+            {
+                case "Default":
+                    load = AddDefaultTab(entry, tab);
+                    break;
+                case "Settings":
+                    load = AddSettingsTab(tab, entry);
+                    break;
+            }
+            return load;
         }
 
         public static async void GetPluginUI(PluginEntry sourcePlugin)
@@ -112,9 +144,7 @@ namespace FrameWork
             ClosableTab settingsTab = isOpened("Settings");
             if (settingsTab == null)
             {
-                int index = Tabs.IndexOf(GetSelectedTab());
-                Tabs[index].Content = new SettingsViewModel();
-                Tabs[index].Title = "Settings";
+                await AddSettingsTab(GetSelectedTab());
             }
             else
             {
@@ -140,6 +170,17 @@ namespace FrameWork
                     SelectedTab = Tabs[((SessionEntry)entry).Positon];
                 }
             }
+        }
+
+        private static async Task AddSettingsTab(ClosableTab tab, SessionEntry? entry = null)
+        {
+            await Task.Factory.StartNew(() => {
+                tab.Title = "Settings";
+                tab.Content = new SettingsViewModel();
+                if(entry != null)
+                    if (((SessionEntry)entry).isSelected)
+                        SelectedTab = tab;
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private static async Task AddDefaultTab(SessionEntry? entry = null, ClosableTab tab = null)
@@ -173,9 +214,9 @@ namespace FrameWork
         {
             List<ClosableTab> tabsToClose = new List<ClosableTab>();
             if(tabToClose == null)
-                tabsToClose = Tabs.Where(w => !w.Title.Equals("Default") && !w.Title.Equals("Unnamed")).ToList();
+                tabsToClose = Tabs.Where(w => !w.Title.Equals("Unnamed") && !isSystemTab(w.Title)).ToList();
             else
-                if(!tabToClose.Title.Equals("Default"))
+                if(!isSystemTab(tabToClose.Title))
                     tabsToClose.Add(tabToClose);
             List<ClosableTab> busyTabs = new List<ClosableTab>();
             foreach(ClosableTab tab in tabsToClose)
@@ -208,7 +249,7 @@ namespace FrameWork
                     SelectedTab = Tabs[index - 1];
                 }
             }
-            if (!Tabs[index].Title.Equals("Default"))
+            if (!isSystemTab(Tabs[index].Title))
             {
                 await ((ITab)Tabs[index].Content).DumpAsync();
             }
@@ -236,7 +277,11 @@ namespace FrameWork
             BinaryFormatter formatter = new BinaryFormatter();
             MemoryStream ms = new MemoryStream();
             formatter.Serialize(ms, openTabsNames);
-            await IOProxy.WriteMemoryStreamToFileAsync(ms, ".session");
+            byte[] array = await Authentification.Cryptography.EncryptDataArrayAsync(ms.ToArray(),
+                Authentification.AppPassword.Password, Authentification.AppPassword.Salt);
+            MemoryStream encryptedMS = new MemoryStream();
+            await encryptedMS.WriteAsync(array, 0, array.Length);
+            await IOProxy.WriteMemoryStreamToFileAsync(encryptedMS, ".session");
         }
 
         private static MessageBoxResult ShowBusyTabsErrorMessage(List<ClosableTab> busyTabs)

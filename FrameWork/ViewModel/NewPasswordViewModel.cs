@@ -73,7 +73,8 @@ namespace FrameWork.ViewModel
 
         public void OnSubmitPassword()
         {
-            if(ValidateNewPassword() && ValidateNewPasswordReEnter())
+            ClearValidationErrors();
+            if (ValidateNewPassword() && ValidateNewPasswordReEnter())
             {
                 Authentification.NewMasterPassword(NewPassword.Password);
             }
@@ -81,12 +82,13 @@ namespace FrameWork.ViewModel
 
         private bool ValidateNewPassword()
         {
-            if (BasePasswordCheck(NewPassword.Password))
+            var result = BasePasswordCheck(NewPassword.Password);
+            if (string.IsNullOrEmpty(result))
                 return true;
             else
             {
+                PasswordError = result;
                 NewPasswordErrorFrame = Visibility.Visible;
-                NewPasswordReEnterErrorFrame = Visibility.Hidden;
                 return false;
             }
         }
@@ -96,7 +98,6 @@ namespace FrameWork.ViewModel
             if (NewPasswordReEnter.Length == 0)
             {
                 PasswordError = "Please re-enter the password";
-                NewPasswordErrorFrame = Visibility.Hidden;
                 NewPasswordReEnterErrorFrame = Visibility.Visible;
                 return false;
             }
@@ -107,6 +108,13 @@ namespace FrameWork.ViewModel
                 return false;
             }
             return true;
+        }
+
+        private void ClearValidationErrors()
+        {
+            PasswordError = string.Empty;
+            NewPasswordErrorFrame = Visibility.Hidden;
+            NewPasswordReEnterErrorFrame = Visibility.Hidden;
         }
     }
 }

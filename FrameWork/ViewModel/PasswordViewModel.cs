@@ -38,25 +38,24 @@ namespace FrameWork.ViewModel
             }
         }
 
-        protected bool BasePasswordCheck(SecureString password, string passwordType = "")
+        protected string BasePasswordCheck(SecureString password, string passwordType = null)
         {
+            string error = string.Empty;
             if (password.Length == 0)
             {
                 if (string.IsNullOrEmpty(passwordType))
-                    PasswordError = "Password cannot be empty!";
+                    return "Password cannot be empty!";
                 else
-                    PasswordError = passwordType + " password cannot be empty!";
-                return false;
+                    return passwordType + " password cannot be empty!";
             }
             if(password.Length < _passwordLength)
             {
                 if (string.IsNullOrEmpty(passwordType))
-                    PasswordError = "Password must be at least " + _passwordLength + " symbols long!";
+                    return "Password must be at least " + _passwordLength + " symbols long!";
                 else
-                    PasswordError = passwordType + " password must be at least " + _passwordLength + " symbols long!";
-                return false;
+                    return passwordType + " password must be at least " + _passwordLength + " symbols long!";
             }
-            return true;
+            return null;
         }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)

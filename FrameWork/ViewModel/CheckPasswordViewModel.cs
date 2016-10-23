@@ -46,8 +46,12 @@ namespace FrameWork.ViewModel
 
         public void OnSubmitPassword(object box)
         {
-            if(!BasePasswordCheck((box as PasswordBox).SecurePassword))
+            var result = BasePasswordCheck((box as PasswordBox).SecurePassword);
+            if (!string.IsNullOrEmpty(result))
+            {
+                PasswordError = result;
                 CheckPasswordError = Visibility.Visible;
+            }
             else if (!Authentification.CheckMasterPassword((box as PasswordBox).SecurePassword))
             {
                 CheckPasswordError = Visibility.Visible;

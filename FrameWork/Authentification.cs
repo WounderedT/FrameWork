@@ -85,7 +85,7 @@ namespace FrameWork
             SelectedTab = Tabs.First();
         }
      
-        public static void NewMasterPassword(SecureString password)
+        public static void NewMasterPassword(SecureString password, bool shortCheck = false)
         {
             EncryptedPassword result = new EncryptedPassword(cryptography.EncryptMasterPassword(password));
             if (!IOProxy.WritePassword(result, ".key"))
@@ -95,6 +95,8 @@ namespace FrameWork
             _appPassword.Salt = result.Salt;
             if (!IOProxy.WritePassword(result, ".bak_key"))
                 OnAuthentificationComplete(new AuthentificationEventArgs(false));
+            if (shortCheck)
+                return;
             OnAuthentificationComplete(new AuthentificationEventArgs());
         }
 

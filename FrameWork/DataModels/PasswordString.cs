@@ -41,6 +41,14 @@ namespace FrameWork.DataModels
             }
         }
 
+        public bool isEmpty
+        {
+            get
+            {
+                return Password.Length > 0;
+            }
+        }
+
         public PasswordString(): this(new SecureString()) { }
 
         public PasswordString(SecureString password)

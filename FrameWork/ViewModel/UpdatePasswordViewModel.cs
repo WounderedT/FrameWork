@@ -17,7 +17,11 @@ namespace FrameWork.ViewModel
         private Visibility _newPasswordReEnterErrorFrame = Visibility.Hidden;
         private RelayCommand _submitPassword;
         private RelayCommand _cancelPassword;
+        private string _checkPasswordError = string.Empty;
+        private string _newPasswordError = string.Empty;
+        private string _newPasswordReEnterError = string.Empty;
 
+        public event EventHandler passwordUpdateComplete;
         public PasswordString CheckPassword { get; set; }
         public PasswordString NewPassword { get; set; }
         public PasswordString NewPasswordReEnter { get; set; }
@@ -35,7 +39,7 @@ namespace FrameWork.ViewModel
             }
         }
 
-        public Visibility NewPassswordErrorFrame
+        public Visibility NewPasswordErrorFrame
         {
             get { return _newPasswordErrorFrame; }
             set
@@ -43,7 +47,7 @@ namespace FrameWork.ViewModel
                 if (_newPasswordErrorFrame != value)
                 {
                     _newPasswordErrorFrame = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs("NewPassswordErrorFrame"));
+                    OnPropertyChanged(new PropertyChangedEventArgs("NewPasswordErrorFrame"));
                 }
             }
         }
@@ -85,43 +89,136 @@ namespace FrameWork.ViewModel
             }
         }
 
-        private void OnSubmitPassword()
+        public string CheckPasswordError
         {
-            if (!BasePasswordCheck(CheckPassword.Password) || !BasePasswordCheck(NewPassword.Password) || !ValidateNewPasswordReEnter())
-                return;
+            get { return _checkPasswordError; }
+            set
+            {
+                if(_checkPasswordError != value)
+                {
+                    _checkPasswordError = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("CheckPasswordError"));
+                }
+            }
+        }
+
+        public string NewPasswordError
+        {
+            get { return _newPasswordError; }
+            set
+            {
+                if (_newPasswordError != value)
+                {
+                    _newPasswordError = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("NewPasswordError"));
+                }
+            }
+        }
+
+        public string NewPasswordReEnterError
+        {
+            get { return _newPasswordReEnterError; }
+            set
+            {
+                if (_newPasswordReEnterError != value)
+                {
+                    _newPasswordReEnterError = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("NewPasswordReEnterError"));
+                }
+            }
+        }
+
+        public bool isChanged
+        {
+            get
+            {
+                return !(CheckPassword.isEmpty && NewPassword.isEmpty && NewPasswordReEnter.isEmpty);
+            }
+        }
+
+        public UpdatePasswordViewModel()
+        {
+            CheckPassword = new PasswordString();
+            NewPassword = new PasswordString();
+            NewPasswordReEnter = new PasswordString();
+        }
+
+        public bool OnSubmitPassword()
+        {
+            ClearValidationErros();
+            string result = BasePasswordCheck(CheckPassword.Password, CheckPasswordError);
+            if(!string.IsNullOrEmpty(result))
+            {
+                CheckPasswordError = result;
+                CheckPasswordErrorFrame = Visibility.Visible;
+                return false;
+            }
+            result = BasePasswordCheck(NewPassword.Password, CheckPasswordError);
+            if (!string.IsNullOrEmpty(result))
+            {
+                NewPasswordError = result;
+                NewPasswordErrorFrame = Visibility.Visible;
+                return false;
+            }
+            if (CheckPassword.Equals(NewPassword))
+            {
+                NewPasswordError = "Cannot use current password as a new one!";
+                NewPasswordErrorFrame = Visibility.Visible;
+                return false;
+            }
+            if (!ValidateNewPasswordReEnter())
+                return false;
             if (!Authentification.CheckMasterPassword(CheckPassword.Password, true))
             {
-                PasswordError = "Incorrect password. Please enter correct password and try again.";
+                CheckPasswordError = "Incorrect password!";
                 CheckPasswordErrorFrame = Visibility.Visible;
-                return;
+                return false;
             }
-            Authentification.NewMasterPassword(NewPassword.Password);
+            Authentification.NewMasterPassword(NewPassword.Password, true);
+            OnPasswordUpdateComplete();
+            return true;
         }
 
         private void OnCancelPassword()
         {
-
+            OnPasswordUpdateComplete();
         }
 
         private bool ValidateNewPasswordReEnter()
         {
             if (NewPasswordReEnter.Length == 0)
             {
-                PasswordError = "Please re-enter new password";
+                NewPasswordReEnterError = "Please re-enter new password";
                 CheckPasswordErrorFrame = Visibility.Hidden;
-                NewPassswordErrorFrame = Visibility.Hidden;
+                NewPasswordErrorFrame = Visibility.Hidden;
                 NewPasswordReEnterErrorFrame = Visibility.Visible;
                 return false;
             }
             if (!NewPassword.Equals(NewPasswordReEnter))
             {
-                PasswordError = "Entered passwords don't match!";
+                NewPasswordReEnterError = "Passwords don't match!";
+                NewPasswordError = "Passwords don't match!";
                 CheckPasswordErrorFrame = Visibility.Hidden;
-                NewPassswordErrorFrame = Visibility.Visible;
+                NewPasswordErrorFrame = Visibility.Visible;
                 NewPasswordReEnterErrorFrame = Visibility.Visible;
                 return false;
             }
             return true;
+        }
+
+        private void ClearValidationErros()
+        {
+            CheckPasswordError = string.Empty;
+            CheckPasswordErrorFrame = Visibility.Hidden;
+            NewPasswordError = string.Empty;
+            NewPasswordErrorFrame = Visibility.Hidden;
+            NewPasswordReEnterError = string.Empty;
+            NewPasswordReEnterErrorFrame = Visibility.Hidden;
+        }
+
+        protected virtual void OnPasswordUpdateComplete()
+        {
+            passwordUpdateComplete?.Invoke(this, new EventArgs());
         }
     }
 }
