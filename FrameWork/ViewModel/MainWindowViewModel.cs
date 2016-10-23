@@ -61,8 +61,11 @@ namespace FrameWork.ViewModel
 
         public MainWindowViewModel()
         {
+            ResourceDictionary rd = new ResourceDictionary();
+            rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
+            Application.Current.Resources.MergedDictionaries.Add(rd);
             Settings.LoadSettings();
-            App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Authentification.GetAuthentificationTab();
             Tabs = Authentification.Tabs;
             SelectedTab = Authentification.SelectedTab;
