@@ -22,8 +22,7 @@
             </Grid.RowDefinitions>
 
             <Button
-                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
-                Height="25" Width="150" FontFamily="Copperplate Gothic Light"
+                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Height="25" Width="150"
                 Content="Change Password" Command="{Binding ChangePasswordButton}" IsEnabled="{Binding ChangePasswordButtonEnable}"
                 />
             <Grid Grid.Row="2" Grid.Column="0" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Center">

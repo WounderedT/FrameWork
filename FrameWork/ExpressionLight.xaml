@@ -51,7 +51,6 @@
     <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFFFF" />
 
-
     <!-- EXPRESSION COMMON VALUES -->
 
     <LinearGradientBrush x:Key="ShineBrush" EndPoint="0.5,0.971" StartPoint="0.5,0.042">
@@ -76,7 +75,8 @@
 
     <SolidColorBrush x:Key="DefaultedBorderBrush" Color="{StaticResource DefaultColor}" />
     <SolidColorBrush x:Key="SolidBorderBrush" Color="#888" />
-
+    <FontFamily x:Key="FrameWorkCommonFont">Copperplate Gothic Light</FontFamily>
+    
     <Style x:Key="NuclearButtonFocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -93,7 +93,8 @@
         <Setter Property="Background" Value="{DynamicResource NormalBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
-<Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
+        <Setter Property="FontFamily" Value="{StaticResource FrameWorkCommonFont}" />
+        <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
     </Style>
     
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
@@ -1504,6 +1505,7 @@
 <Setter Property="Template" Value="{DynamicResource TextBoxTemplate}" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource FrameWorkCommonFont}" />
         <Setter Property="BorderBrush" Value="#FF000000"/>
     </Style>
     
@@ -1734,7 +1736,7 @@
     <Style TargetType="{x:Type Label}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Template">
+        <!--<Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Label}">
                     <Grid>
@@ -1745,8 +1747,8 @@
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
-        <Setter Property="Background" Value="Red" />
+        </Setter>-->
+        <Setter Property="FontFamily" Value="{StaticResource FrameWorkCommonFont}"/>
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     </Style>
 
@@ -2972,6 +2974,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource FrameWorkCommonFont}" />
     </Style>
 
     <Style x:Key="{x:Static ToolBar.CheckBoxStyleKey}" TargetType="{x:Type CheckBox}">

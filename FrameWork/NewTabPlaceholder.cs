@@ -19,7 +19,7 @@ namespace FrameWork
         {
             Header = "+";
             FontSize = 25;
-            FontFamily = new FontFamily("Copperplate Gothic Light");
+            FontFamily = TryFindResource("FrameWorkCommonFont") as FontFamily;
             FontWeight = FontWeights.UltraLight;
         }
 

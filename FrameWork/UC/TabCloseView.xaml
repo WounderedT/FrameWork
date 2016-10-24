@@ -12,13 +12,13 @@
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
         <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="auto"
-               FontFamily="Copperplate Gothic Light" 
                x:Name="labelTabName" 
-               Content="{Binding LabelContent}" Background="LightBlue" />
+               Content="{Binding LabelContent}" Background="{Binding LabelBackground}">
+        </Label>
         <!--Background="{Binding LabelBackground}" />-->
         <Button Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="20"
                 Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" ToolTip="Close"
-                FontFamily="Copperplate Gothic Light" FontWeight="Bold" Background="Transparent"
+                FontWeight="Bold" Background="Transparent"
                 x:Name="buttonTabClose" 
                 Content="X" Command="{Binding CloseButtonClick}"
                 Visibility="{Binding ButtonCloseVisibility}"  />
