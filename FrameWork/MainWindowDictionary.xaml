@@ -19,7 +19,6 @@
     <DataTemplate DataType="{x:Type viewModel:TabCloseViewModel}">
         <view:TabCloseView/>
     </DataTemplate>
-
     <!--<ControlTemplate x:Key="TabsTemplate">
         <TabControl 
       IsSynchronizedWithCurrentItem="True" 

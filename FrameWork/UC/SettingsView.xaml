@@ -10,9 +10,6 @@
              d:DesignHeight="500" d:DesignWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0">
     <Grid>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="20"/>
@@ -21,11 +18,14 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Button
-                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Height="25" Width="150"
+            <Button 
+                Grid.Row="0" 
+                HorizontalAlignment="Left" Height="25" Width="150"
                 Content="Change Password" Command="{Binding ChangePasswordButton}" IsEnabled="{Binding ChangePasswordButtonEnable}"
                 />
-            <Grid Grid.Row="2" Grid.Column="0" Height="auto" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Grid 
+                Grid.Row="2" 
+                HorizontalAlignment="Left" VerticalAlignment="Center" Height="auto" Width="auto">
                 <ItemsControl ItemsSource="{Binding UpdatePasswordObject}" >
                     <!--<ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModel:UpdatePasswordViewModel}">
@@ -67,7 +67,8 @@
                     />
             </Grid>
         </Grid>
-        <Grid HorizontalAlignment="Right" Margin="0,470,0,0" >
+        <Grid 
+            HorizontalAlignment="Right" Margin="0,470,0,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="30"/>

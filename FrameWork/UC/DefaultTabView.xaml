@@ -9,28 +9,35 @@
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
     <Grid>
-        <Canvas HorizontalAlignment="Left" Height="650" VerticalAlignment="Top" Width="800">
-            <Button x:Name="button" Canvas.Left="750" Canvas.Top="15" Width="30" Height="30" Command="{Binding SettingsButton}">
-                <StackPanel>
-                    <Image Source="/FrameWork;component/Resources/ConfigurationButton.png" />
-                </StackPanel>
-            </Button>
-            <Grid Height="605" Canvas.Top="45" Width="800">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding PluginButtons}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewModel:PluginButtonViewModel}">
-                                <local:PluginButtonView/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-        </Canvas>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Button 
+            Grid.Row="0" x:Name="button" 
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="30" Height="30" Margin="0,0,30,0"
+            Command="{Binding SettingsButton}">
+            <StackPanel>
+                <Image Source="/FrameWork;component/Resources/ConfigurationButton.png" />
+            </StackPanel>
+        </Button>
+        <Grid 
+            Grid.Row="1" 
+            HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="800">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding PluginButtons}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModel:PluginButtonViewModel}">
+                            <local:PluginButtonView/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

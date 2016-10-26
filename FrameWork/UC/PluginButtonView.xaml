@@ -8,37 +8,36 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Canvas Height="266" Width="266" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="button" Opacity="1.0" Command="{Binding PluginButtonClick}" 
-                    CommandParameter="{Binding PluginButtonSourceID}" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Height="200" Width="200" Margin="33" ToolTip="{Binding ButtonToolTip}" >
-                <StackPanel>
-                    <Image Source="{Binding PluginButtonImage}" />
-                </StackPanel>
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="Opacity" Value="1.0" />
-                            </Trigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.7" To="1" SpeedRatio="5"></DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" SpeedRatio="5"></DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-        </Canvas>
+        <Button 
+            HorizontalAlignment="Center" VerticalAlignment="Center" Height="200" Width="200" Margin="30"
+            Command="{Binding PluginButtonClick}" CommandParameter="{Binding PluginButtonSourceID}" ToolTip="{Binding ButtonToolTip}"
+            Opacity="1.0" >
+            <StackPanel>
+                <Image Source="{Binding PluginButtonImage}" />
+            </StackPanel>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="Opacity" Value="1.0" />
+                        </Trigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.7" To="1" SpeedRatio="5"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" SpeedRatio="5"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>

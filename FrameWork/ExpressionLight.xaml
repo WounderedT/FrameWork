@@ -18,7 +18,10 @@
     <Color x:Key="HoverColor">#FFAAAAAA</Color>
     <Color x:Key="DefaultColor">#FF9BB1C5</Color>
     <SolidColorBrush x:Key="LightBrush" Color="#FFAFAFAF" />
-    <SolidColorBrush x:Key="ShadeBrush" Color="#FF9F9F9F" />
+    <LinearGradientBrush x:Key="ShadeBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFAAA9A9" Offset="0" />
+        <GradientStop Color="#FF939393" Offset="1" />
+    </LinearGradientBrush>
 
     <Color x:Key="TopGradientSelectColor">#FFFFFFFF</Color>
     <Color x:Key="BottomGradientSelectColor">#FF999999</Color>
@@ -32,11 +35,9 @@
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />
     <SolidColorBrush x:Key="GlyphBrush" Color="#FFFFFFFF" />
 
-    <LinearGradientBrush x:Key="PressedBrush" EndPoint="0.5,0.971" StartPoint="0.5,0.042">
-        <GradientStop Color="#4C000000" Offset="0" />
-        <GradientStop Color="#26FFFFFF" Offset="1" />
-        <GradientStop Color="#4C000000" Offset="0.467" />
-        <GradientStop Color="#26FFFFFF" Offset="0.479" />
+    <LinearGradientBrush x:Key="PressedBrush">
+        <GradientStop Color="#06FFFFFF" Offset="0" />
+        <GradientStop Color="#16FFFFFF" Offset="1" />
     </LinearGradientBrush>
 
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFD6D6D6" />
@@ -46,8 +47,9 @@
         <GradientStop Color="{StaticResource BottomGradientSelectColor}" Offset="1" />
     </LinearGradientBrush>
 
+    <!--<SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />-->
     <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
-    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#FFD4D4D4" />
+    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#FFB8B8B8" />
     <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFFFF" />
 
@@ -118,7 +120,7 @@
 
                         </Storyboard>
                         <Storyboard x:Key="PressedOn">
-
+                    
                             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="PressedBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
                                 <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1" />
                             </DoubleAnimationUsingKeyFrames>
@@ -1933,7 +1935,7 @@
                         <Border x:Name="ContentPanel" Grid.Column="0" Grid.Row="1" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local" Background="{DynamicResource ShadeBrush}" CornerRadius="0,0,2,2">
                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
                         </Border>
-                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" BorderThickness="0,0,0,1" CornerRadius="10,0,0,0" Opacity="0.5" Margin="2,0,2,0" x:Name="border1">
+                        <!--<Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" BorderThickness="0,0,0,1" CornerRadius="10,0,0,0" Opacity="0.5" Margin="2,0,2,0" x:Name="border1">
                             <Border.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="1" ScaleY="1"/>
@@ -1945,7 +1947,7 @@
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="{DynamicResource BlackColor}"/>
                             </Border.BorderBrush>
-                        </Border>
+                        </Border>-->
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="TabStripPlacement" Value="Bottom">
@@ -1968,7 +1970,7 @@
                             <Setter Property="Grid.Column" TargetName="border" Value="0"/>
                             <Setter Property="Margin" TargetName="border" Value="0,0,0,0"/>
                             <Setter Property="Margin" TargetName="ContentPanel" Value="0,0,0,0"/>
-                            <Setter Property="LayoutTransform" TargetName="border1">
+                            <!--<Setter Property="LayoutTransform" TargetName="border1">
                                 <Setter.Value>
                                     <TransformGroup>
                                         <ScaleTransform ScaleX="1" ScaleY="1"/>
@@ -1977,8 +1979,8 @@
                                         <TranslateTransform X="0" Y="0"/>
                                     </TransformGroup>
                                 </Setter.Value>
-                            </Setter>
-                            <Setter Property="Margin" TargetName="border1" Value="0,0,0,0"/>
+                            </Setter>-->
+                            <!--<Setter Property="Margin" TargetName="border1" Value="0,0,0,0"/>-->
                             <Setter Property="CornerRadius" TargetName="border" Value="0,2,2,0"/>
                             <Setter Property="CornerRadius" TargetName="ContentPanel" Value="0,2,2,0"/>
 
@@ -1992,7 +1994,7 @@
                             <Setter Property="Height" TargetName="RowDefinition0" Value="*" />
                             <Setter Property="Height" TargetName="RowDefinition1" Value="0" />
                             <Setter Property="Grid.Column" TargetName="border" Value="1"/>
-                            <Setter Property="LayoutTransform" TargetName="border1">
+                            <!--<Setter Property="LayoutTransform" TargetName="border1">
                                 <Setter.Value>
                                     <TransformGroup>
                                         <ScaleTransform ScaleX="1" ScaleY="1"/>
@@ -2001,8 +2003,8 @@
                                         <TranslateTransform X="0" Y="0"/>
                                     </TransformGroup>
                                 </Setter.Value>
-                            </Setter>
-                            <Setter Property="Grid.Column" TargetName="border1" Value="1"/>
+                            </Setter>-->
+                            <!--<Setter Property="Grid.Column" TargetName="border1" Value="1"/>-->
                             <Setter Property="CornerRadius" TargetName="ContentPanel" Value="2,0,0,2"/>
                             <Setter Property="CornerRadius" TargetName="border" Value="0,2,2,0"/>
                         </Trigger>

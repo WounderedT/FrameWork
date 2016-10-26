@@ -5,22 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FrameWork.UC"
              mc:Ignorable="d" >
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid
+        HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="8" />
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="auto"
-               x:Name="labelTabName" 
-               Content="{Binding LabelContent}" Background="{Binding LabelBackground}">
+        <Label 
+            Grid.Column="0" 
+            HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="auto"
+            Content="{Binding LabelContent}" Background="{Binding LabelBackground}">
         </Label>
-        <!--Background="{Binding LabelBackground}" />-->
-        <Button Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="20"
-                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" ToolTip="Close"
-                FontWeight="Bold" Background="Transparent"
-                x:Name="buttonTabClose" 
-                Content="X" Command="{Binding CloseButtonClick}"
-                Visibility="{Binding ButtonCloseVisibility}"  />
+        <Button
+            Grid.Column="2" 
+            HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="20"
+            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Close" Background="Transparent"
+            FontStretch="Normal" FontSize="14" FontWeight="Bold"
+            Content="X" Command="{Binding CloseButtonClick}" Visibility="{Binding ButtonCloseVisibility}"  />
     </Grid>
 </UserControl>

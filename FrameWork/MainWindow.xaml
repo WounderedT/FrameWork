@@ -6,20 +6,15 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:FrameWork"
         mc:Ignorable="d"
-        Title="FrameWork" Height="750" Width="850" ResizeMode="CanMinimize" >
-    
-    <!--<i:Interaction.Behaviors>
-        <i:EventTrigger EventName="Closing">
-            <local:EventToCommandBehavior Command="{Binding CloseMainWindowCommand}" CommandParameter=""/>
-        </i:EventTrigger>
-    </i:Interaction.Behaviors>-->
+        Title="FrameWork" Height="750" Width="850" ResizeMode="CanMinimize">
+
     <i:Interaction.Behaviors>
             <local:EventToCommandBehavior Command="{Binding CloseMainWindowCommand}" Event="Closing" PassArguments="True"/>
     </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary Source="MainWindowDictionary.xaml"/>
     </Window.Resources>
-    <Grid>
+    <Grid Background="Red" Name="MainWindowGrid">
         <TabControl x:Name="tabControl" HorizontalAlignment="Center" Height="700" VerticalAlignment="Center" Width="824"
                     ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" >
             <!--<TabControl.ItemTemplate>
