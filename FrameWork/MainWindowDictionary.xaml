@@ -4,15 +4,73 @@
                     xmlns:viewModel="clr-namespace:FrameWork.ViewModel"
                     xmlns:view="clr-namespace:FrameWork.UC">
 
+    <!--
+    http://stackoverflow.com/questions/16609696/border-margin-in-window-template-doesnt-have-any-effect-when-used-with-windowch
+    http://learnwpf.com/post/2011/09/28/Office-2010-style-Window-Header-with-WPF-and-MicrosoftWindowsShell.aspx
+    http://www.japf.fr/2010/12/set-up-main-window-of-your-wpf-project/
+    -->
+    
+    <Style TargetType="{x:Type local:CustomWindow}" x:Name="CustomWindowStyle">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="MinHeight" Value=""/>
+        <Setter Property="MinWidth" Value=""/>
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:CustomWindow}" x:Name="Part_WindowTemplate">
+                    <Grid Name="Part_WinwowFrame">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="Part_WindowBorderTopLeft"
+                                Grid.Column="0" Grid.Row="0"
+                                />
+                        <Border x:Name="Part_WindowBorderTop"
+                                Grid.Column="1" Grid.Row="0"
+                                />
+                        <Border x:Name="Part_WindowBorderTopRight"
+                                Grid.Column="2" Grid.Row="0"
+                                />
+                        <Border x:Name="Part_WindowBorderLeft"
+                                Grid.Column="0" Grid.Row="1"
+                                />
+                        <Border x:Name="Part_WindowBorderRight"
+                                Grid.Column="2" Grid.Row="1"
+                                />
+                        <Border x:Name="Part_WindowBorderBottomLeft"
+                                Grid.Column="0" Grid.Row="3"
+                                />
+                        <Border x:Name="Part_WindowBorderBottom"
+                                Grid.Column="1" Grid.Row="3"
+                                />
+                        <Border x:Name="Part_WindowBorderRight"
+                                Grid.Column="2" Grid.Row="3"
+                                />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
     <DataTemplate DataType="{x:Type viewModel:DefaultTabViewModel}">
         <view:DefaultTabView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModel:CheckPasswordViewModel}">
         <view:CheckPasswordView/>
     </DataTemplate>
-    <!--<DataTemplate DataType="{x:Type viewModel:UpdatePasswordViewModel}">
-        <view:UpdatePasswordView/>
-    </DataTemplate>-->
     <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
         <view:SettingsView/>
     </DataTemplate>

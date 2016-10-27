@@ -42,6 +42,8 @@
 
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFD6D6D6" />
 
+    <SolidColorBrush x:Key="BorderBrush" Color="Green" />
+
     <LinearGradientBrush x:Key="SelectedBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
         <GradientStop Color="{StaticResource TopGradientSelectColor}" Offset="0" />
         <GradientStop Color="{StaticResource BottomGradientSelectColor}" Offset="1" />

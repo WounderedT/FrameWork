@@ -73,6 +73,7 @@
     <Compile Include="NewTabPlaceholder.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="CustomWindow.cs" />
     <Compile Include="UC\DefaultTabView.xaml.cs">
       <DependentUpon>DefaultTabView.xaml</DependentUpon>
     </Compile>
