@@ -9,8 +9,42 @@
     http://learnwpf.com/post/2011/09/28/Office-2010-style-Window-Header-with-WPF-and-MicrosoftWindowsShell.aspx
     http://www.japf.fr/2010/12/set-up-main-window-of-your-wpf-project/
     -->
-    
-    <Style TargetType="{x:Type local:CustomWindow}" x:Name="CustomWindowStyle">
+
+    <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid>
+                        <!--<Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>-->
+                        <!--<Border Background="{DynamicResource SelectedBackgroundBrush}"
+                        Margin="0,0,0,0">-->
+                            <ContentPresenter
+                                 Content="{TemplateBinding Content}" />
+                        <!--</Border>-->
+                        <!--<TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" 
+                           VerticalAlignment="Top" HorizontalAlignment="Left" 
+                           Margin="36,8,0,0"/>
+                        <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Icon}"
+                       VerticalAlignment="Top" HorizontalAlignment="Left"
+                       Margin="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=WindowChrome.WindowChrome.ResizeBorderThickness}" 
+                       Width="{Binding Source={x:Static SystemParameters.SmallIconWidth}}"
+                       WindowChrome.IsHitTestVisibleInChrome="True"/>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--<Style TargetType="{x:Type local:CustomWindow}" x:Name="CustomWindowStyle">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="MinHeight" Value=""/>
@@ -62,7 +96,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
     
     
     <DataTemplate DataType="{x:Type viewModel:DefaultTabViewModel}">

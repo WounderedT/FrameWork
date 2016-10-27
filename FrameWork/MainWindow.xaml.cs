@@ -41,30 +41,40 @@ namespace FrameWork
             MessageBox.Show(windowText + excpetionText, ex.GetType().FullName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
+        //[DllImport("dwmapi.dll", PreserveSig = false)]
+        //static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
 
 
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        static extern bool DwmIsCompositionEnabled();
+        //[DllImport("dwmapi.dll", PreserveSig = false)]
+        //static extern bool DwmIsCompositionEnabled();
+
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
             // This can’t be done any earlier than the SourceInitialized event:
-            var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-            hwndSource.AddHook(WndProc);
+            //var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            //hwndSource.AddHook(WndProc);
 
-            GlassHelper.RemoveNonClientRegion(this);
+            //GlassHelper.RemoveNonClientRegion(this);
             //GlassHelper.ExtendGlassFrame(this, new Thickness(-1));
             //GlassHelper.SetWindowThemeAttribute(this, false, false);
         }
 
-        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == 0x0083)
-                return new IntPtr(0);
-            return new IntPtr(0);
-        }
+        //private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        //{
+        //    if (msg == 0x0083)
+        //        return new IntPtr(0);
+        //    return new IntPtr(0);
+        //}
     }
 
     public class GlassHelper
