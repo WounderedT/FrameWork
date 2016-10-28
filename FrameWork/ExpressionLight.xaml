@@ -35,6 +35,10 @@
     <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />
     <SolidColorBrush x:Key="GlyphBrush" Color="#FFFFFFFF" />
 
+    <SolidColorBrush x:Key="CloseButtonHowerBrush" Color="#FFDC0000" />
+    <SolidColorBrush x:Key="CloseButtonPressedBrush" Color="#FFDA7A7A"/>
+    <SolidColorBrush x:Key="MinimizeButtonHowerBrush" Color="#FFE8E8E8"/>
+
     <LinearGradientBrush x:Key="PressedBrush">
         <GradientStop Color="#06FFFFFF" Offset="0" />
         <GradientStop Color="#16FFFFFF" Offset="1" />
@@ -196,20 +200,20 @@
                 </ControlTemplate>
 
     <ControlTemplate x:Key="ButtonWindoCloseTemplate" TargetType="{x:Type Button}">
-        <ControlTemplate.Resources>
+        <ControlTemplate.Resources >
             <Storyboard x:Key="HoverOn">
-                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverShineBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <!--<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverShineBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
                     <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1" />
-                </DoubleAnimationUsingKeyFrames>
+                </DoubleAnimationUsingKeyFrames>-->
                 <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
                     <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
 
             </Storyboard>
             <Storyboard x:Key="HoverOff">
-                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverShineBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <!--<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverShineBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
                     <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0" />
-                </DoubleAnimationUsingKeyFrames>
+                </DoubleAnimationUsingKeyFrames>-->
                 <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="(UIElement.Opacity)">
                     <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0" />
                 </DoubleAnimationUsingKeyFrames>
@@ -242,18 +246,18 @@
 
         </ControlTemplate.Resources>
         <Grid x:Name="Grid">
-            <Border x:Name="Background" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" />
-            <Border x:Name="HoverBorder" Opacity="0" Background="{StaticResource HoverBrush}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" />
-            <Border x:Name="HoverShineBorder" Opacity="0" Background="Red" BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}"/>
-            <Border x:Name="PressedBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{StaticResource PressedBrush}" />
-            <Border x:Name="ShineBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{StaticResource ShineBrush}" Opacity="1" />
+            <Border x:Name="Background" Background="Transparent" BorderBrush="Transparent"/>
+            <Border x:Name="HoverBorder" Opacity="0" Background="{StaticResource CloseButtonHowerBrush}" BorderBrush="Transparent" />
+            <!--<Border x:Name="HoverShineBorder" Opacity="0" Background="Red" BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}"/>-->
+            <Border x:Name="PressedBorder" Opacity="0" Background="{StaticResource CloseButtonPressedBrush}" BorderBrush="Transparent" />
+            <!--<Border x:Name="ShineBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{StaticResource ShineBrush}" Opacity="1" />-->
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
-            <Border x:Name="FocusVisualElement" IsHitTestVisible="false" BorderBrush="{StaticResource HoverShineBrush}" BorderThickness="1" CornerRadius="3,3,3,3" Margin="1,1,1,1" Opacity="0" />
+            <Border x:Name="FocusVisualElement" IsHitTestVisible="false" BorderBrush="Transparent" />
         </Grid>
         <ControlTemplate.Triggers>
-            <Trigger Property="IsDefault" Value="True">
+            <!--<Trigger Property="IsDefault" Value="True">
                 <Setter Property="BorderBrush" TargetName="ShineBorder" Value="{DynamicResource DefaultedBorderBrush}" />
-            </Trigger>
+            </Trigger>-->
             <Trigger Property="IsKeyboardFocused" Value="true">
                 <Trigger.ExitActions>
                     <BeginStoryboard Storyboard="{StaticResource FocussedOff}" x:Name="FocussedOff_BeginStoryboard"/>
@@ -280,12 +284,12 @@
                     <BeginStoryboard Storyboard="{StaticResource PressedOn}"/>
                 </Trigger.EnterActions>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="true" />
+            <!--<Trigger Property="IsEnabled" Value="true" />
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Background" />
-                <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="ShineBorder" />
+                --><!--<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="ShineBorder" />--><!--
                 <Setter Property="Opacity" TargetName="Grid" Value="0.5"/>
-            </Trigger>
+            </Trigger>-->
         </ControlTemplate.Triggers>
     </ControlTemplate>
 

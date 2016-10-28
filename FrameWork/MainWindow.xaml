@@ -15,7 +15,9 @@
         <ResourceDictionary Source="MainWindowDictionary.xaml"/>
     </Window.Resources>
     <Grid Name="MainWindowGrid">
-        <TabControl x:Name="tabControl" HorizontalAlignment="Center" VerticalAlignment="Center" Height="750"  Width="850"
+        <TabControl x:Name="tabControl" 
+                    WindowChrome.IsHitTestVisibleInChrome="True"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Height="750"  Width="850"
                     ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" >
             <!--<TabControl.ItemTemplate>
                 <DataTemplate>
@@ -35,12 +37,14 @@
             </Grid.ColumnDefinitions>
 
             <Button x:Name="WindowMinimizeButton"
+                    WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30"
                     Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize"
                     Content="–"
                     />
             
             <Button x:Name="WindowCloseButton"
+                    WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30"
                     Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close"
                     Content="X"

@@ -18,6 +18,7 @@
             Content="{Binding LabelContent}" Background="{Binding LabelBackground}">
         </Label>
         <Button
+            WindowChrome.IsHitTestVisibleInChrome="True"
             Grid.Column="2" 
             HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="20"
             Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Close" Background="Transparent"
