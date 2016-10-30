@@ -2,13 +2,25 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:FrameWork"
                     xmlns:viewModel="clr-namespace:FrameWork.ViewModel"
-                    xmlns:view="clr-namespace:FrameWork.UC">
+                    xmlns:view="clr-namespace:FrameWork.UC"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--
     http://stackoverflow.com/questions/16609696/border-margin-in-window-template-doesnt-have-any-effect-when-used-with-windowch
     http://learnwpf.com/post/2011/09/28/Office-2010-style-Window-Header-with-WPF-and-MicrosoftWindowsShell.aspx
     http://www.japf.fr/2010/12/set-up-main-window-of-your-wpf-project/
     -->
+    <sys:Double x:Key="MainWindowHeight">750</sys:Double>
+    <sys:Double x:Key="MainWindowWidth">850</sys:Double>
+
+    <sys:Double x:Key="NewTabButtonSize">30</sys:Double>
+    <sys:Double x:Key="WindowDragAreaMinWidth">60</sys:Double>
+    
+    <sys:Double x:Key="SystemButtonHeight">30</sys:Double>
+    <sys:Double x:Key="SystemButtonWidth">40</sys:Double>
+
+    <sys:Double x:Key="TabCloseButtonWidth">20</sys:Double>
+    <sys:Double x:Key="TabTitleDefaultWidth">138</sys:Double>
 
     <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">
@@ -16,6 +28,8 @@
                 <WindowChrome />
             </Setter.Value>
         </Setter>
+        <Setter Property="Height" Value="{StaticResource MainWindowHeight}"/>
+        <Setter Property="Width" Value="{StaticResource MainWindowWidth}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">

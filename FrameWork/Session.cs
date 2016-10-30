@@ -4,6 +4,7 @@ using Interface;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -18,28 +19,32 @@ namespace FrameWork
     public static class Session
     {
         public static event UpdateSelectedTabEventHandler UpdateSelectedTab;
+        public static event EventHandler UpdateDragAreaWidth;
         public delegate void UpdateSelectedTabEventHandler(EventArgs args);
 
-        private static TabItem _selectedTab;
+        private static int _selectedTabIndex;
+        private static Dictionary<string, object> _resources = new Dictionary<string, object>();
 
         public static ObservableCollection<ClosableTab> Tabs { get; set; }
-        public static TabItem SelectedTab
+        public static int SelectedTabIndex
         {
-            get { return _selectedTab; }
+            get { return _selectedTabIndex; }
             set
             {
-                _selectedTab = value;
+                _selectedTabIndex = value;
                 OnUpdateSelectedTab(new EventArgs());
             }
         }
 
-        public static async void GetSession()
+        public static async Task<ObservableCollection<ClosableTab>> GetSession()
         {
             Tabs = new ObservableCollection<ClosableTab>();
+            Tabs.CollectionChanged += UpdateUIWidth;
             if (IOProxy.Exists(".session"))
                 await LoadSession();
             else
                 await NewTab();
+            return Tabs;
         }
 
         public static async Task<bool> SaveSession()
@@ -57,6 +62,11 @@ namespace FrameWork
             ms.Position = 0;
             BinaryFormatter formatter = new BinaryFormatter();
             List<SessionEntry> lastSessionTabs = (List<SessionEntry>)formatter.Deserialize(ms);
+            if (lastSessionTabs.Count == 0)
+            {
+                await AddDefaultTab();
+                return;
+            }
             var plugins = PluginEntryCollection.Plugins;
             Task[] loadTasks = new Task[lastSessionTabs.Count];
             for (int index = 0; index < lastSessionTabs.Count; index++)
@@ -73,14 +83,51 @@ namespace FrameWork
                     loadTasks[ind] = UpdateTabContent(plugins[lastSessionTabs[ind].Name], Tabs[ind], lastSessionTabs[ind]);
             }
             await Task.WhenAll(loadTasks);
-            AddNewButtonPlaceholder();
         }
 
         public static async Task NewTab()
         {
             await AddDefaultTab();
-            SelectedTab = Tabs[Tabs.Count - 1];
-            AddNewButtonPlaceholder();
+            SelectedTabIndex = Tabs.Count - 1;
+            //UpdateUIWidth();
+        }
+
+        public static void UpdateUIWidth(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            double width = 0;
+            foreach (ClosableTab entry in Tabs)
+            {
+                if(entry.ActualWidth == 0)
+                    width += StaticResources.TabTitleDefaultWidth + StaticResources.NewTabButtonSize;
+                else
+                    width += entry.ActualWidth;
+            }
+            if (width > StaticResources.TabAreaWidth)
+            {
+                UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
+                width = StaticResources.TabAreaWidth / Tabs.Count - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderPadding;
+                foreach (ClosableTab entry in Tabs)
+                {
+                    int some = Tabs.IndexOf(entry);
+                    entry.HeaderWidth = width;
+                }
+                return;
+            }
+            if (width < StaticResources.TabAreaWidth)
+            {
+                width = StaticResources.TabAreaWidth / Tabs.Count;
+                if (width > StaticResources.TabHeaderDefaultWidth)
+                    width = StaticResources.TabHeaderDefaultWidth;
+                UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(
+                    StaticResources.MainWindowWidth - width * Tabs.Count - StaticResources.SystemButtonAreaWidth));
+                width = width - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderPadding;
+                foreach (ClosableTab entry in Tabs)
+                {
+                    int some = Tabs.IndexOf(entry);
+                    entry.HeaderWidth = width;
+                }
+                return;
+            }
         }
 
         private static async void CloseTab(object sender, PluginTabCloseEventArgs args)
@@ -135,7 +182,7 @@ namespace FrameWork
             else
             {
                 await CloseTabAsync(GetSelectedTab());
-                SelectedTab = requestedPlugin;
+                SelectedTabIndex = Tabs.IndexOf(requestedPlugin);
             }
         }
 
@@ -149,7 +196,7 @@ namespace FrameWork
             else
             {
                 await CloseTabAsync(GetSelectedTab());
-                SelectedTab = settingsTab;
+                SelectedTabIndex = Tabs.IndexOf(settingsTab);
             }
         }        
 
@@ -167,7 +214,7 @@ namespace FrameWork
             {
                 if (((SessionEntry)entry).isSelected)
                 {
-                    SelectedTab = Tabs[((SessionEntry)entry).Positon];
+                    SelectedTabIndex = ((SessionEntry)entry).Positon;
                 }
             }
         }
@@ -179,7 +226,7 @@ namespace FrameWork
                 tab.Content = new SettingsViewModel();
                 if(entry != null)
                     if (((SessionEntry)entry).isSelected)
-                        SelectedTab = tab;
+                        SelectedTabIndex = Tabs.IndexOf(tab);
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -198,16 +245,16 @@ namespace FrameWork
                     tab.Title = "Default";
                     tab.Content = defaultTabVM;
                     if (((SessionEntry)entry).isSelected)
-                        SelectedTab = tab;
+                        SelectedTabIndex = Tabs.IndexOf(tab);
                 }
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private static void AddNewButtonPlaceholder()
         {
-            NewTabPlaceholder pluginTab = new NewTabPlaceholder();
-            pluginTab.NewTabCreationRequest += AlertNewTabRequest;
-            Tabs.Add(pluginTab);
+            //NewTabPlaceholder pluginTab = new NewTabPlaceholder();
+            //pluginTab.NewTabCreationRequest += AlertNewTabRequest;
+            //Tabs.Add(pluginTab);
         }
 
         private static async Task<bool> CloseTabAsync(ClosableTab tabToClose = null)
@@ -246,7 +293,7 @@ namespace FrameWork
             {
                 if (Tabs.Count > 2)
                 {
-                    SelectedTab = Tabs[index - 1];
+                    SelectedTabIndex = index - 1;
                 }
             }
             if (!isSystemTab(Tabs[index].Title))
@@ -309,7 +356,7 @@ namespace FrameWork
             Tabs.RemoveAt((int)tabIndex);
         }
 
-        private static async void AlertNewTabRequest(object sender, EventArgs args)
+        public static async void NewTabRequest()
         {
             Tabs.RemoveAt(Tabs.Count - 1);
             await NewTab();
@@ -361,6 +408,16 @@ namespace FrameWork
             Name = name;
             Positon = position;
             this.isSelected = isSelected;
+        }
+    }
+
+    public class UpdateDragAreaWidthEventArgs: EventArgs
+    {
+        public double Width { get; set; }
+
+        public UpdateDragAreaWidthEventArgs(double width)
+        {
+            Width = width;
         }
     }
 }

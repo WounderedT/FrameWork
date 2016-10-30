@@ -6,19 +6,24 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:FrameWork"
         mc:Ignorable="d"
-        Title="FrameWork" Height="750" Width="850" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
+        Title="FrameWork" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
 
     <i:Interaction.Behaviors>
             <local:EventToCommandBehavior Command="{Binding CloseMainWindowCommand}" Event="Closing" PassArguments="True"/>
     </i:Interaction.Behaviors>
     <Window.Resources>
-        <ResourceDictionary Source="MainWindowDictionary.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="MainWindowDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
-    <Grid Name="MainWindowGrid">
+    <Grid Name="MainWindowGrid" >
         <TabControl x:Name="tabControl" 
                     WindowChrome.IsHitTestVisibleInChrome="True"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" Height="750"  Width="850"
-                    ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" >
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Height="{StaticResource MainWindowHeight}" Width="{StaticResource MainWindowWidth}"
+                    ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" Padding="0">
             <!--<TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}" />
@@ -32,22 +37,41 @@
         </TabControl>
         <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
+            <Button x:Name="NewTabPlaceHolder"
+                    WindowChrome.IsHitTestVisibleInChrome="True"
+                    Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonHeight}"
+                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-5,0,0"
+                    Content="+" Visibility="{Binding NewTabButtonVisibility}"
+                    Command="{Binding NewTabCommand}"
+                    />
+            
+            <Rectangle 
+                MouseDown="OnDragMoveWindow"
+                Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Height="{StaticResource SystemButtonHeight}" Width="{Binding WindowDragAreaWidth}" MinWidth="{StaticResource WindowDragAreaMinWidth}"
+                Fill="Red"
+                />
             <Button x:Name="WindowMinimizeButton"
                     WindowChrome.IsHitTestVisibleInChrome="True"
-                    Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30"
-                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize"
-                    Content="–"
+                    Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
+                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-7,0,0"
+                    Content="–" 
                     />
             
             <Button x:Name="WindowCloseButton"
                     WindowChrome.IsHitTestVisibleInChrome="True"
-                    Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30"
-                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close"
-                    Content="X"
+                    Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
+                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close" FontSize="21" Padding="0,-2,0,0"
+                    Content="X" 
                     />
         </Grid>
     </Grid>

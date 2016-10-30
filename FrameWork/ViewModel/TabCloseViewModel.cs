@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -18,6 +19,7 @@ namespace FrameWork.ViewModel
         private Brush _labelBackground;
         private Visibility _buttonCloseVisibility;
         private RelayCommand _closeButtonClick;
+        private double _closableTabLabelWidth = StaticResources.TabTitleDefaultWidth;
 
         public object LabelContent
         {
@@ -31,7 +33,7 @@ namespace FrameWork.ViewModel
                 }
             }
         }
-
+        
         public Brush LabelBackground
         {
             get { return _labelBackground; }
@@ -41,6 +43,19 @@ namespace FrameWork.ViewModel
                 {
                     _labelBackground = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LabelBackground"));
+                }
+            }
+        }
+
+        public double ClosableTabLabelWidth
+        {
+            get { return _closableTabLabelWidth; }
+            set
+            {
+                if (_closableTabLabelWidth != value)
+                {
+                    _closableTabLabelWidth = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ClosableTabLabelWidth"));
                 }
             }
         }

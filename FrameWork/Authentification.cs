@@ -25,7 +25,7 @@ namespace FrameWork
          * use the same syntax as Session.
          */
         public static ObservableCollection<ClosableTab> Tabs { get; set; }
-        public static TabItem SelectedTab { get; set; }
+        public static int SelectedTabIndex { get; set; }
 
         public static event AuthentificationCompleteEventHandler AuthentificationComplete;
         public delegate void AuthentificationCompleteEventHandler(AuthentificationEventArgs args);
@@ -82,7 +82,7 @@ namespace FrameWork
                 authTab.Content = new NewPasswordView();
             }
             Tabs.Add(authTab);
-            SelectedTab = Tabs.First();
+            SelectedTabIndex = 0;
         }
      
         public static void NewMasterPassword(SecureString password, bool shortCheck = false)

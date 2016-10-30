@@ -69,6 +69,16 @@ namespace FrameWork
             //GlassHelper.SetWindowThemeAttribute(this, false, false);
         }
 
+        private void OnDragMoveWindow(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        //private void OnContentRendered(object sender, EventArgs args)
+        //{
+        //    Session.UpdateUIWidth();
+        //}
+
         //private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         //{
         //    if (msg == 0x0083)

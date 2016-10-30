@@ -19,6 +19,9 @@ namespace FrameWork.DataModels
         public event PluginTabCloseEventHandler PluginTabClose;
         public delegate void PluginTabCloseEventHandler(object caller, PluginTabCloseEventArgs args);
 
+        private double _defaultTitleWidth;
+        private double _newTitleWidth;
+
         public bool CleanProgressBar
         {
             get; set;
@@ -48,6 +51,26 @@ namespace FrameWork.DataModels
             }
         }
 
+        public double HeaderWidth
+        {
+            get
+            {
+                return closeView.ClosableTabLabelWidth;
+            }
+            set
+            {
+                closeView.ClosableTabLabelWidth = value;
+                if (value != NewHeaderWidth)
+                    NewHeaderWidth = value;
+            }
+        }
+
+        public double NewHeaderWidth
+        {
+            get { return _newTitleWidth; }
+            set { _newTitleWidth = value; }
+        }
+
         public bool CanClose { get; set; }
 
         public ClosableTab()
@@ -67,10 +90,11 @@ namespace FrameWork.DataModels
             closeView.CloseButtonClick = new RelayCommand(param => buttonTabClose_Click(Title), param => buttonTabClose_CanExecute());
             CanClose = canClose;
             if(!CanClose)
-                closeView.ButtonCloseVisibility = Visibility.Hidden;
+                closeView.ButtonCloseVisibility = Visibility.Collapsed;
             Header = closeView;
             CleanProgressBar = false;
         }
+
 
         public void CreateProgressBar(object sender, EventArgs args)
         {
@@ -85,8 +109,8 @@ namespace FrameWork.DataModels
             if(progressArgs.Value < 1.0)
             {
                 LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
-                myLinearGradientBrush.StartPoint = new Point(0, 0);
-                myLinearGradientBrush.EndPoint = new Point(1, 1);
+                myLinearGradientBrush.StartPoint = new Point(0, 0.5);
+                myLinearGradientBrush.EndPoint = new Point(1, 0.5);
                 Color color = GetColor(progressArgs.Status);
                 myLinearGradientBrush.GradientStops.Add(new GradientStop(color, 0.0));
                 myLinearGradientBrush.GradientStops.Add(new GradientStop(Colors.WhiteSmoke, progressArgs.Value));
@@ -123,6 +147,22 @@ namespace FrameWork.DataModels
             SolidColorBrush empty = new SolidColorBrush();
             empty.Color = Colors.Transparent;
             HeaderBackground = empty;
+        }
+
+        public void shrinktitle(double value)
+        {
+            _defaultTitleWidth = HeaderWidth;
+            HeaderWidth = value;
+        }
+
+        public void restoretitle()
+        {
+            HeaderWidth = _defaultTitleWidth;
+        }
+
+        public double GetPaddingWidth()
+        {
+            return Padding.Left + Padding.Right;
         }
 
         private Color GetColor(string status)
@@ -192,6 +232,13 @@ namespace FrameWork.DataModels
         protected virtual void OnPluginTabClose(PluginTabCloseEventArgs args)
         {
             PluginTabClose?.Invoke(this, args);
+        }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+            if (NewHeaderWidth > 0 && NewHeaderWidth != HeaderWidth)
+                HeaderWidth = NewHeaderWidth;
         }
     }
 
