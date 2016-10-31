@@ -5,29 +5,41 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FrameWork
 {
     public static class Settings
     {
         private static Parameters paramters = null;
-
+        private static string _oldColorScheme = string.Empty;
+        private static Dictionary<string, string> _colorSchemeDict = new Dictionary<string, string>() {
+            { "Light", "ColorSchemes/WhistlerBlue.xaml" },
+            { "Dark", "ColorSchemes/ExpressionLight.xaml" }
+        };
+            //AnotherExpressionLight
         public static bool EncryptFiles
         {
             get { return paramters.EncryptFiles; }
             set { paramters.EncryptFiles = value; }
         }
 
-        public static object CurrentColorScheme
+        public static string CurrentColorScheme
         {
             get { return paramters.CurrentColorScheme; }
-            set { paramters.CurrentColorScheme = value; }
+            set {
+                if(paramters.CurrentColorScheme != value)
+                {
+                    _oldColorScheme = paramters.CurrentColorScheme;
+                    paramters.CurrentColorScheme = value;
+                    UpdateUIScheme();
+                }
+            }
         }
 
-        public static List<object> ColorSchemes
+        public static List<string> ColorSchemes
         {
-            get { return paramters.ColorSchemes; }
-            set { paramters.ColorSchemes = value; }
+            get { return _colorSchemeDict.Keys.ToList(); }
         }
 
         public static void LoadSettings()
@@ -35,6 +47,21 @@ namespace FrameWork
             paramters = new Parameters();
             if (IOProxy.Exists(".config"))
                 paramters.Deserialize(IOProxy.GetMemoryStreamFromFile(".config"));
+            if (string.IsNullOrEmpty(CurrentColorScheme))
+                CurrentColorScheme = _colorSchemeDict.First().Key;
+            else
+                UpdateUIScheme();
+        }
+
+        public static void UpdateUIScheme()
+        {
+            ResourceDictionary rd = new ResourceDictionary();
+            rd.Source = new Uri(_colorSchemeDict[CurrentColorScheme], UriKind.Relative);
+            if (!string.IsNullOrEmpty(_oldColorScheme))
+                Application.Current.Resources.MergedDictionaries.Remove(
+                    Application.Current.Resources.MergedDictionaries.Where(w => w.Source.OriginalString.Equals(_colorSchemeDict[_oldColorScheme])).First()
+                    );
+            Application.Current.Resources.MergedDictionaries.Add(rd);
         }
 
         public static async void SaveSettings()
@@ -47,14 +74,12 @@ namespace FrameWork
     class Parameters
     {
         public bool EncryptFiles { get; set; }
-        public object CurrentColorScheme { get; set; }
-        public List<object> ColorSchemes { get; set; }
+        public string CurrentColorScheme { get; set; }
 
         public Parameters()
         {
             EncryptFiles = true;
-            CurrentColorScheme = new object();
-            ColorSchemes = new List<object>();
+            CurrentColorScheme = string.Empty;
         }
 
         public MemoryStream Serialize()
@@ -71,7 +96,6 @@ namespace FrameWork
             var obj = (Parameters)formatter.Deserialize(ms);
             EncryptFiles = obj.EncryptFiles;
             CurrentColorScheme = obj.CurrentColorScheme;
-            ColorSchemes = obj.ColorSchemes;
         }
     }
 }

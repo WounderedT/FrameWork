@@ -20,7 +20,7 @@
     <sys:Double x:Key="SystemButtonWidth">40</sys:Double>
 
     <sys:Double x:Key="TabCloseButtonWidth">20</sys:Double>
-    <sys:Double x:Key="TabTitleDefaultWidth">138</sys:Double>
+    <sys:Double x:Key="TabTitleDefaultWidth">148</sys:Double>
 
     <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">

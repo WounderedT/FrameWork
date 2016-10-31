@@ -47,23 +47,22 @@
                     WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonHeight}"
-                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-5,0,0"
-                    Content="+" Visibility="{Binding NewTabButtonVisibility}"
-                    Command="{Binding NewTabCommand}"
+                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-5,0,0"
+                    Content="+" Visibility="{Binding NewTabButtonVisibility}" Command="{Binding NewTabCommand}"
                     />
             
             <Rectangle 
                 MouseDown="OnDragMoveWindow"
                 Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
                 Height="{StaticResource SystemButtonHeight}" Width="{Binding WindowDragAreaWidth}" MinWidth="{StaticResource WindowDragAreaMinWidth}"
-                Fill="Red"
+                Fill="Transparent"
                 />
             <Button x:Name="WindowMinimizeButton"
                     WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
-                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-7,0,0"
-                    Content="–" 
+                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-7,0,0"
+                    Content="–" Command="{Binding MinimizeMainWindowCommand}"
                     />
             
             <Button x:Name="WindowCloseButton"
@@ -71,7 +70,7 @@
                     Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
                     Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close" FontSize="21" Padding="0,-2,0,0"
-                    Content="X" 
+                    Content="X" Command="{Binding CloseMainWindowCommand}"
                     />
         </Grid>
     </Grid>

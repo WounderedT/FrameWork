@@ -25,7 +25,8 @@ namespace FrameWork
         public static double MinSystemAreaWidth { get; set; }
         public static double SystemButtonAreaWidth { get; set; }
         public static double TabAreaWidth { get; set; }
-        public static double TabHeaderPadding { get; set; }
+        public static Thickness TabHeaderPadding { get; set; }
+        public static double TabHeaderTotalPadding { get; set; }
         public static double TabHeaderDefaultWidth { get; set; }
 
         private static bool _isInitialized = false;
@@ -60,9 +61,9 @@ namespace FrameWork
             MinSystemAreaWidth = NewTabButtonSize + SystemButtonWidth * 2 + WindowDragAreaMinWidth;
             SystemButtonAreaWidth = NewTabButtonSize + SystemButtonWidth * 2;
             TabAreaWidth = MainWindowWidth - MinSystemAreaWidth;
-            var tmp = new ClosableTab();
-            TabHeaderPadding = tmp.Padding.Left + tmp.Padding.Right;
-            TabHeaderDefaultWidth = TabTitleDefaultWidth + TabCloseButtonWidth + TabHeaderPadding;
+            TabHeaderPadding = new Thickness(2);
+            TabHeaderTotalPadding = TabHeaderPadding.Left + TabHeaderPadding.Right;
+            TabHeaderDefaultWidth = TabTitleDefaultWidth + TabCloseButtonWidth + TabHeaderTotalPadding;
         }
     }
 }

@@ -93,6 +93,7 @@ namespace FrameWork.DataModels
                 closeView.ButtonCloseVisibility = Visibility.Collapsed;
             Header = closeView;
             CleanProgressBar = false;
+            Padding = StaticResources.TabHeaderPadding;
         }
 
 

@@ -105,7 +105,7 @@ namespace FrameWork
             if (width > StaticResources.TabAreaWidth)
             {
                 UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
-                width = StaticResources.TabAreaWidth / Tabs.Count - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderPadding;
+                width = StaticResources.TabAreaWidth / Tabs.Count - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderTotalPadding;
                 foreach (ClosableTab entry in Tabs)
                 {
                     int some = Tabs.IndexOf(entry);
@@ -120,7 +120,7 @@ namespace FrameWork
                     width = StaticResources.TabHeaderDefaultWidth;
                 UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(
                     StaticResources.MainWindowWidth - width * Tabs.Count - StaticResources.SystemButtonAreaWidth));
-                width = width - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderPadding;
+                width = width - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderTotalPadding;
                 foreach (ClosableTab entry in Tabs)
                 {
                     int some = Tabs.IndexOf(entry);
@@ -132,7 +132,12 @@ namespace FrameWork
 
         private static async void CloseTab(object sender, PluginTabCloseEventArgs args)
         {
+            bool updateSelected = false;
+            if ((sender as ClosableTab).IsSelected)
+                updateSelected = true;
             await CloseTabAsync((ClosableTab)sender);
+            if (updateSelected)
+                SelectedTabIndex = Tabs.Count - 1;
         }
 
         public static async void CloseTab()
@@ -278,11 +283,13 @@ namespace FrameWork
                 foreach(ClosableTab tab in busyTabs)
                     ((ITab)tab.Content).CancellationToken.Cancel();
             }
-            await WriteSessionToFile();
             if(tabToClose != null)
                 await DumpAndRemoveTab(tabToClose);
             else
+            {
+                await WriteSessionToFile();
                 await DumpAndRemoveTabs(tabsToClose);
+            }
             return true;
         }
 
@@ -317,7 +324,7 @@ namespace FrameWork
         private static async Task WriteSessionToFile()
         {
             List<SessionEntry> openTabsNames = new List<SessionEntry>();
-            for(int ind = 0; ind < Tabs.Count - 1; ind++)
+            for(int ind = 0; ind < Tabs.Count; ind++)
             {
                 openTabsNames.Add(new SessionEntry(Tabs[ind].Title, ind, Tabs[ind].IsSelected));
             }

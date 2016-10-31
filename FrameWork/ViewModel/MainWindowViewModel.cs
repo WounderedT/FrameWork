@@ -31,7 +31,7 @@ namespace FrameWork.ViewModel
 
         private RelayCommandAsync _newTabCommand;
         private RelayCommand _minimizeMainWindowCommand;
-        private RelayCommand<CancelEventArgs> _closeMainWindowCommand;
+        private RelayCommand _closeMainWindowCommand;
 
         public ObservableCollection<ClosableTab> Tabs
         {
@@ -47,7 +47,7 @@ namespace FrameWork.ViewModel
         {
             get
             {
-                if (Tabs.Count == 0)
+                if (Tabs == null || Tabs.Count == 0)
                     return null;
                 return Tabs[SelectedTabIndex];
             }
@@ -102,9 +102,21 @@ namespace FrameWork.ViewModel
             {
                 if (_newTabCommand == null)
                 {
-                    _newTabCommand = new RelayCommandAsync(param => Some());
+                    _newTabCommand = new RelayCommandAsync(param => NewTabRequest());
                 }
                 return _newTabCommand;
+            }
+        }
+
+        public ICommand MinimizeMainWindowCommand
+        {
+            get
+            {
+                if (_minimizeMainWindowCommand == null)
+                {
+                    _minimizeMainWindowCommand = new RelayCommand(param => MinimizeMainWindow());
+                }
+                return _minimizeMainWindowCommand;
             }
         }
 
@@ -114,23 +126,28 @@ namespace FrameWork.ViewModel
             {
                 if (_closeMainWindowCommand == null)
                 {
-                    _closeMainWindowCommand = new RelayCommand<CancelEventArgs>(CloseMainWindow);
+                    _closeMainWindowCommand = new RelayCommand(param => CloseMainWindow());
                 }
                 return _closeMainWindowCommand;
             }
         }
 
-        public async Task Some()
+        public async Task NewTabRequest()
         {
             await Session.NewTab();
+        }
+
+        public void MinimizeMainWindow()
+        {
+            Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive).WindowState = WindowState.Minimized;
         }
 
         public MainWindowViewModel()
         {
             StaticResources.InitializeResources();
-            ResourceDictionary rd = new ResourceDictionary();
-            rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
-            Application.Current.Resources.MergedDictionaries.Add(rd);
+            //ResourceDictionary rd = new ResourceDictionary();
+            //rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
+            //Application.Current.Resources.MergedDictionaries.Add(rd);
             Settings.LoadSettings();
 
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -146,7 +163,8 @@ namespace FrameWork.ViewModel
         public async void LoadFrameWorkTabs(AuthentificationEventArgs args)
         {
             if (!args.Result)
-                CloseMainWindow(new CancelEventArgs());
+                CloseMainWindow();
+            Tabs = new ObservableCollection<ClosableTab>();
             Session.UpdateSelectedTab += UpdateSelectedTab;
             Session.UpdateDragAreaWidth += UpdateDragAreaWidth;
 
@@ -155,17 +173,15 @@ namespace FrameWork.ViewModel
             NewTabButtonVisibility = Visibility.Visible;
         }
 
-        public async void CloseMainWindow(CancelEventArgs args)
+        public async void CloseMainWindow()
         {
-            if (Tabs.Count == 1)
+            if (Tabs.Count > 0 && Tabs[0].Title.Equals("Authentification"))
             {
                 Application.Current.Shutdown();
                 return;
             }
             if (await Session.SaveSession())
                 Application.Current.Shutdown();
-            else
-                args.Cancel = true;
         }
 
         private void UpdateSelectedTab(EventArgs args)

@@ -16,7 +16,7 @@ namespace FrameWork.ViewModel
 
         private bool _encryptFiles;
         private bool _changePasswordButtonEnable;
-        private List<object> _colorSchemes;
+        private List<string> _colorSchemes;
         private RelayCommand _changePassword;
         private RelayCommand _saveSettings;
         private RelayCommand _cancel;
@@ -61,7 +61,9 @@ namespace FrameWork.ViewModel
             }
         }
 
-        public List<object> ColorSchemes
+        public string SelectedColorScheme { get; set; }
+
+        public List<string> ColorSchemes
         {
             get { return _colorSchemes; }
             set { _colorSchemes = value; }
@@ -108,6 +110,7 @@ namespace FrameWork.ViewModel
             ChangePasswordButtonEnable = true;
             EnableEncryption = Settings.EncryptFiles;
             ColorSchemes = Settings.ColorSchemes;
+            SelectedColorScheme = Settings.CurrentColorScheme;
         }
 
         private void ChangePassword()
@@ -132,12 +135,14 @@ namespace FrameWork.ViewModel
                     if (!UpdatePasswordObject[0].viewModel.OnSubmitPassword())
                         return;
             Settings.EncryptFiles = EnableEncryption;
+            Settings.CurrentColorScheme = SelectedColorScheme;
             Settings.SaveSettings();
             Session.CloseTab();
         }
 
         private void Cancel()
         {
+            var some = SelectedColorScheme;
             Session.CloseTab();
         }
     }

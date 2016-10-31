@@ -105,7 +105,11 @@
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TabCloseViewModel.cs" />
     <Compile Include="ViewModel\UpdatePasswordViewModel.cs" />
-    <Page Include="ExpressionLight.xaml">
+    <Page Include="ColorSchemes\AnotherExpressionLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorSchemes\ExpressionLight.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -154,7 +158,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WhistlerBlue.xaml">
+    <Page Include="ColorSchemes\WhistlerBlue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
