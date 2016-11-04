@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:FrameWork"
         mc:Ignorable="d"
-        Title="FrameWork" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
+        Title="FrameWork" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize" >
 
     <i:Interaction.Behaviors>
             <local:EventToCommandBehavior Command="{Binding CloseMainWindowCommand}" Event="Closing" PassArguments="True"/>
@@ -14,10 +14,12 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="MainWindowDictionary.xaml"/>
+                <ResourceDictionary Source="Resources/ResourceDictionaries/MainWindowDictionary.xaml"/>
+                <ResourceDictionary Source="Resources/ResourceDictionaries/StaticWindowParameters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid Name="MainWindowGrid" >
         <TabControl x:Name="tabControl" 
                     WindowChrome.IsHitTestVisibleInChrome="True"

@@ -1,6 +1,7 @@
 ﻿using FrameWork.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -41,32 +42,16 @@ namespace FrameWork
             MessageBox.Show(windowText + excpetionText, ex.GetType().FullName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        //[DllImport("dwmapi.dll", PreserveSig = false)]
-        //static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
-
-
-        //[DllImport("dwmapi.dll", PreserveSig = false)]
-        //static extern bool DwmIsCompositionEnabled();
-
-        private const int GWL_STYLE = -16;
-        private const int WS_SYSMENU = 0x80000;
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
             var hwnd = new WindowInteropHelper(this).Handle;
-            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
-            // This can’t be done any earlier than the SourceInitialized event:
-            //var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-            //hwndSource.AddHook(WndProc);
-
-            //GlassHelper.RemoveNonClientRegion(this);
-            //GlassHelper.ExtendGlassFrame(this, new Thickness(-1));
-            //GlassHelper.SetWindowThemeAttribute(this, false, false);
+            /*Remove window menu from main window's title bar*/
+            NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWL_STYLE, new IntPtr(NativeMethods.GetWindowLong(hwnd, NativeMethods.GWL_STYLE) & ~NativeMethods.WS_SYSMENU));
+            var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            if (hwndSource != null)
+                /*Add wndProc hook to handle window resize messages.*/
+                hwndSource.AddHook(WndProc);
         }
 
         private void OnDragMoveWindow(object sender, MouseButtonEventArgs e)
@@ -74,146 +59,82 @@ namespace FrameWork
             DragMove();
         }
 
-        //private void OnContentRendered(object sender, EventArgs args)
-        //{
-        //    Session.UpdateUIWidth();
-        //}
-
-        //private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        //{
-        //    if (msg == 0x0083)
-        //        return new IntPtr(0);
-        //    return new IntPtr(0);
-        //}
-    }
-
-    public class GlassHelper
-    {
-        public static bool ExtendGlassFrame(Window window, Thickness margin)
+        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (!NativeMethods.DwmIsCompositionEnabled())
-                return false;
-
-
-            IntPtr hwnd = new WindowInteropHelper(window).Handle;
-            if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("The Window must be shown before extending glass.");
-
-
-            // Set the background to transparent from both the WPF and Win32 perspectives
-            window.Background = Brushes.Transparent;
-            HwndSource.FromHwnd(hwnd).CompositionTarget.BackgroundColor = Colors.Transparent;
-
-
-            MARGINS margins = new MARGINS(margin);
-            NativeMethods.DwmExtendFrameIntoClientArea(hwnd, ref margins);
-            return true;
-        }
-
-        public static void SetWindowThemeAttribute(Window window, bool showCaption, bool showIcon)
-        {
-            bool isGlassEnabled = NativeMethods.DwmIsCompositionEnabled();
-
-            IntPtr hwnd = new WindowInteropHelper(window).Handle;
-            if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("The Window must be shown before extending glass.");
-
-            var options = new NativeMethods.WTA_OPTIONS
+            if (msg == NativeMethods.WM_NCHITTEST)
             {
-                dwMask = (NativeMethods.WTNCA.NODRAWCAPTION | NativeMethods.WTNCA.NODRAWICON)
-            };
-            if (isGlassEnabled)
-            {
-                if (!showCaption)
+                handled = true;
+                var htLocation = NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
+                switch (htLocation)
                 {
-                    options.dwFlags |= NativeMethods.WTNCA.NODRAWCAPTION;
+                    case NativeMethods.HTBOTTOM:
+                    case NativeMethods.HTBOTTOMLEFT:
+                    case NativeMethods.HTBOTTOMRIGHT:
+                    case NativeMethods.HTLEFT:
+                    case NativeMethods.HTRIGHT:
+                    case NativeMethods.HTTOP:
+                    case NativeMethods.HTTOPLEFT:
+                    case NativeMethods.HTTOPRIGHT:
+                        htLocation = NativeMethods.HTBORDER;
+                        break;
                 }
-                if (!showIcon)
-                {
-                    options.dwFlags |= NativeMethods.WTNCA.NODRAWICON;
-                }
+
+                return new IntPtr(htLocation);
             }
 
-            NativeMethods.SetWindowThemeAttribute(hwnd, NativeMethods.WINDOWTHEMEATTRIBUTETYPE.WTA_NONCLIENT, ref options, NativeMethods.WTA_OPTIONS.Size);
-        }
-
-        public static void RemoveNonClientRegion(Window window)
-        {
-            IntPtr hwnd = new WindowInteropHelper(window).Handle;
-            if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("The Window must be shown before extending glass.");
-
-            NativeMethods.SetWindowPos(hwnd, hwnd, 0, 0, 0, 0, NativeMethods.SWP.NOSIZE | NativeMethods.SWP.FRAMECHANGED);
+            return IntPtr.Zero;
         }
     }
 
     internal static class NativeMethods
     {
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern bool DwmIsCompositionEnabled();
+        public const int GWL_STYLE = -16;
+        public const int WS_SYSMENU = 0x80000;
+        public const int WM_NCHITTEST = 0x0084;
+        public const int HTBORDER = 18;
+        public const int HTBOTTOM = 15;
+        public const int HTBOTTOMLEFT = 16;
+        public const int HTBOTTOMRIGHT = 17;
+        public const int HTLEFT = 10;
+        public const int HTRIGHT = 11;
+        public const int HTTOP = 12;
+        public const int HTTOPLEFT = 13;
+        public const int HTTOPRIGHT = 14;
 
-        [DllImport("dwmapi.dll")]
-        public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+        /*Calls the default window procedure to provide default processing for any window messages
+         *that an application does not process. This function ensures that every message is processed.
+         */
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport("uxtheme.dll")]
-        public static extern void SetWindowThemeAttribute(IntPtr hwnd, WINDOWTHEMEATTRIBUTETYPE eAttribute, ref WTA_OPTIONS options, uint cbAttribute);
+        /*Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) 
+         *value at the specified offset into the extra window memory. 
+         */
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll", EntryPoint = "SetWindowPos", SetLastError = true)]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, SWP uFlags);
-
-        public enum WTNCA : uint
+        /*Changes an attribute of the specified window. The function also sets a value at the specified 
+         *offset in the extra window memory. 
+         */
+        // This is aliased as a macro in 32bit Windows.
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        public static IntPtr SetWindowLongPtr(IntPtr hwnd, int nIndex, IntPtr dwNewLong)
         {
-            NODRAWCAPTION = 0x00000001,
-            NODRAWICON = 0x00000002,
-            NOSYSMENU = 0x00000004,
-            NOMIRRORHELP = 0x00000008,
-            VALIDBITS = NODRAWCAPTION | NODRAWICON | NOMIRRORHELP | NOSYSMENU,
+            if (8 == IntPtr.Size)
+            {
+                return SetWindowLongPtr64(hwnd, nIndex, dwNewLong);
+            }
+            return new IntPtr(SetWindowLongPtr32(hwnd, nIndex, dwNewLong.ToInt32()));
         }
 
-        public struct WTA_OPTIONS
-        {
-            public const uint Size = 8;
-            public WTNCA dwFlags;
-            public WTNCA dwMask;
-        }
+        [SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
+        private static extern int SetWindowLongPtr32(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        public enum WINDOWTHEMEATTRIBUTETYPE
-        {
-            WTA_NONCLIENT = 1
-        }
-
-        internal enum SWP
-        {
-            ASYNCWINDOWPOS = 0x4000,
-            DEFERERASE = 0x2000,
-            DRAWFRAME = 0x0020,
-            FRAMECHANGED = 0x0020,
-            HIDEWINDOW = 0x0080,
-            NOACTIVATE = 0x0010,
-            NOCOPYBITS = 0x0100,
-            NOMOVE = 0x0002,
-            NOOWNERZORDER = 0x0200,
-            NOREDRAW = 0x0008,
-            NOREPOSITION = 0x0200,
-            NOSENDCHANGING = 0x0400,
-            NOSIZE = 0x0001,
-            NOZORDER = 0x0004,
-            SHOWWINDOW = 0x0040,
-        }
-    }
-
-    public struct MARGINS
-    {
-        public MARGINS(Thickness t)
-        {
-            Left = (int)t.Left;
-            Right = (int)t.Right;
-            Top = (int)t.Top;
-            Bottom = (int)t.Bottom;
-        }
-        public int Left;
-        public int Right;
-        public int Top;
-        public int Bottom;
+        [SuppressMessage("Microsoft.Interoperability", "CA1400:PInvokeEntryPointsShouldExist")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr", SetLastError = true)]
+        private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
     }
 }

@@ -11,12 +11,18 @@ namespace FrameWork
 {
     public static class Settings
     {
+        private const string _resourcesFolder = "Resources/ColorSchemes/";
+
         private static Parameters paramters = null;
         private static string _oldColorScheme = string.Empty;
         private static Dictionary<string, string> _colorSchemeDict = new Dictionary<string, string>() {
-            { "Light", "ColorSchemes/WhistlerBlue.xaml" },
-            { "Dark", "ColorSchemes/ExpressionLight.xaml" }
+            { "Light", _resourcesFolder + "WhistlerBlue.xaml" },
+            { "ShinyBlue", _resourcesFolder + "ShinyBlue.xaml" },
+            { "Dark", _resourcesFolder + "Dark.xaml" }
         };
+
+        public static event EventHandler OnUIColorSchemeUpdate;
+
             //AnotherExpressionLight
         public static bool EncryptFiles
         {
@@ -32,7 +38,7 @@ namespace FrameWork
                 {
                     _oldColorScheme = paramters.CurrentColorScheme;
                     paramters.CurrentColorScheme = value;
-                    UpdateUIScheme();
+                    UpdateUIColorScheme();
                 }
             }
         }
@@ -42,6 +48,8 @@ namespace FrameWork
             get { return _colorSchemeDict.Keys.ToList(); }
         }
 
+        public static bool IsColorSchemeUpdated { get; set; }
+
         public static void LoadSettings()
         {
             paramters = new Parameters();
@@ -50,10 +58,10 @@ namespace FrameWork
             if (string.IsNullOrEmpty(CurrentColorScheme))
                 CurrentColorScheme = _colorSchemeDict.First().Key;
             else
-                UpdateUIScheme();
+                UpdateUIColorScheme();
         }
 
-        public static void UpdateUIScheme()
+        public static void UpdateUIColorScheme()
         {
             ResourceDictionary rd = new ResourceDictionary();
             rd.Source = new Uri(_colorSchemeDict[CurrentColorScheme], UriKind.Relative);
@@ -62,6 +70,9 @@ namespace FrameWork
                     Application.Current.Resources.MergedDictionaries.Where(w => w.Source.OriginalString.Equals(_colorSchemeDict[_oldColorScheme])).First()
                     );
             Application.Current.Resources.MergedDictionaries.Add(rd);
+
+            StaticResources.UpdateCloseTabButtonWidth(rd);
+            OnUIColorSchemeUpdate?.Invoke(null, new EventArgs());
         }
 
         public static async void SaveSettings()

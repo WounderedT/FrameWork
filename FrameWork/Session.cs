@@ -89,7 +89,6 @@ namespace FrameWork
         {
             await AddDefaultTab();
             SelectedTabIndex = Tabs.Count - 1;
-            //UpdateUIWidth();
         }
 
         public static void UpdateUIWidth(object sender, NotifyCollectionChangedEventArgs e)
@@ -98,19 +97,16 @@ namespace FrameWork
             foreach (ClosableTab entry in Tabs)
             {
                 if(entry.ActualWidth == 0)
-                    width += StaticResources.TabTitleDefaultWidth + StaticResources.NewTabButtonSize;
+                    width += StaticResources.TabHeaderDefaultWidth;
                 else
                     width += entry.ActualWidth;
             }
             if (width > StaticResources.TabAreaWidth)
             {
-                UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
-                width = StaticResources.TabAreaWidth / Tabs.Count - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderTotalPadding;
+                width = StaticResources.TabAreaWidth / Tabs.Count;
                 foreach (ClosableTab entry in Tabs)
-                {
-                    int some = Tabs.IndexOf(entry);
                     entry.HeaderWidth = width;
-                }
+                OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
                 return;
             }
             if (width < StaticResources.TabAreaWidth)
@@ -118,31 +114,29 @@ namespace FrameWork
                 width = StaticResources.TabAreaWidth / Tabs.Count;
                 if (width > StaticResources.TabHeaderDefaultWidth)
                     width = StaticResources.TabHeaderDefaultWidth;
-                UpdateDragAreaWidth?.Invoke(null, new UpdateDragAreaWidthEventArgs(
-                    StaticResources.MainWindowWidth - width * Tabs.Count - StaticResources.SystemButtonAreaWidth));
-                width = width - StaticResources.TabCloseButtonWidth - StaticResources.TabHeaderTotalPadding;
+                OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(StaticResources.DynamicWindowAreaWidth - width * Tabs.Count));
+                //width -= StaticResources.TabHeaderTotalPadding;
                 foreach (ClosableTab entry in Tabs)
-                {
-                    int some = Tabs.IndexOf(entry);
                     entry.HeaderWidth = width;
-                }
                 return;
             }
         }
 
         private static async void CloseTab(object sender, PluginTabCloseEventArgs args)
         {
-            bool updateSelected = false;
+            int? newSelectedTab = null;
             if ((sender as ClosableTab).IsSelected)
-                updateSelected = true;
+                newSelectedTab = GetNextSelectedTabIndex(GetSelectedTab());
             await CloseTabAsync((ClosableTab)sender);
-            if (updateSelected)
-                SelectedTabIndex = Tabs.Count - 1;
+            if (newSelectedTab != null)
+                SelectedTabIndex = (int)newSelectedTab;
         }
 
         public static async void CloseTab()
         {
+            int newSelectedTab = GetNextSelectedTabIndex(GetSelectedTab());
             await CloseTabAsync(GetSelectedTab());
+            SelectedTabIndex = newSelectedTab;
         }
 
         public static ClosableTab isOpened(string tabTitle)
@@ -397,9 +391,38 @@ namespace FrameWork
             }
         }
 
+        public static void UpdateTabsHeaderWidth()
+        {
+            foreach(ClosableTab entry in Tabs)
+            {
+                entry.CloseTabButtonWidth = StaticResources.TabCloseButtonWidth;
+            }
+        }
+
+        private static void Select(int ind)
+        {
+            SelectedTabIndex = ind;
+        }
+
+        private static int GetNextSelectedTabIndex(ClosableTab tab)
+        {
+            int newSelectedTab = 0;
+            if (Tabs.Count > 1)
+                if (Tabs.IndexOf(tab) == Tabs.Count - 1)
+                    newSelectedTab = Tabs.Count - 2;
+                else
+                    newSelectedTab = Tabs.IndexOf(tab);
+            return newSelectedTab;
+        }
+
         private static void OnUpdateSelectedTab(EventArgs args)
         {
             UpdateSelectedTab?.Invoke(args);
+        }
+
+        public static void OnUpdateDragAreaWidth(UpdateDragAreaWidthEventArgs args)
+        {
+            UpdateDragAreaWidth?.Invoke(null, args);
         }
     }
 

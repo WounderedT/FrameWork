@@ -74,7 +74,7 @@ namespace FrameWork.DataModels
             }
             else
             {
-                return new BitmapImage(new Uri("pack://application:,,,/Resources/DefaultPluginPreview.png"));
+                return new BitmapImage(new Uri("pack://application:,,,/Resources/Images/DefaultPluginPreview.png"));
             }
         }
 

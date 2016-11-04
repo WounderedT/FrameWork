@@ -62,7 +62,7 @@
                     />
                 <ComboBox
                     Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Width="100" Height="25"
+                    Width="auto" Height="25" MinWidth="100"
                     ItemsSource="{Binding ColorSchemes}" SelectedValue="{Binding SelectedColorScheme, Mode=TwoWay}"
                     />
             </Grid>

@@ -20,6 +20,7 @@ namespace FrameWork.ViewModel
         private Visibility _buttonCloseVisibility;
         private RelayCommand _closeButtonClick;
         private double _closableTabLabelWidth = StaticResources.TabTitleDefaultWidth;
+        private double _tabCloseButtonWidth = StaticResources.TabCloseButtonWidth;
 
         public object LabelContent
         {
@@ -56,6 +57,19 @@ namespace FrameWork.ViewModel
                 {
                     _closableTabLabelWidth = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ClosableTabLabelWidth"));
+                }
+            }
+        }
+
+        public double TabCloseButtonWidth
+        {
+            get { return _tabCloseButtonWidth; }
+            set
+            {
+                if (_tabCloseButtonWidth != value)
+                {
+                    _tabCloseButtonWidth = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TabCloseButtonWidth"));
                 }
             }
         }

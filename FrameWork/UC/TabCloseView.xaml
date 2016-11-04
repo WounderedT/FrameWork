@@ -5,22 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FrameWork.UC"
              mc:Ignorable="d" >
-    <Grid MinWidth="20"
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ResourceDictionaries/StaticWindowParameters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid MinHeight="{StaticResource SystemButtonHeight}" MinWidth="{StaticResource TabCloseButtonDefaultWidth}" 
         HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>-->
         <Label 
-            Grid.Column="0" 
-            HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="{Binding ClosableTabLabelWidth, Mode=TwoWay}"
+            HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="{Binding ClosableTabLabelWidth, Mode=TwoWay}"
             Content="{Binding LabelContent}" Background="{Binding LabelBackground}">
         </Label>
         <Button
-            WindowChrome.IsHitTestVisibleInChrome="True"
-            Grid.Column="1" 
-            HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="20"
-            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Close" Background="Transparent"
+            Name="TabCloseButton"
+            HorizontalAlignment="Right" VerticalAlignment="Center" Height="26" Width="{Binding TabCloseButtonWidth}"
+            Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Close" Background="Transparent"
             FontStretch="Normal" FontSize="14" FontWeight="Bold"
             Content="X" Command="{Binding CloseButtonClick}" Visibility="{Binding ButtonCloseVisibility}"  />
     </Grid>

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:FrameWork.Resources.ResourceDictionaries"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:Double x:Key="MainWindowHeight">750</sys:Double>
+    <sys:Double x:Key="MainWindowWidth">850</sys:Double>
+
+    <sys:Double x:Key="NewTabButtonSize">30</sys:Double>
+    <sys:Double x:Key="WindowDragAreaMinWidth">60</sys:Double>
+
+    <sys:Double x:Key="SystemButtonHeight">30</sys:Double>
+    <sys:Double x:Key="SystemButtonWidth">40</sys:Double>
+
+    <sys:Double x:Key="TabCloseButtonWidth">20</sys:Double>
+    <sys:Double x:Key="TabTitleDefaultWidth">168</sys:Double>
+    <sys:Double x:Key="TabCloseButtonDefaultWidth">20</sys:Double>
+    
+</ResourceDictionary>

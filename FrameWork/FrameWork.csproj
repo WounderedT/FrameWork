@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -73,7 +74,6 @@
     <Compile Include="NewTabPlaceholder.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SizeObserver.cs" />
     <Compile Include="StaticResources.cs" />
     <Compile Include="UC\DefaultTabView.xaml.cs">
       <DependentUpon>DefaultTabView.xaml</DependentUpon>
@@ -105,14 +105,22 @@
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TabCloseViewModel.cs" />
     <Compile Include="ViewModel\UpdatePasswordViewModel.cs" />
-    <Page Include="ColorSchemes\AnotherExpressionLight.xaml">
+    <Resource Include="Resources\ColorSchemes\AnotherExpressionLight.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ColorSchemes\ExpressionLight.xaml">
+    </Resource>
+    <Resource Include="Resources\ColorSchemes\Dark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </Resource>
+    <Resource Include="Resources\ColorSchemes\ExpressionLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Resources\ColorSchemes\ShinyBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,7 +134,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MainWindowDictionary.xaml">
+    <Page Include="Resources\ResourceDictionaries\MainWindowDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ResourceDictionaries\StaticWindowParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -158,10 +170,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ColorSchemes\WhistlerBlue.xaml">
+    <Resource Include="Resources\ColorSchemes\WhistlerBlue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -191,10 +203,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\DefaultPluginPreview.png" />
+    <Resource Include="Resources\Images\DefaultPluginPreview.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ConfigurationButton.png" />
+    <Resource Include="Resources\Images\ConfigurationButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

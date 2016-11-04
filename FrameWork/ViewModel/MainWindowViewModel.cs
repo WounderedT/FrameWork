@@ -47,7 +47,7 @@ namespace FrameWork.ViewModel
         {
             get
             {
-                if (Tabs == null || Tabs.Count == 0)
+                if (Tabs == null || Tabs.Count == 0 || SelectedTabIndex < 0)
                     return null;
                 return Tabs[SelectedTabIndex];
             }
@@ -62,10 +62,7 @@ namespace FrameWork.ViewModel
             get { return _selectedTabIndex; }
             set
             {
-                if (value < 0)
-                    _selectedTabIndex = 0;
-                else
-                    _selectedTabIndex = value;
+                _selectedTabIndex = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedTab"));
             }
         }
@@ -148,6 +145,7 @@ namespace FrameWork.ViewModel
             //ResourceDictionary rd = new ResourceDictionary();
             //rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
             //Application.Current.Resources.MergedDictionaries.Add(rd);
+            Settings.OnUIColorSchemeUpdate += UIColorSchemeChanged;
             Settings.LoadSettings();
 
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -189,32 +187,19 @@ namespace FrameWork.ViewModel
             SelectedTabIndex = Session.SelectedTabIndex;
         }
 
+        private void UIColorSchemeChanged(object sender, EventArgs args)
+        {
+            if (Tabs == null)
+                return;
+            if (Tabs.Count == 0)
+                return;
+            Session.UpdateTabsHeaderWidth();
+            Session.UpdateUIWidth(this, new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+        }
+
         private void UpdateDragAreaWidth(object sender, EventArgs args)
         {
             WindowDragAreaWidth = (args as UpdateDragAreaWidthEventArgs).Width;
         }
-
-        //private void UpdateUIWidth()
-        //{
-        //    double minSystemAreaWidth = (double)Application.Current.TryFindResource("SystemButtonHeight")
-        //        + (double)Application.Current.TryFindResource("SystemButtonWidth") * 2
-        //        + (double)Application.Current.TryFindResource("WindowDragAreaMinWidth");
-        //    double tabAreaWidth = (double)Application.Current.TryFindResource("MainWindowWidth") - minSystemAreaWidth;
-
-        //    double width = 0;
-        //    foreach(ClosableTab entry in Tabs)
-        //    {
-        //        width += entry.ActualWidth;
-        //    }
-        //    if(width > tabAreaWidth)
-        //    {
-                
-        //        width = tabAreaWidth / (Tabs.Count - 1);
-        //        foreach(ClosableTab entry in Tabs)
-        //        {
-        //            entry.HeaderWidth = width - (double)Application.Current.TryFindResource("TabCloseButtonWidth") - entry.GetPaddingWidth();
-        //        }
-        //    }
-        //}
     }
 }

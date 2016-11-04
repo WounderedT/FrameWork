@@ -81,7 +81,7 @@ namespace FrameWork
             {
                 authTab.Content = new NewPasswordView();
             }
-            authTab.Padding = new Thickness(2);
+            authTab.Padding = StaticResources.TabHeaderPadding;
             Tabs.Add(authTab);
             SelectedTabIndex = 0;
         }

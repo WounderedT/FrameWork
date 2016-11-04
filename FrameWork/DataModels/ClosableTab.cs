@@ -20,7 +20,6 @@ namespace FrameWork.DataModels
         public delegate void PluginTabCloseEventHandler(object caller, PluginTabCloseEventArgs args);
 
         private double _defaultTitleWidth;
-        private double _newTitleWidth;
 
         public bool CleanProgressBar
         {
@@ -60,15 +59,21 @@ namespace FrameWork.DataModels
             set
             {
                 closeView.ClosableTabLabelWidth = value;
-                if (value != NewHeaderWidth)
-                    NewHeaderWidth = value;
+                //if (value != NewHeaderWidth)
+                //    NewHeaderWidth = value;
             }
         }
 
-        public double NewHeaderWidth
+        //public double NewHeaderWidth
+        //{
+        //    get { return _newTitleWidth; }
+        //    set { _newTitleWidth = value; }
+        //}
+
+        public double CloseTabButtonWidth
         {
-            get { return _newTitleWidth; }
-            set { _newTitleWidth = value; }
+            get { return closeView.TabCloseButtonWidth; }
+            set { closeView.TabCloseButtonWidth = value; }
         }
 
         public bool CanClose { get; set; }
@@ -100,7 +105,7 @@ namespace FrameWork.DataModels
         public void CreateProgressBar(object sender, EventArgs args)
         {
             SolidColorBrush solid = new SolidColorBrush();
-            solid.Color = Colors.WhiteSmoke;
+            solid.Color = GetColor();
             HeaderBackground = solid;
         }
 
@@ -114,7 +119,7 @@ namespace FrameWork.DataModels
                 myLinearGradientBrush.EndPoint = new Point(1, 0.5);
                 Color color = GetColor(progressArgs.Status);
                 myLinearGradientBrush.GradientStops.Add(new GradientStop(color, 0.0));
-                myLinearGradientBrush.GradientStops.Add(new GradientStop(Colors.WhiteSmoke, progressArgs.Value));
+                myLinearGradientBrush.GradientStops.Add(new GradientStop(GetColor(), progressArgs.Value));
                 HeaderBackground = myLinearGradientBrush;
             }
             else
@@ -146,7 +151,7 @@ namespace FrameWork.DataModels
         public void ClearProgressBar()
         {
             SolidColorBrush empty = new SolidColorBrush();
-            empty.Color = Colors.Transparent;
+            empty.Color = GetColor();
             HeaderBackground = empty;
         }
 
@@ -166,7 +171,7 @@ namespace FrameWork.DataModels
             return Padding.Left + Padding.Right;
         }
 
-        private Color GetColor(string status)
+        private Color GetColor(string status = "")
         {
             switch (status)
             {
@@ -175,7 +180,7 @@ namespace FrameWork.DataModels
                 case "Error":
                     return Colors.Red;
                 default:
-                    return Colors.WhiteSmoke;
+                    return Colors.Transparent;
             }
         }
 
@@ -235,12 +240,37 @@ namespace FrameWork.DataModels
             PluginTabClose?.Invoke(this, args);
         }
 
-        protected override void OnRender(DrawingContext dc)
-        {
-            base.OnRender(dc);
-            if (NewHeaderWidth > 0 && NewHeaderWidth != HeaderWidth)
-                HeaderWidth = NewHeaderWidth;
-        }
+        //protected override void OnRender(DrawingContext dc)
+        //{
+        //    //base.OnRender(dc);
+        //    //if (NewHeaderWidth > 0 && NewHeaderWidth != HeaderWidth)
+        //    //    HeaderWidth = NewHeaderWidth;
+        //    /*This check is required to update UI in case of dynamic header size which could be loaded from color scheme.
+        //     * If different color scheme is loaded and header size is changed UI must be updated to reflect these changes.
+        //     * All these updates must be as lightweight as possibe and only to be invoken if header with greater width is loaded.
+        //     */
+        //    if (ActualWidth > StaticResources.TabHeaderDefaultWidth + Math.Abs(Margin.Left) + Math.Abs(Margin.Right) || Settings.IsColorSchemeUpdated)
+        //    //if (ActualWidth != StaticResources.TabHeaderDefaultWidth)
+        //    {
+        //        //if (ActualWidth == StaticResources.TabHeaderDefaultWidth + Math.Abs(Margin.Left) + Math.Abs(Margin.Right))
+        //        //    return;
+        //        //StaticResources.TabCloseButtonWidth = ActualWidth - StaticResources.TabTitleDefaultWidth
+        //        //    - StaticResources.TabHeaderTotalPadding + Margin.Left + Margin.Right;
+
+        //        //StaticResources.TabCloseButtonWidth = 50;
+        //        //StaticResources.RecalculateParameters();
+
+        //        //Session.OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(
+        //        //    StaticResources.MainWindowWidth - StaticResources.TabHeaderDefaultWidth * Session.Tabs.Count - StaticResources.SystemButtonAreaWidth));
+
+        //        //closeView = new TabCloseViewModel() { LabelContent = "TEST" };
+        //        ////closeView.TabCloseButtonWidth = StaticResources.TabCloseButtonWidth;
+        //        //Header = closeView;
+        //        //Session.UpdateTabsHeaderWidth();
+
+        //        Session.UpdateUIWidth(null, new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+        //    }
+        //}
     }
 
     public class PluginTabCloseEventArgs : EventArgs
