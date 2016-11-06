@@ -14,11 +14,11 @@
 
     <!-- Main Colors -->
 
-    <Color x:Key="MainColor">#FF595959</Color>
-    <Color x:Key="HoverColor">#FF393939</Color>
-    <Color x:Key="DefaultColor">#FF9BB1C5</Color>
-    <SolidColorBrush x:Key="LightBrush" Color="#FF323232" />
-    <SolidColorBrush x:Key="ShadeBrush" Color="#FF4F4F4F" />
+    <Color x:Key="MainColor">#FFE1E4F1</Color>
+    <Color x:Key="HoverColor">#FFC4CFFF</Color>
+    <Color x:Key="DefaultColor">#FFD6DBF1</Color>
+    <SolidColorBrush x:Key="LightBrush" Color="#FFB1BEF7" />
+    <SolidColorBrush x:Key="ShadeBrush" Color="#FFB7BFE2" />
 
     <Color x:Key="TopGradientSelectColor">#FF959191</Color>
     <Color x:Key="BottomGradientSelectColor">#FF807D7D</Color>

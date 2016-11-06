@@ -6,7 +6,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:FrameWork"
         mc:Ignorable="d"
-        Title="FrameWork" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize" >
+        Title="FrameWork" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize" 
+        xmlns:dataModel="clr-namespace:FrameWork.DataModels">
 
     <i:Interaction.Behaviors>
             <local:EventToCommandBehavior Command="{Binding CloseMainWindowCommand}" Event="Closing" PassArguments="True"/>
@@ -14,6 +15,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/ResourceDictionaries/Styles.xaml"/>
                 <ResourceDictionary Source="Resources/ResourceDictionaries/MainWindowDictionary.xaml"/>
                 <ResourceDictionary Source="Resources/ResourceDictionaries/StaticWindowParameters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -26,6 +28,9 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Height="{StaticResource MainWindowHeight}" Width="{StaticResource MainWindowWidth}"
                     ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" Padding="0">
+            <TabControl.Resources>
+                <Style TargetType="dataModel:ClosableTab" BasedOn="{StaticResource {x:Type TabItem}}" />
+            </TabControl.Resources>
             <!--<TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Header}" />
@@ -36,6 +41,7 @@
                     
                 </DataTemplate>
             </TabControl.ContentTemplate>-->
+            
         </TabControl>
         <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
@@ -77,3 +83,5 @@
         </Grid>
     </Grid>
 </Window>
+    
+ 

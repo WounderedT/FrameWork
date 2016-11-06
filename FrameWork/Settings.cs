@@ -16,7 +16,7 @@ namespace FrameWork
         private static Parameters paramters = null;
         private static string _oldColorScheme = string.Empty;
         private static Dictionary<string, string> _colorSchemeDict = new Dictionary<string, string>() {
-            { "Light", _resourcesFolder + "WhistlerBlue.xaml" },
+            { "Light", _resourcesFolder + "Light.xaml" },
             { "ShinyBlue", _resourcesFolder + "ShinyBlue.xaml" },
             { "Dark", _resourcesFolder + "Dark.xaml" }
         };
@@ -55,6 +55,11 @@ namespace FrameWork
             paramters = new Parameters();
             if (IOProxy.Exists(".config"))
                 paramters.Deserialize(IOProxy.GetMemoryStreamFromFile(".config"));
+
+            //ResourceDictionary rd = new ResourceDictionary();
+            //rd.Source = new Uri("Resources/ResourceDictionaries/Styles.xaml", UriKind.Relative);
+            //Application.Current.Resources.MergedDictionaries.Add(rd);
+
             if (string.IsNullOrEmpty(CurrentColorScheme))
                 CurrentColorScheme = _colorSchemeDict.First().Key;
             else
