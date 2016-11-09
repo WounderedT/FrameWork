@@ -17,7 +17,6 @@ namespace FrameWork
         private static string _oldColorScheme = string.Empty;
         private static Dictionary<string, string> _colorSchemeDict = new Dictionary<string, string>() {
             { "Light", _resourcesFolder + "Light.xaml" },
-            { "ShinyBlue", _resourcesFolder + "ShinyBlue.xaml" },
             { "Dark", _resourcesFolder + "Dark.xaml" }
         };
 
@@ -76,8 +75,8 @@ namespace FrameWork
                     );
             Application.Current.Resources.MergedDictionaries.Add(rd);
 
-            StaticResources.UpdateCloseTabButtonWidth(rd);
-            OnUIColorSchemeUpdate?.Invoke(null, new EventArgs());
+            //StaticResources.UpdateCloseTabButtonWidth(rd);
+            //OnUIColorSchemeUpdate?.Invoke(null, new EventArgs());
         }
 
         public static async void SaveSettings()

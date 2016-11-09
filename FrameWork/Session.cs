@@ -109,7 +109,7 @@ namespace FrameWork
                 OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
                 return;
             }
-            if (width < StaticResources.TabAreaWidth)
+            if (width < StaticResources.TabAreaWidth && !e.Action.Equals("Add"))
             {
                 width = StaticResources.TabAreaWidth / Tabs.Count;
                 if (width > StaticResources.TabHeaderDefaultWidth)

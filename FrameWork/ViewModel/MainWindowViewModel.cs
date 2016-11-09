@@ -145,7 +145,7 @@ namespace FrameWork.ViewModel
             //ResourceDictionary rd = new ResourceDictionary();
             //rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
             //Application.Current.Resources.MergedDictionaries.Add(rd);
-            Settings.OnUIColorSchemeUpdate += UIColorSchemeChanged;
+            //Settings.OnUIColorSchemeUpdate += UIColorSchemeChanged;
             Settings.LoadSettings();
 
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -187,15 +187,15 @@ namespace FrameWork.ViewModel
             SelectedTabIndex = Session.SelectedTabIndex;
         }
 
-        private void UIColorSchemeChanged(object sender, EventArgs args)
-        {
-            if (Tabs == null)
-                return;
-            if (Tabs.Count == 0)
-                return;
-            Session.UpdateTabsHeaderWidth();
-            Session.UpdateUIWidth(this, new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-        }
+        //private void UIColorSchemeChanged(object sender, EventArgs args)
+        //{
+        //    if (Tabs == null)
+        //        return;
+        //    if (Tabs.Count == 0)
+        //        return;
+        //    Session.UpdateTabsHeaderWidth();
+        //    Session.UpdateUIWidth(this, new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
+        //}
 
         private void UpdateDragAreaWidth(object sender, EventArgs args)
         {
