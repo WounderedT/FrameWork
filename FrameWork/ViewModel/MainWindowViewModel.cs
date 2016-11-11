@@ -20,6 +20,9 @@ namespace FrameWork.ViewModel
     */
     class MainWindowViewModel: INotifyPropertyChanged
     {
+        public System.Threading.Mutex mutex = new System.Threading.Mutex(false, appGuid);
+        private static string appGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+
         public event PropertyChangedEventHandler PropertyChanged;
         public RelayCommand<DragEventArgs> CloseCommand { get; private set; }
 
