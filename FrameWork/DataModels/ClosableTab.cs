@@ -2,6 +2,7 @@
 using Interface;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -222,6 +223,34 @@ namespace FrameWork.DataModels
             if (!IsSelected && CanClose)
             {
                 closeView.ButtonCloseVisibility = Visibility.Hidden;
+            }
+        }
+
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            var tab = e.Source as ClosableTab;
+            if (tab == null)
+                return;
+
+            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
+                DragDrop.DoDragDrop(tab, tab, DragDropEffects.All);
+        }
+
+        protected override void OnDrop(DragEventArgs e)
+        {
+            var tabTarget = e.Source as ClosableTab;
+            var tabSource = e.Data.GetData(typeof(ClosableTab)) as ClosableTab;
+
+            if (!tabSource.Equals(tabTarget))
+            {
+                /* Tab management is ought to be handled by Parent property of e.Source. Currently there is a bug(?) and this property
+                 * is null for all objects in Session.Tabs(as well as MainWindowViewModel.Tabs). Untill this is changed tab rearrangement
+                 * must be handler either by direct use of Session.Tabs or by implemenring OnDragEvent in Session.
+                 */
+                int targetIndex = Session.Tabs.IndexOf(tabTarget);
+                int sourceIndex = Session.Tabs.IndexOf(tabSource);
+
+                Session.Tabs.Move(sourceIndex, targetIndex);
             }
         }
 

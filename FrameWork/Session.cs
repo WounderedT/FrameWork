@@ -109,15 +109,16 @@ namespace FrameWork
                 OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(StaticResources.WindowDragAreaMinWidth));
                 return;
             }
-            if (width < StaticResources.TabAreaWidth && !e.Action.Equals("Add"))
+            if (width < StaticResources.TabAreaWidth)
             {
                 width = StaticResources.TabAreaWidth / Tabs.Count;
                 if (width > StaticResources.TabHeaderDefaultWidth)
                     width = StaticResources.TabHeaderDefaultWidth;
                 OnUpdateDragAreaWidth(new UpdateDragAreaWidthEventArgs(StaticResources.DynamicWindowAreaWidth - width * Tabs.Count));
                 //width -= StaticResources.TabHeaderTotalPadding;
-                foreach (ClosableTab entry in Tabs)
-                    entry.HeaderWidth = width;
+                if(!e.Action.Equals(NotifyCollectionChangedAction.Add))
+                    foreach (ClosableTab entry in Tabs)
+                        entry.HeaderWidth = width;
                 return;
             }
         }

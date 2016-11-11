@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +29,7 @@ namespace FrameWork
     {
         MainWindowViewModel viewModel = new MainWindowViewModel();
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +46,11 @@ namespace FrameWork
 
         protected override void OnSourceInitialized(EventArgs e)
         {
+            if (!viewModel.mutex.WaitOne(0, false))
+            {
+                MessageBox.Show("Instance already running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
             base.OnSourceInitialized(e);
             var hwnd = new WindowInteropHelper(this).Handle;
             /*Remove window menu from main window's title bar*/
