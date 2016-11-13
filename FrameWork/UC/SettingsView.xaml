@@ -7,8 +7,18 @@
              xmlns:viewModel="clr-namespace:FrameWork.ViewModel"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0">
-    <Grid>
+             HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ResourceDictionaries/StaticWindowParameters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid 
+        Height="{StaticResource SettingsAreaHeight}" Width="auto" MinWidth="{StaticResource SettingsAreaMinWidth}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -26,18 +36,10 @@
             <Grid 
                 Grid.Row="2" 
                 HorizontalAlignment="Left" VerticalAlignment="Center" Height="auto" Width="auto">
-                <ItemsControl ItemsSource="{Binding UpdatePasswordObject}" >
-                    <!--<ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModel:UpdatePasswordViewModel}">
-                            <local:UpdatePasswordView/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>-->
-                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding UpdatePasswordObject}" />
             </Grid>
             <Grid
-                Grid.Row="3" Grid.Column="0"
-                Height="100" Width="500"
-                >
+                Grid.Row="3" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="10"/>
@@ -68,7 +70,7 @@
             </Grid>
         </Grid>
         <Grid 
-            HorizontalAlignment="Right" Margin="0,470,0,0" >
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="30"/>

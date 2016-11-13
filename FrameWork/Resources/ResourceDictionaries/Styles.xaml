@@ -13,16 +13,11 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:dataModel="clr-namespace:FrameWork.DataModels">
     
-
-    <!-- Main Colors -->
-
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="StaticWindowParameters.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
     <FontFamily x:Key="FrameWorkCommonFont">Copperplate Gothic Light</FontFamily>
-
-    <!--<Style TargetType="dataModel:ClosableTab" BasedOn="{StaticResource {x:Type TabItem}}" />-->
 
     <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">
@@ -41,25 +36,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Grid>
-                        <!--<Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>-->
-                        <!--<Border Background="{DynamicResource SelectedBackgroundBrush}"
-                        Margin="0,0,0,0">-->
-                        <ContentPresenter
-                                 Content="{TemplateBinding Content}" />
-                        <!--</Border>-->
-                        <!--<TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" 
-                           VerticalAlignment="Top" HorizontalAlignment="Left" 
-                           Margin="36,8,0,0"/>
-                        <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Icon}"
-                       VerticalAlignment="Top" HorizontalAlignment="Left"
-                       Margin="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=WindowChrome.WindowChrome.ResizeBorderThickness}" 
-                       Width="{Binding Source={x:Static SystemParameters.SmallIconWidth}}"
-                       WindowChrome.IsHitTestVisibleInChrome="True"/>-->
+                        <ContentPresenter Content="{TemplateBinding Content}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -823,16 +800,7 @@
     <Style TargetType="{x:Type ListBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderBrush}">
-            <!--<Setter.Value>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFA3AEB9" Offset="0" />
-                    <GradientStop Color="#FF8399A9" Offset="0.375" />
-                    <GradientStop Color="#FF718597" Offset="0.375" />
-                    <GradientStop Color="#FF617584" Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>-->
-        </Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderBrush}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
@@ -2165,23 +2133,9 @@
                                 <TranslateTransform X="0" Y="0"/>
                             </TransformGroup>
                         </Grid.LayoutTransform>
-                        <Border x:Name="border" BorderBrush="{x:Null}" Opacity="0.5" Background="{DynamicResource DisabledBackgroundBrushGradient}">
-                            <!--<Border.Background>
-                                <LinearGradientBrush EndPoint="0.5,0.976" StartPoint="0.5,0.039">
-                                    <GradientStop Color="#7F595959" Offset="0" />
-                                    <GradientStop Color="#19FFFFFF" Offset="1" />
-                                </LinearGradientBrush>
-                            </Border.Background>-->
-                        </Border>
+                        <Border x:Name="border" BorderBrush="{x:Null}" Opacity="0.5" Background="{DynamicResource DisabledBackgroundBrushGradient}"/>
                         <Border x:Name="SelectedBorder" BorderBrush="{x:Null}" Opacity="0" Background="{DynamicResource TabItemSelectedTabHeaderBackground}"/>
-                        <Border x:Name="HoverBorder" BorderBrush="{x:Null}" Opacity="0" Background="{DynamicResource HowerBrushGradient}">
-                            <!--<Border.Background>
-                                <LinearGradientBrush EndPoint="0.5,0.976" StartPoint="0.5,0.039">
-                                    <GradientStop Color="#7F595959" Offset="0" />
-                                    <GradientStop Color="#19FFFFFF" Offset="1" />
-                                </LinearGradientBrush>
-                            </Border.Background>-->
-                        </Border>
+                        <Border x:Name="HoverBorder" BorderBrush="{x:Null}" Opacity="0" Background="{DynamicResource HowerBrushGradient}"/>
                         <Grid>
                             <ContentPresenter x:Name="ContentSite" RecognizesAccessKey="True" ContentSource="Header"
                                               d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" VerticalAlignment="Center" />

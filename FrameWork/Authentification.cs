@@ -3,41 +3,25 @@ using FrameWork.UC;
 using FrameWork.ViewModel;
 using Interface;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Security;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace FrameWork
 {
     static class Authentification
     {
-        /*This collection will only hold one item - authentification tab. But it must be a collection in order to 
-         * use the same syntax as Session.
-         */
-        public static ObservableCollection<ClosableTab> Tabs { get; set; }
-        public static int SelectedTabIndex { get; set; }
+        private const int _appPasswordLenght = 25;
+
+        private static PasswordObject _appPassword;
+        private static ICrypto cryptography;
+        private static string CryptoLibPath;
 
         public static event AuthentificationCompleteEventHandler AuthentificationComplete;
         public delegate void AuthentificationCompleteEventHandler(AuthentificationEventArgs args);
 
-        private static PasswordObject _appPassword;
-
-        private static ICrypto cryptography;
-        private static string CryptoLibPath;// = @"F:\SkyDrive\Study\C# Projects\FrameWork\Crypto\bin\Debug\Crypto.dll";
-        //private static string CryptoLibPath = @"H:\\OneDrive\Study\C# Projects\FrameWork\Crypto\bin\Debug\Crypto.dll";
-
-
-        private const int _appPasswordLenght = 25;
 
         public static PasswordObject AppPassword
         {
@@ -51,7 +35,7 @@ namespace FrameWork
 
         static Authentification()
         {
-            CryptoLibPath = Path.Combine(IOProxy.GetCurrentProjectFolder(), @"Crypto\bin\Debug\Crypto.dll");
+            CryptoLibPath = Path.Combine(Directory.GetCurrentDirectory(), "Crypto.dll");
             var DLL = Assembly.LoadFile(CryptoLibPath);
             foreach (Type type in DLL.GetExportedTypes())
             {
@@ -63,15 +47,12 @@ namespace FrameWork
                 catch (InvalidCastException) { }
             }
             if (cryptography == null)
-            {
                 throw new NullReferenceException("Failed to initialize cryptography object from " + CryptoLibPath + "!");
-            }
         }
 
 
         public static void GetAuthentificationTab()
         {
-            Tabs = new ObservableCollection<ClosableTab>();
             ClosableTab authTab = new ClosableTab(false) { Title = "Authentification" };
             if(IOProxy.Exists(".key"))
             {
@@ -81,9 +62,7 @@ namespace FrameWork
             {
                 authTab.Content = new NewPasswordView();
             }
-            authTab.Padding = StaticResources.TabHeaderPadding;
-            Tabs.Add(authTab);
-            SelectedTabIndex = 0;
+            MainWindowViewModel.tabs.Add(authTab);
         }
      
         public static void NewMasterPassword(SecureString password, bool shortCheck = false)
@@ -107,14 +86,10 @@ namespace FrameWork
             created.GetPasswordFromFile(".key");
             int iterations = cryptography.GenerateIterationsFromSalt(created.Salt);
             if(iterations == 0)
-            {
                 throw new SecurityException("Password hash was tampered with!");
-            }
             byte[] newHash = cryptography.GenerateMasterPasswordHash(password, created.Salt, iterations);
             if (!ConstantTimeComparison(newHash, created.Hash))
-            {
                 return false;
-            }
             else
             {
                 if (shortCheck)

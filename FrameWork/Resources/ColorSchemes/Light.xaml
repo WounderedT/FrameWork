@@ -24,7 +24,10 @@
     <Color x:Key="LightBrushColor">#FFF1EFEF</Color>
     
     <Color x:Key="MainColor">#FFEAE4E4</Color>
-    
+
+    <Color x:Key="PasswordErrorFrameColor">#FFF71717</Color>
+    <Color x:Key="PasswordErrorMessageColor">#FFF71717</Color>
+
     <Color x:Key="TopGradientSelectColor">#FFD8D8D8</Color>
     
     <Color x:Key="WhiteColor">#FFFFFFFF</Color>
@@ -68,6 +71,8 @@
     <SolidColorBrush x:Key="NuclearButtonFocusVisualStrokeBrush" Color="#60000000" />
     
     <SolidColorBrush x:Key="PasswordBoxBorderBrush" Color="#FF000000" />
+    <SolidColorBrush x:Key="PasswordErrorFrameBrush" Color="{StaticResource PasswordErrorFrameColor}" />
+    <SolidColorBrush x:Key="PasswordErrorMessageBrush" Color="{StaticResource PasswordErrorMessageColor}" />
     <SolidColorBrush x:Key="ProgressBarStrokeBrush" Color="#FF7D7F81"/>
     
     <SolidColorBrush x:Key="RadioButtonFocusVisualStrokeBrush" Color="#60000000" />

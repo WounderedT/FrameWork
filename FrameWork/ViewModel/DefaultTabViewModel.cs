@@ -1,27 +1,12 @@
 ﻿using FrameWork.DataModels;
-using Interface;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace FrameWork.ViewModel
 {
     public class DefaultTabViewModel
     {
-        public event EventHandler GetSettingsTabRequest;
-
         public Dictionary<string, PluginEntry> Plugins { get; set; }
         public ObservableCollection<PluginButtonViewModel> PluginButtons { get; set; }
 

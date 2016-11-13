@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -13,14 +7,14 @@ namespace FrameWork.ViewModel
 {
     public class TabCloseViewModel: INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private object _labelContent;
         private Brush _labelBackground;
         private Visibility _buttonCloseVisibility;
         private RelayCommand _closeButtonClick;
         private double _closableTabLabelWidth = StaticResources.TabTitleDefaultWidth;
         private double _tabCloseButtonWidth = StaticResources.TabCloseButtonWidth;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public object LabelContent
         {

@@ -181,8 +181,6 @@ namespace AnotherTestPlugin
         public async void ButtonClickHandler()
         {
             MessageBlock = "You just pressed the button!";
-            //FileActionRequestEventArgs args = new FileActionRequestEventArgs("someFile", new byte[6] { 0, 1, 2, 3 ,4, 5} );
-            //OnWriteToFileRequest(args);
             FileActionRequestEventArgs args = new FileActionRequestEventArgs("someFile");
             await OnReadFromFileRequest(args);
         }
@@ -190,9 +188,7 @@ namespace AnotherTestPlugin
         public async Task LongRunningAction()
         {
             if (CancellationToken.Token.IsCancellationRequested == true)
-            {
                 CancellationToken.Token.ThrowIfCancellationRequested();
-            }
             _isBusy = true;
             OnProgressReportStart(new EventArgs());
             SynchronizationContext context = SynchronizationContext.Current;
@@ -200,22 +196,22 @@ namespace AnotherTestPlugin
             {
                 await Task.Run(async () =>
                 {
-                    await Task.Delay(3000, CancellationToken.Token);
+                    await Task.Delay(3000, CancellationToken.Token).ConfigureAwait(false);
                     context.Post(new SendOrPostCallback((o) =>
                     {
                         OnProgressReportUpdate(new ProgressReportUpdateEventArgs(0.25));
                     }), null);
-                    await Task.Delay(3000, CancellationToken.Token);
+                    await Task.Delay(3000, CancellationToken.Token).ConfigureAwait(false);
                     context.Post(new SendOrPostCallback((o) =>
                     {
                         OnProgressReportUpdate(new ProgressReportUpdateEventArgs(0.5));
                     }), null);
-                    await Task.Delay(3000, CancellationToken.Token);
+                    await Task.Delay(3000, CancellationToken.Token).ConfigureAwait(false);
                     context.Post(new SendOrPostCallback((o) =>
                     {
                         OnProgressReportUpdate(new ProgressReportUpdateEventArgs(0.75));
                     }), null);
-                    await Task.Delay(3000, CancellationToken.Token);
+                    await Task.Delay(3000, CancellationToken.Token).ConfigureAwait(false);
                     context.Post(new SendOrPostCallback((o) =>
                     {
                         OnProgressReportUpdate(new ProgressReportUpdateEventArgs(1.0));

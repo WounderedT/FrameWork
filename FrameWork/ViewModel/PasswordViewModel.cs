@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace FrameWork.ViewModel
 {
     public class PasswordViewModel: INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private const int _passwordLength = 1;
+        private const string _passwordTips = "Enter your password here. You may use any password of your choice(yep, even '1' will do the tick).";
+
         private string _errorMessage = string.Empty;
 
-        private string _passwordTips = "Enter your password here. You may use any password of your choice(yep, even '1' will do the tick).";
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string PasswordTips
         {

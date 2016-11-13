@@ -3,6 +3,7 @@ using Interface;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,28 +21,28 @@ namespace FrameWork.ViewModel
     */
     class MainWindowViewModel: INotifyPropertyChanged
     {
-        public System.Threading.Mutex mutex = new System.Threading.Mutex(false, appGuid);
         private static string appGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public RelayCommand<DragEventArgs> CloseCommand { get; private set; }
-
-        private ObservableCollection<ClosableTab> _tabs;
-        private int _selectedTabIndex = 0;
-
         private Visibility _newTabButtonVisibility;
+
+        private int _selectedTabIndex = 0;
         private double _windowDragAreaWidth;
 
         private RelayCommandAsync _newTabCommand;
         private RelayCommand _minimizeMainWindowCommand;
         private RelayCommand _closeMainWindowCommand;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        public RelayCommand<DragEventArgs> CloseCommand { get; private set; }
+        public System.Threading.Mutex mutex = new System.Threading.Mutex(false, appGuid);
+        public static ObservableCollection<ClosableTab> tabs = new ObservableCollection<ClosableTab>();
+
         public ObservableCollection<ClosableTab> Tabs
         {
-            get { return _tabs; }
+            get { return tabs; }
             set
             {
-                _tabs = value;
+                tabs = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Tabs"));
             }
         }
@@ -139,24 +140,19 @@ namespace FrameWork.ViewModel
 
         public void MinimizeMainWindow()
         {
-            Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive).WindowState = WindowState.Minimized;
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
         }
 
         public MainWindowViewModel()
         {
             StaticResources.InitializeResources();
-            //ResourceDictionary rd = new ResourceDictionary();
-            //rd.Source = new Uri(@"ExpressionLight.xaml", UriKind.Relative);
-            //Application.Current.Resources.MergedDictionaries.Add(rd);
-            //Settings.OnUIColorSchemeUpdate += UIColorSchemeChanged;
             Settings.LoadSettings();
 
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             NewTabButtonVisibility = Visibility.Collapsed;
-            
+
             Authentification.GetAuthentificationTab();
-            Tabs = Authentification.Tabs;
-            SelectedTabIndex = Authentification.SelectedTabIndex;
+            SelectedTabIndex = 0;
             Authentification.AuthentificationComplete += LoadFrameWorkTabs;
             WindowDragAreaWidth = StaticResources.MainWindowWidth - StaticResources.TabTitleDefaultWidth - StaticResources.SystemButtonWidth * 2;
         }
@@ -165,12 +161,11 @@ namespace FrameWork.ViewModel
         {
             if (!args.Result)
                 CloseMainWindow();
-            Tabs = new ObservableCollection<ClosableTab>();
+            tabs.RemoveAt(0);
+            tabs.CollectionChanged += UpdateUIWidth;
             Session.UpdateSelectedTab += UpdateSelectedTab;
-            Session.UpdateDragAreaWidth += UpdateDragAreaWidth;
 
-            Tabs = await Session.GetSession();
-            SelectedTabIndex = Session.SelectedTabIndex;
+            await Session.GetSession();
             NewTabButtonVisibility = Visibility.Visible;
         }
 
@@ -185,24 +180,40 @@ namespace FrameWork.ViewModel
                 Application.Current.Shutdown();
         }
 
-        private void UpdateSelectedTab(EventArgs args)
+        private void UpdateSelectedTab(object sender, EventArgs args)
         {
-            SelectedTabIndex = Session.SelectedTabIndex;
+            SelectedTabIndex = ((UpdateSelectedTabEventArgs)args).SelectedTab;
         }
 
-        //private void UIColorSchemeChanged(object sender, EventArgs args)
-        //{
-        //    if (Tabs == null)
-        //        return;
-        //    if (Tabs.Count == 0)
-        //        return;
-        //    Session.UpdateTabsHeaderWidth();
-        //    Session.UpdateUIWidth(this, new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
-        //}
-
-        private void UpdateDragAreaWidth(object sender, EventArgs args)
+        private void UpdateUIWidth(object sender, NotifyCollectionChangedEventArgs e)
         {
-            WindowDragAreaWidth = (args as UpdateDragAreaWidthEventArgs).Width;
+            double width = 0;
+            foreach (ClosableTab entry in tabs)
+            {
+                if (entry.ActualWidth == 0)
+                    width += StaticResources.TabTitleDefaultWidth;
+                else
+                    width += entry.ActualWidth;
+            }
+            if (width > StaticResources.TabAreaWidth)
+            {
+                width = StaticResources.TabAreaWidth / tabs.Count;
+                foreach (ClosableTab entry in tabs)
+                    entry.HeaderWidth = width;
+                WindowDragAreaWidth = StaticResources.WindowDragAreaMinWidth;
+                return;
+            }
+            if (width < StaticResources.TabAreaWidth)
+            {
+                width = StaticResources.TabAreaWidth / tabs.Count;
+                if (width > StaticResources.TabTitleDefaultWidth)
+                    width = StaticResources.TabTitleDefaultWidth;
+                WindowDragAreaWidth = StaticResources.DynamicWindowAreaWidth - width * tabs.Count;
+                if (!e.Action.Equals(NotifyCollectionChangedAction.Add))
+                    foreach (ClosableTab entry in tabs)
+                        entry.HeaderWidth = width;
+                return;
+            }
         }
     }
 }

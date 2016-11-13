@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FrameWork
@@ -12,17 +10,14 @@ namespace FrameWork
     public static class Settings
     {
         private const string _resourcesFolder = "Resources/ColorSchemes/";
-
-        private static Parameters paramters = null;
-        private static string _oldColorScheme = string.Empty;
         private static Dictionary<string, string> _colorSchemeDict = new Dictionary<string, string>() {
             { "Light", _resourcesFolder + "Light.xaml" },
             { "Dark", _resourcesFolder + "Dark.xaml" }
         };
 
-        public static event EventHandler OnUIColorSchemeUpdate;
+        private static Parameters paramters = null;
+        private static string _oldColorScheme = string.Empty;
 
-            //AnotherExpressionLight
         public static bool EncryptFiles
         {
             get { return paramters.EncryptFiles; }
@@ -55,10 +50,6 @@ namespace FrameWork
             if (IOProxy.Exists(".config"))
                 paramters.Deserialize(IOProxy.GetMemoryStreamFromFile(".config"));
 
-            //ResourceDictionary rd = new ResourceDictionary();
-            //rd.Source = new Uri("Resources/ResourceDictionaries/Styles.xaml", UriKind.Relative);
-            //Application.Current.Resources.MergedDictionaries.Add(rd);
-
             if (string.IsNullOrEmpty(CurrentColorScheme))
                 CurrentColorScheme = _colorSchemeDict.First().Key;
             else
@@ -74,9 +65,6 @@ namespace FrameWork
                     Application.Current.Resources.MergedDictionaries.Where(w => w.Source.OriginalString.Equals(_colorSchemeDict[_oldColorScheme])).First()
                     );
             Application.Current.Resources.MergedDictionaries.Add(rd);
-
-            //StaticResources.UpdateCloseTabButtonWidth(rd);
-            //OnUIColorSchemeUpdate?.Invoke(null, new EventArgs());
         }
 
         public static async void SaveSettings()

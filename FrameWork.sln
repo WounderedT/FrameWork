@@ -4,12 +4,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameWork", "FrameWork\FrameWork.csproj", "{186E8352-1E23-4700-9D36-848B80209F6B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F29E272D-FF6F-4506-897B-6EF4C5DFC106} = {F29E272D-FF6F-4506-897B-6EF4C5DFC106}
+		{3803485B-E9C3-48FC-B081-9408AA2EA858} = {3803485B-E9C3-48FC-B081-9408AA2EA858}
+		{85EAE99C-1ED3-4A6D-878A-633F3AE30523} = {85EAE99C-1ED3-4A6D-878A-633F3AE30523}
+		{10FDD8D5-489C-4BA4-8029-016772F68D0F} = {10FDD8D5-489C-4BA4-8029-016772F68D0F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface", "Interface\Interface.csproj", "{10FDD8D5-489C-4BA4-8029-016772F68D0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto", "Crypto\Crypto.csproj", "{85EAE99C-1ED3-4A6D-878A-633F3AE30523}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10FDD8D5-489C-4BA4-8029-016772F68D0F} = {10FDD8D5-489C-4BA4-8029-016772F68D0F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{F29E272D-FF6F-4506-897B-6EF4C5DFC106}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10FDD8D5-489C-4BA4-8029-016772F68D0F} = {10FDD8D5-489C-4BA4-8029-016772F68D0F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnotherTestPlugin", "AnotherTestPlugin\AnotherTestPlugin.csproj", "{3803485B-E9C3-48FC-B081-9408AA2EA858}"
 EndProject

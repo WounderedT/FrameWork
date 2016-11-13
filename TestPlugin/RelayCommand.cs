@@ -18,10 +18,7 @@ namespace TestPlugin
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if(execute == null)
-            {
                 throw new ArgumentNullException("Execute action cannot be null!");
-            }
-
             _execute = execute;
             _canExecute = canExecute;
         }

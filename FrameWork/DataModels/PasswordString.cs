@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 namespace FrameWork.DataModels
 {
-    public class PasswordString: Object
+    public class PasswordString: object
     {
         private SecureString _password;
 
@@ -135,6 +131,11 @@ namespace FrameWork.DataModels
                 }, null
             );
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -3,25 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace FrameWork.ViewModel
 {
     public class SettingsViewModel: INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private bool _encryptFiles;
         private bool _changePasswordButtonEnable;
         private List<string> _colorSchemes;
         private RelayCommand _changePassword;
         private RelayCommand _saveSettings;
         private RelayCommand _cancel;
-
         private ObservableCollection<UpdatePasswordView> _updatePasswordObject;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ObservableCollection<UpdatePasswordView> UpdatePasswordObject
         {
             get { return _updatePasswordObject; }
@@ -130,7 +127,7 @@ namespace FrameWork.ViewModel
 
         private void SaveSettings()
         {
-            if (UpdatePasswordObject != null)
+            if (UpdatePasswordObject != null && UpdatePasswordObject.Count > 0)
                 if (UpdatePasswordObject[0].viewModel.isChanged)
                     if (!UpdatePasswordObject[0].viewModel.OnSubmitPassword())
                         return;

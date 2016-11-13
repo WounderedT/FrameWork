@@ -120,15 +120,6 @@ namespace Crypto
             return m.ToArray();
         }
 
-        private async Task<MemoryStream> CryptToStreamAsync(byte[] data, ICryptoTransform cryptor)
-        {
-            MemoryStream m = new MemoryStream();
-            using (Stream c = new CryptoStream(m, cryptor, CryptoStreamMode.Write))
-                await c.WriteAsync(data, 0, data.Length);
-            var some = m.ToArray();
-            return m;
-        }
-
         private Tuple<byte[],int> GetPasswordEncryptionParameters()
         {
             int iterations = 0;
@@ -145,9 +136,7 @@ namespace Crypto
         {
             var salt = new byte[_saltSize];
             using (var csprng = new RNGCryptoServiceProvider())
-            {
                 csprng.GetBytes(salt);
-            }
             return salt;
         }
 
@@ -155,17 +144,11 @@ namespace Crypto
         {
             int iterations = 0;
             foreach(byte b in salt)
-            {
                 iterations += b * 5;
-            }
             if(iterations >= _iterationsThreshold)
-            {
                 return iterations;
-            }
             else
-            {
                 return 0;
-            }
         }
 
         public byte[] GenerateMasterPasswordHash(SecureString password, byte[] salt, int iterations)
@@ -186,9 +169,7 @@ namespace Crypto
             {
                 unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(password);
                 using (var pbkdf2 = new Rfc2898DeriveBytes(Marshal.PtrToStringUni(unmanagedString), salt, iterations))
-                {
                     hash = pbkdf2.GetBytes(vectorSize);
-                }
                 return hash;
             }
             finally

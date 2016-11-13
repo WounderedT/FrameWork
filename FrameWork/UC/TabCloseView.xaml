@@ -16,10 +16,6 @@
     
     <Grid MinHeight="{StaticResource SystemButtonHeight}" MinWidth="{StaticResource TabCloseButtonDefaultWidth}" 
         HorizontalAlignment="Center" VerticalAlignment="Center">
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>-->
         <Label 
             HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="{Binding ClosableTabLabelWidth, Mode=TwoWay}"
             Content="{Binding LabelContent}" Background="{Binding LabelBackground}">

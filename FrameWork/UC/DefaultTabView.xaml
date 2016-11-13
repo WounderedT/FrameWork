@@ -6,9 +6,19 @@
              xmlns:local="clr-namespace:FrameWork.UC"
              xmlns:FrameWork="clr-namespace:FrameWork"
              xmlns:viewModel="clr-namespace:FrameWork.ViewModel"
-             mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="800">
-    <Grid>
+             mc:Ignorable="d" >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ResourceDictionaries/StaticWindowParameters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid
+        Height="{StaticResource MainWindowPluginAreaHeight}" Width="{StaticResource MainWindowWidth}"
+        >
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="auto"/>

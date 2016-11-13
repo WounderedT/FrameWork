@@ -5,10 +5,16 @@
     
     <sys:Double x:Key="MainWindowHeight">750</sys:Double>
     <sys:Double x:Key="MainWindowWidth">850</sys:Double>
+    <sys:Double x:Key="MainWindowPluginAreaHeight">720</sys:Double>
 
+    <sys:Double x:Key="PluginButtonHeight">200</sys:Double>
+    <sys:Double x:Key="PluginButtonWidth">200</sys:Double>
+    
     <sys:Double x:Key="NewTabButtonSize">30</sys:Double>
     <sys:Double x:Key="WindowDragAreaMinWidth">60</sys:Double>
 
+    <sys:Double x:Key="SettingsAreaHeight">470</sys:Double>
+    <sys:Double x:Key="SettingsAreaMinWidth">550</sys:Double>
     <sys:Double x:Key="SystemButtonHeight">30</sys:Double>
     <sys:Double x:Key="SystemButtonWidth">40</sys:Double>
 

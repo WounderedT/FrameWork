@@ -1,70 +1,60 @@
-﻿using Interface;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace FrameWork
 {
-    /*
-        An unhandled exception of type 'System.IO.IOException' could be risen by File.Encrypt during
-        password file encryption. Reason:
-        Additional information: Recovery policy configured for this system contains invalid recovery certificate.
-        Encryption could be skipped, but message with notification should be presented.(Based on user decision?)
-    */
     public static class IOProxy
     {
         public static MemoryStream GetMemoryStreamFromFile(string filename)
         {
             string filePath = RelativeToAbsolute(filename);
             if (!File.Exists(filePath))
-            {
                 return null;
-            }
             MemoryStream ms = new MemoryStream();
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
-            {
                 fs.CopyTo(ms);
-            }
             ms.Position = 0;
             return ms;
         }
 
         public static async Task<MemoryStream> GetMemoryStreamFromFileAsync(string filename)
         {
-            return await Task.Run(() => GetMemoryStreamFromFile(filename));
+            string filePath = RelativeToAbsolute(filename);
+            if (!File.Exists(filePath))
+                return null;
+            MemoryStream ms = new MemoryStream();
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                await fs.CopyToAsync(ms).ConfigureAwait(false);
+            ms.Position = 0;
+            return ms;
         }
 
         public static string WriteMemoryStreamToFile(MemoryStream mStream, string filename)
         {
             string filePath = RelativeToAbsolute(filename);
             using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
                 mStream.WriteTo(fs);
-            }
-            //File.Encrypt(filePath);
             return filePath;
+        }
+
+        public static async Task WriteMemoryStreamToFileAsync(MemoryStream mStream, string filename)
+        {
+            string filePath = RelativeToAbsolute(filename);
+            byte[] bytes = mStream.ToArray();
+            using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                await fs.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
         }
 
         public static async Task<string> WriteBytesToFileAsync(byte[] array, string filename)
         {
             string filePath = RelativeToAbsolute(filename);
             using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                await fs.WriteAsync(array, 0, array.Length);
-            }
+                await fs.WriteAsync(array, 0, array.Length).ConfigureAwait(false);
             return filePath;
-        }
-
-        public static async Task WriteMemoryStreamToFileAsync(MemoryStream mStream, string filename)
-        {
-            await Task.Run(() => WriteMemoryStreamToFile(mStream, filename));
         }
 
         public static bool WritePassword(EncryptedPassword password, string filename)
@@ -96,9 +86,7 @@ namespace FrameWork
                 return Path.Combine(filePath, fileName);
             }
             else
-            {
                 return filePath;
-            }
         }
 
         private static string FileNameToCode(string filename)
@@ -109,14 +97,10 @@ namespace FrameWork
             return BitConverter.ToString(bytes).Replace("-", string.Empty);
         }
 
-        public static string GetCurrentProjectFolder()
-        {
-            string currentDir = Directory.GetCurrentDirectory().Split(new string[] { "\\FrameWork\\" }, StringSplitOptions.None).First();
-            return Path.Combine(currentDir, "FrameWork");
-        }
-
         private static bool EncryptFile(string filepath)
         {
+            if (!Settings.EncryptFiles)
+                return true;
             try
             {
                 File.Encrypt(filepath);
