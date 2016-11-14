@@ -20,6 +20,7 @@ namespace FrameWork
         {
             InitializeComponent();
             DataContext = viewModel;
+            viewModel.LoadAuthentificationTab();
         }
 
         void TimeTrackerDispatcherUnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -7,8 +7,8 @@ namespace FrameWork
 {
     public static class StaticResources
     {
-        private static string _resourceDictionaryName = "Resources/ResourceDictionaries/StaticWindowParameters.xaml";
-        
+        private static string _resourceDictionaryName = @"pack://application:,,,/Resources/ResourceDictionaries/StaticWindowParameters.xaml";
+
         //Static parameters from resource file
         public static double MainWindowHeight { get; set; }
         public static double MainWindowWidth { get; set; }
@@ -29,27 +29,17 @@ namespace FrameWork
 
         public static void InitializeResources()
         {
-            bool cleanUp = false;
-            var mergedDict = Application.Current.Resources.MergedDictionaries.Where(w => w.Source.Equals(_resourceDictionaryName)).FirstOrDefault();
-            if(mergedDict == null)
-            {
-                ResourceDictionary rd = new ResourceDictionary();
-                rd.Source = new Uri(_resourceDictionaryName, UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Add(rd);
-                mergedDict = Application.Current.Resources.MergedDictionaries.Where(w => w.Source.Equals(_resourceDictionaryName)).FirstOrDefault();
-                cleanUp = true;
-            }
+            ResourceDictionary rd = new ResourceDictionary();
+            rd.Source = new Uri(_resourceDictionaryName);
             foreach (PropertyInfo property in typeof(StaticResources).GetProperties())
             {
                 try
                 {
-                    if(mergedDict.Contains(property.Name))
-                        property.SetValue(property, mergedDict[property.Name]);
+                    if(rd.Contains(property.Name))
+                        property.SetValue(property, rd[property.Name]);
                 }
                 catch (ArgumentException) { }
             }
-            if (cleanUp)
-                Application.Current.Resources.MergedDictionaries.Remove(mergedDict);
 
             TabCloseButtonWidth = TabCloseButtonDefaultWidth;
             MinSystemAreaWidth = NewTabButtonSize + SystemButtonWidth * 2 + WindowDragAreaMinWidth;

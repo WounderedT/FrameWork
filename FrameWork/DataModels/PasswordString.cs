@@ -56,9 +56,7 @@ namespace FrameWork.DataModels
         {
             _password = new SecureString();
             foreach(char c in unsecureString.ToCharArray())
-            {
                 _password.AppendChar(c);
-            }
         }
 
         public override unsafe bool Equals(object obj)
@@ -68,9 +66,8 @@ namespace FrameWork.DataModels
 
             var compareTo = (obj as PasswordString).Password;
             if(_password.Length != compareTo.Length)
-            {
                 return false;
-            }
+
             IntPtr unsecurePointerThis = IntPtr.Zero;
             IntPtr unsecurePointerTo = IntPtr.Zero;
             GCHandle gch1 = new GCHandle();

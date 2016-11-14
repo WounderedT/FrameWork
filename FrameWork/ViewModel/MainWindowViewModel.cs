@@ -19,7 +19,7 @@ namespace FrameWork.ViewModel
     TODO:
     2. Remove default tab init from this. Put into Session.
     */
-    class MainWindowViewModel: INotifyPropertyChanged
+    public class MainWindowViewModel: INotifyPropertyChanged
     {
         private static string appGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
 
@@ -150,7 +150,10 @@ namespace FrameWork.ViewModel
 
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             NewTabButtonVisibility = Visibility.Collapsed;
+        }
 
+        public void LoadAuthentificationTab()
+        {
             Authentification.GetAuthentificationTab();
             SelectedTabIndex = 0;
             Authentification.AuthentificationComplete += LoadFrameWorkTabs;
