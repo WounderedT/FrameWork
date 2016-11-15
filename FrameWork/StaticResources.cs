@@ -20,11 +20,30 @@ namespace FrameWork
         public static double TabTitleDefaultWidth { get; set; }
 
         //parameters based on Static parameters
+        
+        /* 
+         * Minimum width of header system area. Area consists of new tab button, window drag area, window minimize and close buttons.
+         */
         public static double MinSystemAreaWidth { get; set; }
+        
+        /* 
+         * Combined width of header system area buttons. Buttons are: new tab button, window minimize and close buttons.
+         */
         public static double SystemButtonAreaWidth { get; set; }
+        
+        /* 
+         * Total closable tab headers area. 
+         */
         public static double TabAreaWidth { get; set; }
+       
+        /* 
+         * Total width of window's dynamic header part.
+         */
         public static double DynamicWindowAreaWidth { get; set; }
-        public static double TabCloseButtonWidth { get; set; }
+
+        /* 
+         * Closable tab header paddings.
+         */
         public static Thickness TabHeaderPadding { get; set; }
 
         public static void InitializeResources()
@@ -41,7 +60,6 @@ namespace FrameWork
                 catch (ArgumentException) { }
             }
 
-            TabCloseButtonWidth = TabCloseButtonDefaultWidth;
             MinSystemAreaWidth = NewTabButtonSize + SystemButtonWidth * 2 + WindowDragAreaMinWidth;
             SystemButtonAreaWidth = NewTabButtonSize + SystemButtonWidth * 2;
             TabAreaWidth = MainWindowWidth - MinSystemAreaWidth;

@@ -11,7 +11,7 @@ using System.Web.Security;
 
 namespace FrameWork
 {
-    static class Authentification
+    public static class Authentification
     {
         private const int _appPasswordLenght = 25;
 
@@ -113,6 +113,16 @@ namespace FrameWork
             }
         }
 
+        private static bool ConstantTimeComparison(byte[] result, byte[] created)
+        {
+            uint difference = (uint)result.Length ^ (uint)created.Length;
+            for (var i = 0; i < result.Length && i < created.Length; i++)
+            {
+                difference |= (uint)(result[i] ^ created[i]);
+            }
+            return difference == 0;
+        }
+
         private static void GenerateAppPassword(bool force = false)
         {
             if (_appPassword != null)
@@ -123,16 +133,6 @@ namespace FrameWork
             {
                 _appPassword.Password.AppendChar(c);
             }
-        }
-
-        private static bool ConstantTimeComparison(byte[] result, byte[] created)
-        {
-            uint difference = (uint)result.Length ^ (uint)created.Length;
-            for (var i = 0; i < result.Length && i < created.Length; i++)
-            {
-                difference |= (uint)(result[i] ^ created[i]);
-            }
-            return difference == 0;
         }
 
         private static void OnAuthentificationComplete(AuthentificationEventArgs args)

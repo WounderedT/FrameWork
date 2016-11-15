@@ -71,6 +71,14 @@ namespace FrameWork
             return File.Exists(filePath);
         }
         
+        public static string FileNameToCode(string filename)
+        {
+            byte[] bytes = new byte[filename.Length * sizeof(char)];
+            Buffer.BlockCopy(filename.ToCharArray(), 0, bytes, 0, bytes.Length);
+            bytes = bytes.Where(w => w != 0).ToArray();
+            return BitConverter.ToString(bytes).Replace("-", string.Empty);
+        }
+
         private static string RelativeToAbsolute(string filePath)
         {
             if (!filePath.Contains(@":\")) //could be replaced by Path.IsPathRooted
@@ -87,14 +95,6 @@ namespace FrameWork
             }
             else
                 return filePath;
-        }
-
-        private static string FileNameToCode(string filename)
-        {
-            byte[] bytes = new byte[filename.Length * sizeof(char)];
-            Buffer.BlockCopy(filename.ToCharArray(), 0, bytes, 0, bytes.Length);
-            bytes = bytes.Where(w => w != 0).ToArray();
-            return BitConverter.ToString(bytes).Replace("-", string.Empty);
         }
 
         private static bool EncryptFile(string filepath)

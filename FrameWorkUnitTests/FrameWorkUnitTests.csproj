@@ -53,8 +53,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FrameWorkUnitTests.cs" />
+    <Compile Include="AuthentificationUnitTests.cs" />
+    <Compile Include="MainWindowViewModelUnitTests.cs" />
+    <Compile Include="IOProxyUnitTests.cs" />
+    <Compile Include="NewPasswordViewModelUnitTests.cs" />
+    <Compile Include="PasswordStringUnitTests.cs" />
+    <Compile Include="PasswordViewModelUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdatePasswordViewModelUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FrameWork\FrameWork.csproj">

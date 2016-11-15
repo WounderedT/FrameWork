@@ -183,12 +183,7 @@ namespace FrameWork.ViewModel
                 Application.Current.Shutdown();
         }
 
-        private void UpdateSelectedTab(object sender, EventArgs args)
-        {
-            SelectedTabIndex = ((UpdateSelectedTabEventArgs)args).SelectedTab;
-        }
-
-        private void UpdateUIWidth(object sender, NotifyCollectionChangedEventArgs e)
+        public void UpdateUIWidth(object sender, NotifyCollectionChangedEventArgs e)
         {
             double width = 0;
             foreach (ClosableTab entry in tabs)
@@ -217,6 +212,11 @@ namespace FrameWork.ViewModel
                         entry.HeaderWidth = width;
                 return;
             }
+        }
+
+        private void UpdateSelectedTab(object sender, EventArgs args)
+        {
+            SelectedTabIndex = ((UpdateSelectedTabEventArgs)args).SelectedTab;
         }
     }
 }
