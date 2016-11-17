@@ -18,6 +18,16 @@ namespace FrameWork
         private static Parameters paramters = null;
         private static string _oldColorScheme = string.Empty;
 
+        public static string CryptographyLibFileName
+        {
+            get { return "Crypto.dll";}
+        }
+
+        public static string InterfacesLibFileName
+        {
+            get { return "interface.dll"; }
+        }
+
         public static bool EncryptFiles
         {
             get { return paramters.EncryptFiles; }

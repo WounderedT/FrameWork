@@ -1,26 +1,30 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FrameWork;
+﻿using FrameWork;
 using FrameWork.ViewModel;
-using System.Windows;
-using System.Reflection;
-using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Specialized;
+using System.IO;
+using System.Reflection;
+using System.Windows;
 
 namespace FrameWorkUnitTests
 {
     [TestClass]
     public class MainWindowViewModelUnitTests
     {
+        private static string _currentDir = Directory.GetCurrentDirectory();
+
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             if (Application.Current == null)
             { new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; }
 
-            string path = Directory.GetCurrentDirectory();
-            var pathArray = path.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
-            Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
+            if (_currentDir.Contains("\\FrameWorkUnitTests\\"))
+            {
+                var pathArray = _currentDir.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
+                Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
+            }
         }
 
         [TestMethod]
@@ -63,6 +67,7 @@ namespace FrameWorkUnitTests
         [ClassCleanup]
         public static void ClassCleanUp()
         {
+            Directory.SetCurrentDirectory(_currentDir);
             Application.Current.Shutdown();
         }
     }

@@ -32,8 +32,17 @@ namespace FrameWork
         private static async Task LoadSession()
         {
             var encryptedStream = IOProxy.GetMemoryStreamFromFile(".session");
-            var array = await Authentification.Cryptography.DecryptMemoryStreamAsync(encryptedStream,
-                Authentification.AppPassword.Password, Authentification.AppPassword.Salt);
+            byte[] array = new byte[1];
+            try
+            {
+                array = await Authentification.Cryptography.DecryptMemoryStreamAsync(encryptedStream,
+                        Authentification.AppPassword.Password, Authentification.AppPassword.Salt);
+            }
+            catch (System.Security.SecurityException)
+            {
+                await NewTab();
+                return;
+            }
             MemoryStream ms = new MemoryStream();
             await ms.WriteAsync(array, 0, array.Length);
             ms.Position = 0;
@@ -41,8 +50,7 @@ namespace FrameWork
             List<SessionEntry> lastSessionTabs = (List<SessionEntry>)formatter.Deserialize(ms);
             if (lastSessionTabs.Count == 0)
             {
-                await AddDefaultTab();
-                OnUpdateSelectedTab(new UpdateSelectedTabEventArgs(0));
+                await NewTab();
                 return;
             }
             var plugins = PluginEntryCollection.Plugins;
@@ -156,7 +164,16 @@ namespace FrameWork
             pluginEntry.Plugin.ProgressReportComplete += tab.ClearProgressBarEventHandler;
             pluginEntry.Plugin.ReadFromFileRequest += ReadFromFileRequestHandler;
             pluginEntry.Plugin.WriteToFileRequest += WriteToFileRequestHandler;
-            await pluginEntry.Plugin.RestoreAsync();
+            try
+            {
+                await pluginEntry.Plugin.RestoreAsync();
+            }
+            catch (System.Security.SecurityException)
+            {
+                string message = "Password has been changed. " + pluginEntry.Name + " plugin state cannot be loaded.";
+                string caption = "Plugin state load error";
+                var result = MessageBox.Show(Application.Current.MainWindow, message, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
             tab.Content = pluginEntry.Plugin;
             tab.Title = pluginEntry.Name;
             if (entry != null)

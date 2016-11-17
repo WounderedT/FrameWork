@@ -8,9 +8,7 @@ namespace FrameWork
         public async Task<byte[]> ReadBytesFromFileAsync(string filename)
         {
             if (!IOProxy.Exists(filename))
-            {
                 return null;
-            }
             MemoryStream encryptedStream = await IOProxy.GetMemoryStreamFromFileAsync(filename).ConfigureAwait(false);
             return await Authentification.Cryptography.DecryptMemoryStreamAsync(encryptedStream,
                 Authentification.AppPassword.Password, Authentification.AppPassword.Salt);

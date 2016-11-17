@@ -112,9 +112,7 @@ namespace FrameWork
                     + "You can proceed with the executin but your files will be less secure. "
                     +"You can disable file encryption in Settings if this error cannot be fixed."+Environment.NewLine + "Do you wish to continue?";
                 string caption = "File encryption has failed!";
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Exclamation;
-                var result = MessageBox.Show(Application.Current.MainWindow, messageBoxText, caption, button, icon);
+                var result = MessageBox.Show(Application.Current.MainWindow, messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 return result.Equals(MessageBoxResult.Yes) ? true : false;
             } 
         }

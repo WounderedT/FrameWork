@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security;
 using System.Web.Security;
+using System.Windows;
 
 namespace FrameWork
 {
@@ -70,11 +71,7 @@ namespace FrameWork
             EncryptedPassword result = new EncryptedPassword(cryptography.EncryptMasterPassword(password));
             if (!IOProxy.WritePassword(result, ".key"))
                 OnAuthentificationComplete(new AuthentificationEventArgs(false));
-            GenerateAppPassword();
-            result = new EncryptedPassword(cryptography.EncryptAppPassword(_appPassword.Password, password));
-            _appPassword.Salt = result.Salt;
-            if (!IOProxy.WritePassword(result, ".bak_key"))
-                OnAuthentificationComplete(new AuthentificationEventArgs(false));
+            NewApplicationPassword(password);
             if (shortCheck)
                 return;
             OnAuthentificationComplete(new AuthentificationEventArgs());
@@ -92,25 +89,45 @@ namespace FrameWork
                 return false;
             else
             {
+                string commonErrorMessage = "New password could be generated but all existing data including plugins state will be lost."
+                    + Environment.NewLine + "Would you like to generate new password?";
                 if (shortCheck)
                     return true;
                 if (IOProxy.Exists(".bak_key"))
                 {
                     EncryptedPassword appHash = new EncryptedPassword();
                     appHash.GetPasswordFromFile(".bak_key");
-                    _appPassword = new PasswordObject(cryptography.DecryptAppPassword(appHash.Hash, _appPasswordLenght, password, appHash.Salt), appHash.Salt);
+                    try
+                    {
+                        _appPassword = new PasswordObject(cryptography.DecryptAppPassword(appHash.Hash, _appPasswordLenght, password, appHash.Salt), appHash.Salt);
+                    }
+                    catch (Exception)
+                    {
+                        if (!ShowAppPasswordDecryptionError("Application password cannot be decrypted! " + Environment.NewLine + commonErrorMessage))
+                            OnAuthentificationComplete(new AuthentificationEventArgs(false));
+                        else
+                            NewApplicationPassword(password);
+                    }
                 }
                 else
                 {
-                    GenerateAppPassword();
-                    EncryptedPassword result = new EncryptedPassword(cryptography.EncryptAppPassword(_appPassword.Password, password));
-                    _appPassword.Salt = result.Salt;
-                    if (IOProxy.WritePassword(result, ".bak_key"))
+                    if(!ShowAppPasswordDecryptionError("Application password file not found! " + Environment.NewLine + commonErrorMessage))
                         OnAuthentificationComplete(new AuthentificationEventArgs(false));
+                    else
+                        NewApplicationPassword(password);
                 }
                 OnAuthentificationComplete(new AuthentificationEventArgs());
                 return true;
             }
+        }
+
+        public static void NewApplicationPassword(SecureString password)
+        {
+            GenerateAppPassword();
+            EncryptedPassword result = new EncryptedPassword(cryptography.EncryptAppPassword(_appPassword.Password, password));
+            _appPassword.Salt = result.Salt;
+            if (!IOProxy.WritePassword(result, ".bak_key"))
+                OnAuthentificationComplete(new AuthentificationEventArgs(false));
         }
 
         private static bool ConstantTimeComparison(byte[] result, byte[] created)
@@ -133,6 +150,13 @@ namespace FrameWork
             {
                 _appPassword.Password.AppendChar(c);
             }
+        }
+
+        private static bool ShowAppPasswordDecryptionError(string message)
+        {
+            string caption = "Password decryption error";
+            var result = MessageBox.Show(Application.Current.MainWindow, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Error);
+            return result.Equals(MessageBoxResult.Yes) ? true : false;
         }
 
         private static void OnAuthentificationComplete(AuthentificationEventArgs args)

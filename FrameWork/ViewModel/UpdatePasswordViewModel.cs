@@ -142,14 +142,14 @@ namespace FrameWork.ViewModel
         public bool OnSubmitPassword()
         {
             ClearValidationErros();
-            string result = BasePasswordCheck(CheckPassword.Password, CheckPasswordError);
+            string result = BasePasswordCheck(CheckPassword.Password, "Current");
             if(!string.IsNullOrEmpty(result))
             {
                 CheckPasswordError = result;
                 CheckPasswordErrorFrame = Visibility.Visible;
                 return false;
             }
-            result = BasePasswordCheck(NewPassword.Password, CheckPasswordError);
+            result = BasePasswordCheck(NewPassword.Password, "New");
             if (!string.IsNullOrEmpty(result))
             {
                 NewPasswordError = result;
@@ -166,7 +166,7 @@ namespace FrameWork.ViewModel
                 return false;
             if (!Authentification.CheckMasterPassword(CheckPassword.Password, true))
             {
-                CheckPasswordError = "Incorrect password!";
+                CheckPasswordError = "Current password is incorrect!";
                 CheckPasswordErrorFrame = Visibility.Visible;
                 return false;
             }
@@ -185,8 +185,6 @@ namespace FrameWork.ViewModel
             if (NewPasswordReEnter.Length == 0)
             {
                 NewPasswordReEnterError = "Please re-enter new password";
-                CheckPasswordErrorFrame = Visibility.Hidden;
-                NewPasswordErrorFrame = Visibility.Hidden;
                 NewPasswordReEnterErrorFrame = Visibility.Visible;
                 return false;
             }
@@ -194,7 +192,6 @@ namespace FrameWork.ViewModel
             {
                 NewPasswordReEnterError = "Passwords don't match!";
                 NewPasswordError = "Passwords don't match!";
-                CheckPasswordErrorFrame = Visibility.Hidden;
                 NewPasswordErrorFrame = Visibility.Visible;
                 NewPasswordReEnterErrorFrame = Visibility.Visible;
                 return false;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -145,6 +146,13 @@ namespace FrameWork.ViewModel
 
         public MainWindowViewModel()
         {
+            string result = CheckResources();
+            if (!string.IsNullOrEmpty(result))
+            {
+                MessageBox.Show(GetMissingDllErrorMessage(result), "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CloseMainWindow();
+                return;
+            }
             StaticResources.InitializeResources();
             Settings.LoadSettings();
 
@@ -163,7 +171,10 @@ namespace FrameWork.ViewModel
         public async void LoadFrameWorkTabs(AuthentificationEventArgs args)
         {
             if (!args.Result)
+            {
                 CloseMainWindow();
+                return;
+            }
             tabs.RemoveAt(0);
             tabs.CollectionChanged += UpdateUIWidth;
             Session.UpdateSelectedTab += UpdateSelectedTab;
@@ -174,7 +185,7 @@ namespace FrameWork.ViewModel
 
         public async void CloseMainWindow()
         {
-            if (Tabs.Count > 0 && Tabs[0].Title.Equals("Authentification"))
+            if (Tabs.Count == 0 || Tabs[0].Title.Equals("Authentification"))
             {
                 Application.Current.Shutdown();
                 return;
@@ -217,6 +228,31 @@ namespace FrameWork.ViewModel
         private void UpdateSelectedTab(object sender, EventArgs args)
         {
             SelectedTabIndex = ((UpdateSelectedTabEventArgs)args).SelectedTab;
+        }
+
+        private string CheckResources()
+        {
+            string currentDir = Directory.GetCurrentDirectory();
+            string delemiter = " and ";
+            StringBuilder builder = new StringBuilder();
+            if (!File.Exists(Path.Combine(currentDir, Settings.CryptographyLibFileName)))
+                builder.Append(Settings.CryptographyLibFileName);
+            if (!File.Exists(Path.Combine(currentDir, Settings.InterfacesLibFileName)))
+            {
+                if(builder.Length > 0)
+                    builder.Append(delemiter);
+                builder.Append(Settings.InterfacesLibFileName);
+            }
+            return builder.ToString();
+        }
+
+        private string GetMissingDllErrorMessage(string result)
+        {
+            var dlls = result.Split(new string[] { " and " }, StringSplitOptions.None);
+            string[] words = new string[] { "file" };
+            if(dlls.Length > 1)
+                words = new string[] { "files" };
+            return "DLL " + words[0] + " " + result + " cannot be found!";
         }
     }
 }

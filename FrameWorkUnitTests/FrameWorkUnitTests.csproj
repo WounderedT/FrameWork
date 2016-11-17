@@ -58,7 +58,6 @@
     <Compile Include="IOProxyUnitTests.cs" />
     <Compile Include="NewPasswordViewModelUnitTests.cs" />
     <Compile Include="PasswordStringUnitTests.cs" />
-    <Compile Include="PasswordViewModelUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdatePasswordViewModelUnitTests.cs" />
   </ItemGroup>

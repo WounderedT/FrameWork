@@ -154,10 +154,10 @@ namespace AnotherTestPlugin
         {
             FileActionRequestEventArgs args = new FileActionRequestEventArgs(Name + "State");
             await OnReadFromFileRequest(args);
+            if (args.Exception != null)
+                throw args.Exception;
             if (args.InOutData == null)
-            {
                 return;
-            }
             await Task.Run(() =>
             {
                 MemoryStream ms = new MemoryStream();

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace FrameWork.ViewModel
 {
-    class NewPasswordViewModel : PasswordViewModel
+    public class NewPasswordViewModel : PasswordViewModel
     {
         private Visibility _newPasswordErrorFrame = Visibility.Hidden;
         private Visibility _newPasswordReEnterErrorFrame = Visibility.Hidden;

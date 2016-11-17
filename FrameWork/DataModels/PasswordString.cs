@@ -64,6 +64,9 @@ namespace FrameWork.DataModels
             if (obj == null)
                 return false;
 
+            if(_password.Equals(obj))
+                return true;
+
             var compareTo = (obj as PasswordString).Password;
             if(_password.Length != compareTo.Length)
                 return false;

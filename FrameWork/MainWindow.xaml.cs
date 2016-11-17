@@ -1,6 +1,7 @@
 ﻿using FrameWork.ViewModel;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -15,20 +16,33 @@ namespace FrameWork
     {
         MainWindowViewModel viewModel = new MainWindowViewModel();
 
-
         public MainWindow()
         {
             InitializeComponent();
             DataContext = viewModel;
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(DispatcherUnhandledException);
             viewModel.LoadAuthentificationTab();
         }
 
-        void TimeTrackerDispatcherUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        void DispatcherUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = e.ExceptionObject as Exception;
-            string excpetionText = ex.Message + Environment.NewLine + ex.StackTrace;
-            string windowText = "Ups! This is embarrassing... :(" + Environment.NewLine;
-            MessageBox.Show(windowText + excpetionText, ex.GetType().FullName, MessageBoxButton.OK, MessageBoxImage.Error);
+            while(ex.InnerException != null)
+                ex = ex.InnerException;
+            string additionalInfo = string.Empty;
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss",
+                System.Globalization.CultureInfo.InvariantCulture));
+            try
+            {
+                File.WriteAllText(filePath, ex.Message + Environment.NewLine + ex.StackTrace);
+                additionalInfo = "For additional infomation about this error please refer to " + filePath;
+            } catch(Exception fileWriteEx)
+            {
+                additionalInfo = "Exception stacktrace could not be written to " + filePath + " : " + fileWriteEx.Message;
+            }
+            string messageText = "Something went wrong and application will shut down now. " + Environment.NewLine + additionalInfo;
+            string windowTitle = "Ups! This is embarrassing... :(";
+            MessageBox.Show(messageText, windowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

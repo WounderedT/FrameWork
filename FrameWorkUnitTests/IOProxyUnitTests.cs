@@ -1,11 +1,10 @@
 ﻿using FrameWork;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FrameWorkUnitTests
 {
@@ -16,16 +15,30 @@ namespace FrameWorkUnitTests
         private static MemoryStream testStream = new MemoryStream();
         private static string testFileName = "testFile";
 
+        private static string _currentDir = Directory.GetCurrentDirectory();
+
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
+            if (Application.Current == null)
+            { new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; }
+
+            if (_currentDir.Contains("\\FrameWorkUnitTests\\"))
+            {
+                var pathArray = _currentDir.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
+                Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
+            }
+
+            Application.ResourceAssembly = System.Reflection.Assembly.GetAssembly(typeof(MainWindow));
+            Settings.LoadSettings();
+
             Random rand = new Random();
             rand.NextBytes(testArray);
             testStream.Write(testArray, 0, testArray.Length);
             testStream.Position = 0;
         }
 
-        [TestMethod]
+        [TestMethod()]
         public void ReadWriteMemoryStreamToFileTest()
         {
             IOProxy.WriteMemoryStreamToFile(testStream, testFileName);
@@ -33,7 +46,7 @@ namespace FrameWorkUnitTests
             Assert.IsTrue(CompareStreams(testStream, ms));
         }
 
-        [TestMethod]
+        [TestMethod()]
         public async Task ReadWriteMemoryStreamToFileAsyncTest()
         {
             await IOProxy.WriteMemoryStreamToFileAsync(testStream, testFileName);
@@ -61,15 +74,25 @@ namespace FrameWorkUnitTests
         }
 
         [TestMethod]
-        public void RelativeToAbsoluteTest()
-        {
-
-        }
-
-        [TestMethod]
         public void FileNameToCodeTest()
         {
+            Assert.AreEqual(IOProxy.FileNameToCode(testFileName), IOProxy.FileNameToCode(testFileName));
+            Assert.AreEqual(string.Empty, IOProxy.FileNameToCode(string.Empty));
+            try
+            {
+                IOProxy.FileNameToCode(null);
+            } catch(Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(NullReferenceException));
+            }
+            
+        }
 
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            //Directory.SetCurrentDirectory(_currentDir);
+            //Application.Current.Shutdown();
         }
 
         private bool CompareStreams(MemoryStream stream1, MemoryStream stream2)
