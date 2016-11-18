@@ -30,7 +30,7 @@ namespace FrameWork
             while(ex.InnerException != null)
                 ex = ex.InnerException;
             string additionalInfo = string.Empty;
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss",
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DateTime.Now.ToString("ddMMyyyy-HHmmss",
                 System.Globalization.CultureInfo.InvariantCulture));
             try
             {

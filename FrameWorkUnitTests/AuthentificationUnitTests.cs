@@ -49,12 +49,11 @@ namespace FrameWorkUnitTests
             foreach (char c in masterPassword.ToCharArray())
                 passwd.AppendChar(c);
 
-            Authentification.NewMasterPassword(passwd);
+            Authentification.NewMasterPassword(passwd, triggerCompleteEvent:true);
             PasswordObject oldAppPassword = new PasswordObject();
             oldAppPassword.Password = Authentification.AppPassword.Password.Copy();
             oldAppPassword.Salt = new byte[Authentification.AppPassword.Salt.Length];
             Authentification.AppPassword.Salt.CopyTo(oldAppPassword.Salt, 0);
-            File.Delete(IOProxy.FileNameToCode(".bak_key"));
 
             Assert.IsFalse(Authentification.CheckMasterPassword(wrongPassword));
 
@@ -63,13 +62,9 @@ namespace FrameWorkUnitTests
             newAppPassword.Password = Authentification.AppPassword.Password.Copy();
             newAppPassword.Salt = new byte[Authentification.AppPassword.Salt.Length];
             Authentification.AppPassword.Salt.CopyTo(newAppPassword.Salt, 0);
-            Assert.IsFalse(CheckAppPassword(oldAppPassword, newAppPassword));
+            Assert.IsTrue(CheckAppPassword(oldAppPassword, newAppPassword));
 
-            Assert.IsTrue(Authentification.CheckMasterPassword(passwd));
-            Assert.IsTrue(CheckAppPassword(newAppPassword, Authentification.AppPassword));
-
-            File.Delete(IOProxy.FileNameToCode(".bak_key"));
-            Assert.IsTrue(Authentification.CheckMasterPassword(passwd, true));
+            Assert.IsTrue(Authentification.CheckMasterPassword(passwd, shortCheck:true));
             Assert.IsTrue(CheckAppPassword(newAppPassword, Authentification.AppPassword));
         }
 

@@ -57,8 +57,8 @@ namespace FrameWorkUnitTests
         [TestMethod]
         public async Task WriteByteArrayToFileAsyncTest()
         {
-            await IOProxy.WriteBytesToFileAsync(testArray, testFileName);
-            MemoryStream ms = await IOProxy.GetMemoryStreamFromFileAsync(testFileName);
+            await IOProxy.WriteBytesToFileAsync(testArray, testFileName).ConfigureAwait(false);
+            MemoryStream ms = await IOProxy.GetMemoryStreamFromFileAsync(testFileName).ConfigureAwait(false);
             Assert.IsTrue(CompareStreams(testStream, ms));
         }
 
@@ -99,7 +99,7 @@ namespace FrameWorkUnitTests
         {
             if (stream1.Length != stream2.Length)
                 return false;
-            while (stream1.Position <= stream1.Length)
+            while (stream1.Position < stream1.Length)
             {
                 if (stream1.ReadByte() != stream2.ReadByte())
                     return false;

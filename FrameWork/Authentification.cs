@@ -66,15 +66,14 @@ namespace FrameWork
             MainWindowViewModel.tabs.Add(authTab);
         }
      
-        public static void NewMasterPassword(SecureString password, bool shortCheck = false)
+        public static void NewMasterPassword(SecureString password, bool triggerCompleteEvent = true)
         {
             EncryptedPassword result = new EncryptedPassword(cryptography.EncryptMasterPassword(password));
             if (!IOProxy.WritePassword(result, ".key"))
                 OnAuthentificationComplete(new AuthentificationEventArgs(false));
             NewApplicationPassword(password);
-            if (shortCheck)
-                return;
-            OnAuthentificationComplete(new AuthentificationEventArgs());
+            if (triggerCompleteEvent)
+                OnAuthentificationComplete(new AuthentificationEventArgs());
         }
 
         public static bool CheckMasterPassword(SecureString password, bool shortCheck = false)

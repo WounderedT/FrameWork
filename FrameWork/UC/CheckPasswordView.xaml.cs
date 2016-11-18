@@ -1,7 +1,4 @@
 ﻿using FrameWork.ViewModel;
-using System;
-using System.Security;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace FrameWork.UC

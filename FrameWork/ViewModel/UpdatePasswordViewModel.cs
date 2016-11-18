@@ -164,13 +164,13 @@ namespace FrameWork.ViewModel
             }
             if (!ValidateNewPasswordReEnter())
                 return false;
-            if (!Authentification.CheckMasterPassword(CheckPassword.Password, true))
+            if (!Authentification.CheckMasterPassword(CheckPassword.Password, shortCheck:true))
             {
                 CheckPasswordError = "Current password is incorrect!";
                 CheckPasswordErrorFrame = Visibility.Visible;
                 return false;
             }
-            Authentification.NewMasterPassword(NewPassword.Password, true);
+            Authentification.NewMasterPassword(NewPassword.Password, triggerCompleteEvent:true);
             OnPasswordUpdateComplete();
             return true;
         }

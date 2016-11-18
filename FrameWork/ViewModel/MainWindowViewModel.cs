@@ -1,18 +1,14 @@
 ﻿using FrameWork.DataModels;
-using Interface;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace FrameWork.ViewModel
 {
@@ -22,7 +18,7 @@ namespace FrameWork.ViewModel
     */
     public class MainWindowViewModel: INotifyPropertyChanged
     {
-        private static string appGuid = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+        private static string appGuid = "FrameWord-App-Domain-12ab-45c5-b9d9-d693faa6e7b9";
 
         private Visibility _newTabButtonVisibility;
 

@@ -31,10 +31,7 @@ namespace FrameWorkUnitTests
         public void UpdateUIWidthTest()
         {
             Application.ResourceAssembly = Assembly.GetAssembly(typeof(MainWindow));
-            var app = new MainWindow();
-            app.InitializeComponent();
-            var viewModel = app.DataContext as MainWindowViewModel;
-
+            var viewModel = new MainWindowViewModel();
             viewModel.Tabs.Clear();
             viewModel.NewTabButtonVisibility = Visibility.Visible;
 
@@ -49,7 +46,7 @@ namespace FrameWorkUnitTests
             Assert.AreEqual(StaticResources.MainWindowWidth - StaticResources.SystemButtonAreaWidth, viewModel.WindowDragAreaWidth);
 
             int tabsCount = (int)(StaticResources.TabAreaWidth / StaticResources.TabTitleDefaultWidth) * 2;
-            while(tabsCount > 0)
+            while (tabsCount > 0)
             {
                 viewModel.Tabs.Add(new FrameWork.DataModels.ClosableTab());
                 tabsCount--;
