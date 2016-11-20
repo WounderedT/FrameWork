@@ -41,7 +41,7 @@
                     WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonHeight}"
-                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-5,0,0"
+                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="-1,-1,0,0"
                     Content="+" Visibility="{Binding NewTabButtonVisibility}" Command="{Binding NewTabCommand}"
                     />
             
@@ -55,7 +55,7 @@
                     WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
-                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-7,0,0"
+                    Style="{DynamicResource ButtonSystemActionStyleKey}" ToolTip="minimize" FontSize="25" Padding="0,-2,0,0"
                     Content="–" Command="{Binding MinimizeMainWindowCommand}"
                     />
             
@@ -63,7 +63,7 @@
                     WindowChrome.IsHitTestVisibleInChrome="True"
                     Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top"
                     Height="{StaticResource SystemButtonHeight}" Width="{StaticResource SystemButtonWidth}"
-                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close" FontSize="21" Padding="0,-2,0,0"
+                    Style="{DynamicResource ButtonWindowCloseStyleKey}" ToolTip="Close" FontSize="21"
                     Content="X" Command="{Binding CloseMainWindowCommand}"
                     />
         </Grid>

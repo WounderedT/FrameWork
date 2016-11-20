@@ -107,12 +107,6 @@ namespace FrameWork.DataModels
                 solid.Color = GetColor(progressArgs.Status);
                 HeaderBackground = solid;
             }
-            
-        }
-
-        public void ProgressComplete(object sender, EventArgs args)
-        {
-            CleanProgressBar = true;
         }
 
         public void ClearProgressBarEventHandler(object sender, EventArgs args)

@@ -129,11 +129,6 @@ namespace TestPlugin
             }
         }
 
-        public object GetUIElements()
-        {
-            return new object();
-        }
-
         public async Task DumpAsync()
         {
             if (_isChanged)
@@ -214,7 +209,7 @@ namespace TestPlugin
                         }), null);
                         context.Post(new SendOrPostCallback((o) =>
                         {
-                            OnProgressReportCompete(new ProgressReportCompleteEventArgs(Name));
+                            OnProgressReportCompete(new EventArgs());
                         }), null);
                         return true;
                     }, CancellationToken.Token);
@@ -233,7 +228,7 @@ namespace TestPlugin
             ProgressReportUpdate?.Invoke(this, args);
         }
 
-        protected virtual void OnProgressReportCompete(ProgressReportCompleteEventArgs args)
+        protected virtual void OnProgressReportCompete(EventArgs args)
         {
             ProgressReportComplete?.Invoke(this, args);
         }
@@ -289,21 +284,6 @@ namespace TestPlugin
         {
             Value = value;
             Status = status;
-        }
-    }
-
-    public class ProgressReportCompleteEventArgs : EventArgs, IProgressReportCompleteEventArgs
-    {
-        public string SenderName
-        {
-            get; set;
-        }
-
-        public ProgressReportCompleteEventArgs() { }
-
-        public ProgressReportCompleteEventArgs(string senderName)
-        {
-            SenderName = senderName;
         }
     }
 
