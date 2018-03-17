@@ -302,4 +302,33 @@ namespace AnotherTestPlugin
             InOutData = data;
         }
     }
+
+    public class Foo
+    {
+        public string F;
+
+        public virtual string Pr
+        {
+            get;set;
+        }
+        protected virtual void Test()
+        {
+
+        }
+    }
+
+    public class Bar: Foo
+    {
+        public new string F;
+
+        public override string Pr
+        {
+            get;set;
+        }
+
+        protected void Test()
+        {
+            base.Test();
+        }
+    }
 }

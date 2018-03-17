@@ -26,6 +26,7 @@
         <Button 
             Grid.Row="0" x:Name="button" 
             HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="30" Height="30" Margin="0,0,30,0"
+            ToolTip="Settings"
             Command="{Binding SettingsButton}">
             <StackPanel>
                 <Image Source="/FrameWork;component/Resources/Images/ConfigurationButton.png" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameWork", "FrameWork\FrameWork.csproj", "{186E8352-1E23-4700-9D36-848B80209F6B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameWork", "FrameWork\Fram
 		{3803485B-E9C3-48FC-B081-9408AA2EA858} = {3803485B-E9C3-48FC-B081-9408AA2EA858}
 		{85EAE99C-1ED3-4A6D-878A-633F3AE30523} = {85EAE99C-1ED3-4A6D-878A-633F3AE30523}
 		{10FDD8D5-489C-4BA4-8029-016772F68D0F} = {10FDD8D5-489C-4BA4-8029-016772F68D0F}
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0} = {A3E74CEE-EBBD-430B-AB36-7C16756071B0}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface", "Interface\Interface.csproj", "{10FDD8D5-489C-4BA4-8029-016772F68D0F}"
@@ -28,6 +29,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoUnitTests", "CryptoUnitTests\CryptoUnitTests.csproj", "{CF451639-5842-494B-AB37-BD81E35A73CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameWorkUnitTests", "FrameWorkUnitTests\FrameWorkUnitTests.csproj", "{D3461732-8B83-46D2-BD09-A0DD18534963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downloader", "Downloader\Downloader.csproj", "{A3E74CEE-EBBD-430B-AB36-7C16756071B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10FDD8D5-489C-4BA4-8029-016772F68D0F} = {10FDD8D5-489C-4BA4-8029-016772F68D0F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloaderUnitTests", "DownloaderUnitTests\DownloaderUnitTests.csproj", "{7D8B3512-75A8-4D34-B08E-9720A352BA04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,8 +111,35 @@ Global
 		{D3461732-8B83-46D2-BD09-A0DD18534963}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D3461732-8B83-46D2-BD09-A0DD18534963}.Release|x86.ActiveCfg = Release|Any CPU
 		{D3461732-8B83-46D2-BD09-A0DD18534963}.Release|x86.Build.0 = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Debug|x86.Build.0 = Debug|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|x86.ActiveCfg = Release|Any CPU
+		{A3E74CEE-EBBD-430B-AB36-7C16756071B0}.Release|x86.Build.0 = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Debug|x86.Build.0 = Debug|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D8B3512-75A8-4D34-B08E-9720A352BA04}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C0C0CFC-C534-4552-A2AA-6A7E5EC045C7}
 	EndGlobalSection
 EndGlobal

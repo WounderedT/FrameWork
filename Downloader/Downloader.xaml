@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="Downloader.Downloader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Downloader"
+             xmlns:viewModel="clr-namespace:Downloader.ViewModel"
+             xmlns:view="clr-namespace:Downloader.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="450">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid 
+                        Grid.Row="0" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="auto">
+                        <ItemsControl ItemsSource="{Binding PatternEntries}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type viewModel:PatternViewModel}">
+                                    <view:PatternView/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+
+                    <Button 
+                        Grid.Row="2"
+                        Height="30" Width="85" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Content="Download" Command="{Binding DownloadImagesCommand}"
+                        />
+                </Grid>
+
+                <ItemsControl ItemsSource="{Binding SavePatternWindow}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModel:AddNewPatternViewModel}">
+                            <view:AddNewPatternView/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Downloader"
+                    xmlns:viewModel="clr-namespace:Downloader.ViewModel">
+
+    <DataTemplate DataType="{x:Type viewModel:DownloaderViewModel}">
+        <local:Downloader/>
+    </DataTemplate>
+    
+</ResourceDictionary>

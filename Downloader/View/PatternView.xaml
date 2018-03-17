@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="Downloader.View.PatternView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Downloader.View"
+             xmlns:viewModel="clr-namespace:Downloader.ViewModel"
+             mc:Ignorable="d" 
+             >
+    <Grid IsEnabled="{Binding PatterViewIsEnabled}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox
+            Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Width="auto" Height="25" MinWidth="150"
+            ItemsSource="{Binding AvailablePatterns}" SelectedValue="{Binding SelectedPattern, Mode=TwoWay}"
+            />
+
+        <Grid 
+            Grid.Row="2" 
+            HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="auto">
+            <ItemsControl ItemsSource="{Binding PatternEntries}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModel:PatternEntryViewModel}">
+                        <local:PatternEntryView/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <Button 
+            Grid.Row="4"
+            Height="25" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0"
+            Content="+" FontSize="25" Padding="0,-2,0,0" 
+            Command="{Binding AddPatternEntryInstance}"
+            />
+
+        <Grid Grid.Row="6" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Label 
+                Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                Content="Download Path"
+                />
+            <TextBox 
+                Grid.Column="2" 
+                Height="25" Width="300" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Text="{Binding PatternCommondDownloadFolderPathText}"
+                />
+            <Button 
+                Grid.Column="4"
+                Height="25" Width="25" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Content="..." Command="{Binding OpenFileBrowser}"
+                />
+        </Grid>
+        
+    </Grid>
+</UserControl>
