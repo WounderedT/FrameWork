@@ -39,6 +39,8 @@ namespace Downloader.ViewModel
         private string _patternDownloadStatus;
         [NonSerialized]
         private string _patternDownloadStatusToolTip;
+        [NonSerialized]
+        private int _lastIndMag;
 
         [NonSerialized]
         private RelayCommand _patternSaveAction;
@@ -496,6 +498,7 @@ namespace Downloader.ViewModel
         {
             Dictionary<string,string> list = new Dictionary<string,string>();
             _patternDownloadLinkInternal = _patternDownloadLink;
+            UpdateLastIndexMag();
 
             var intervalKeys = GetIntervalKeys();
             if (intervalKeys == null)
@@ -562,11 +565,36 @@ namespace Downloader.ViewModel
                 {
                     link = link.Replace(key.KeyNameString, key.GetKeyValue());
                 }
-                link = link.Replace(Pattern.Indexer, index.ToString());
+
+                link = link.Replace(Pattern.Indexer, GetImageIndex(index));
 
                 list.Add(link, Path.Combine(downloadPath, link.Substring(link.LastIndexOf('/') + 1)));
             }
             return list;
+        }
+
+        private string GetImageIndex(int index)
+        {
+            if (_enableZeroPrefix)
+            {
+                var num = index.ToString();
+                return String.Concat(Enumerable.Repeat("0", _lastIndMag - num.Length)) + num;
+            }
+            else
+            {
+                return index.ToString();
+            }
+        }
+
+        private void UpdateLastIndexMag()
+        {
+            int res = _patternLastIndex;
+            _lastIndMag = 1;
+            while (res > 10)
+            {
+                res /= 10;
+                _lastIndMag++;
+            }
         }
 
         private Dictionary<string, string[]> GetIntervalKeys()
