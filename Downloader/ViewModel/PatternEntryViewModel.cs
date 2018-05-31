@@ -618,6 +618,8 @@ namespace Downloader.ViewModel
             {
                 keys.Add(key.KeyName, new string[] { key.KeyValue, key.KeyIntervalSecondValue });
             }
+            if (keys.Count == 0)
+                return null;
             return keys;
         }
 
