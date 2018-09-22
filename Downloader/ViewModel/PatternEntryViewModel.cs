@@ -13,6 +13,14 @@ using System.Windows.Media;
 
 namespace Downloader.ViewModel
 {
+    public enum DownloadStatus
+    {
+        OK,
+        Error,
+        Inprogress,
+        Pending
+    }
+
     [Serializable]
     public class PatternEntryViewModel: INotifyPropertyChanged
     {
@@ -534,10 +542,10 @@ namespace Downloader.ViewModel
             _optionalKeysList.Clear();
         }
 
-        public void UpdateDownloadStatus(string statusText, string status)
+        public void UpdateDownloadStatus(DownloadStatus status)
         {
-            PatternDownloadStatus = statusText;
-            PatternDownloadStatusBrush = GetColor(status);
+            PatternDownloadStatus = GetStatusText(status);
+            PatternDownloadStatusBrush = GetStatusColour(status);
             PatternDownloadStatusVisibility = Visibility.Visible;
         }
 
@@ -851,17 +859,34 @@ namespace Downloader.ViewModel
                 return _pattern.Extension;
         }
 
-        private Brush GetColor(string status)
+        private String GetStatusText(DownloadStatus status)
         {
             switch (status)
             {
-                case "OK":
+                case DownloadStatus.OK:
+                    return "Complete";
+                case DownloadStatus.Error:
+                    return "Error";
+                case DownloadStatus.Inprogress:
+                    return "In progress";
+                case DownloadStatus.Pending:
+                    return "Pending...";
+                default:
+                    return String.Empty;
+            }
+        }
+
+        private Brush GetStatusColour(DownloadStatus status)
+        {
+            switch (status)
+            {
+                case DownloadStatus.OK:
                     return new SolidColorBrush(Colors.LimeGreen);
-                case "Error":
+                case DownloadStatus.Error:
                     return new SolidColorBrush(Colors.Red);
-                case "Inprogress":
+                case DownloadStatus.Inprogress:
                     return new SolidColorBrush(Colors.DarkBlue);
-                case "Pending":
+                case DownloadStatus.Pending:
                     return new SolidColorBrush(Colors.Gray);
                 default:
                     return new SolidColorBrush(Colors.Transparent);

@@ -60,7 +60,6 @@
     <Compile Include="ViewModel\PatternEntryViewModel.cs" />
     <Compile Include="ViewModel\PatternKeyViewModel.cs" />
     <Compile Include="ViewModel\PatternViewModel.cs" />
-    <Compile Include="ViewModel\PredefinedPatterns.cs" />
     <Compile Include="View\AddNewPatternView.xaml.cs">
       <DependentUpon>AddNewPatternView.xaml</DependentUpon>
     </Compile>

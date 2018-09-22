@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -137,7 +139,6 @@ namespace Downloader.ViewModel
 
             Patterns = new List<Pattern>();
             Patterns.Add(GetDefaultPattern());
-            Patterns.AddRange(PredefinedPatterns.Patterns);
             await GetCustomPatterns();
             Patterns.AddRange(CustomPatterns);
 
@@ -187,14 +188,14 @@ namespace Downloader.ViewModel
             {
                 foreach (PatternViewModel pattern in PatternEntries)
                     foreach (PatternEntryViewModel entry in pattern.PatternEntries)
-                        entry.UpdateDownloadStatus("Pending...", "Pending");
+                        entry.UpdateDownloadStatus(DownloadStatus.Pending);
                 foreach (PatternViewModel pattern in PatternEntries)
                 {
                     pattern.PatterViewIsEnabled = false;
                     foreach(PatternEntryViewModel entry in pattern.PatternEntries)
                     {
                         bool canceled = false;
-                        entry.UpdateDownloadStatus("In progress", "Inprogress");
+                        entry.UpdateDownloadStatus(DownloadStatus.Inprogress);
                         var links = entry.GetDownloadLinks(pattern.PatternCommondDownloadFolderPathText);
                         downloads.Clear();
                         while(downloads.Count <= _threadsCount && links.Count > 0)
@@ -211,7 +212,7 @@ namespace Downloader.ViewModel
                                 {
                                     if (!entry.SkipMissingFilesCheck)
                                     {
-                                        entry.UpdateDownloadStatus("Error", "Error");
+                                        entry.UpdateDownloadStatus(DownloadStatus.Error);
                                         entry.PatternDownloadStatusToolTip = complete.Exception.InnerException.Message;
                                         canceled = true;
                                         break;
@@ -219,7 +220,7 @@ namespace Downloader.ViewModel
                                 }
                                 else
                                 {
-                                    entry.UpdateDownloadStatus("Error", "Error");
+                                    entry.UpdateDownloadStatus(DownloadStatus.Error);
                                     entry.PatternDownloadStatusToolTip = complete.Exception.InnerException.Message;
                                     canceled = true;
                                     break;
@@ -234,7 +235,7 @@ namespace Downloader.ViewModel
                             }
                         }
                         if(!canceled)
-                            entry.UpdateDownloadStatus("Complete", "OK");
+                            entry.UpdateDownloadStatus(DownloadStatus.Error);
                     }
                     pattern.PatterViewIsEnabled = true;
                 }
