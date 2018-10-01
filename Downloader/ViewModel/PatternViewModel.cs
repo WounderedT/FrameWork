@@ -18,8 +18,10 @@ namespace Downloader.ViewModel
         private List<Pattern> _patterns;
         private string _selectedPattern;
         private string _patternCommondDownloadFolderPathText;
-        private RelayCommand _addPatternEntryInstance;
+        private RelayCommand _addPatternEntryInstanceNew;
+        private RelayCommand _addPatternEntryInstanceDuplicate;
         private RelayCommand _openFileBrowser;
+        private RelayCommand _openDownloadDirectory;
 
         private readonly DownloaderViewModel _sender;
 
@@ -40,15 +42,27 @@ namespace Downloader.ViewModel
             }
         }
 
-        public ICommand AddPatternEntryInstance
+        public ICommand AddPatternEntryInstanceNew
         {
             get
             {
-                if(_addPatternEntryInstance == null)
+                if(_addPatternEntryInstanceNew == null)
                 {
-                    _addPatternEntryInstance = new RelayCommand(param => AddPatternEntry());
+                    _addPatternEntryInstanceNew = new RelayCommand(param => AddPatternEntry());
                 }
-                return _addPatternEntryInstance;
+                return _addPatternEntryInstanceNew;
+            }
+        }
+
+        public ICommand AddPatternEntryInstanceDuplicate
+        {
+            get
+            {
+                if (_addPatternEntryInstanceDuplicate == null)
+                {
+                    _addPatternEntryInstanceDuplicate = new RelayCommand(param => AddPatternEntry(duplicate:true));
+                }
+                return _addPatternEntryInstanceDuplicate;
             }
         }
 
@@ -61,6 +75,18 @@ namespace Downloader.ViewModel
                     _openFileBrowser = new RelayCommand(param => SelectDownloadPath());
                 }
                 return _openFileBrowser;
+            }
+        }
+
+        public ICommand OpenDownloadDirectory
+        {
+            get
+            {
+                if (_openDownloadDirectory == null)
+                {
+                    _openDownloadDirectory = new RelayCommand(param => ShowDownloadDirectory());
+                }
+                return _openDownloadDirectory;
             }
         }
 
@@ -115,13 +141,19 @@ namespace Downloader.ViewModel
             _patterns.Remove(pattern);
         }
 
-        public void AddPatternEntry(PatternEntryViewModel entry = null)
+        public void AddPatternEntry(PatternEntryViewModel entry = null, Boolean duplicate = false)
         {
             Visibility customDirVisibility = Visibility.Collapsed;
             if (PatternEntries.Count > 0)
                 customDirVisibility = Visibility.Visible;
             if(entry == null)
-                entry = new PatternEntryViewModel(GetSelectedPattern(_selectedPattern), customDirVisibility);
+            {
+                if (duplicate && PatternEntries.Count > 0)
+                    entry = PatternEntries.Last().Clone();
+                else
+                    entry = new PatternEntryViewModel(GetSelectedPattern(_selectedPattern));
+            }
+            entry.PatternCustomDownloadFolderInputVisibility = customDirVisibility;
             entry.CloseEnteryEvent += ClosePatternEntry;
             entry.SavePatternEvent += _sender.OnSavePatternEvent;
             entry.RemovePatternEvent += _sender.OnRemovePatternEvent;
@@ -141,6 +173,12 @@ namespace Downloader.ViewModel
                 folderBrowserDialog.SelectedPath = PatternCommondDownloadFolderPathText;
             folderBrowserDialog.ShowDialog();
             PatternCommondDownloadFolderPathText = folderBrowserDialog.SelectedPath;
+        }
+
+        private void ShowDownloadDirectory()
+        {
+            if (!string.IsNullOrEmpty(PatternCommondDownloadFolderPathText))
+                System.Diagnostics.Process.Start(PatternCommondDownloadFolderPathText);
         }
 
         private void ClosePatternEntry(object sender, EventArgs args)

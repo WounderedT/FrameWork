@@ -35,14 +35,14 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Label 
+                <Label Width="90"
                     Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                     Content="Download Link"
                     />
                 <TextBox 
                     Grid.Column="2" 
                     Height="25" Width="300" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Text="{Binding PatternDownloadLinkText, Mode=TwoWay}"  ToolTip="{Binding DownloadLinkToolTip}"
+                    Text="{Binding PatternDownloadLinkText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ToolTip="{Binding DownloadLinkToolTip}"
                     />
                 <Menu Grid.Column="4"
                       Width="60"
@@ -61,7 +61,7 @@
                 <Button
                     Grid.Column="6"
                     Height="25" Width="25" HorizontalAlignment="Right" VerticalAlignment="Center"
-                    ToolTip="Close" Visibility="{Binding PatternSaveButtonVisibility}"
+                    ToolTip="Save pattern" Visibility="{Binding PatternSaveButtonVisibility}"
                     Command="{Binding PatternSaveAction}">
                     <StackPanel>
                         <Image Source="/Downloader;component/Resources/Images/save_icon.png" />
@@ -70,7 +70,7 @@
                 <Button
                     Grid.Column="8"
                     Height="25" Width="25" HorizontalAlignment="Right" VerticalAlignment="Center"
-                    ToolTip="Close" 
+                    ToolTip="Edit patter" 
                     Command="{Binding PatternEditAction}">
                     <StackPanel>
                         <Image Source="/Downloader;component/Resources/Images/config_icon.png" />
@@ -122,7 +122,7 @@
                 <TextBox 
                     Grid.Column="2" Grid.Row="0"
                     Height="25" Width="100" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Text="{Binding PatternGlobalFileNameText}"
+                    Text="{Binding PatternGlobalFileNameText, UpdateSourceTrigger=PropertyChanged}"
                     />
                 <CheckBox 
                     Grid.Column="4" Grid.Row="0"
@@ -150,7 +150,7 @@
                 <TextBox 
                     Grid.Column="2" 
                     Height="25" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Text="{Binding PatternFirstIndexText}"
+                    Text="{Binding PatternFirstIndexText, UpdateSourceTrigger=PropertyChanged}"
                     />
                 <Label 
                     Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -159,7 +159,7 @@
                 <TextBox 
                     Grid.Column="6" 
                     Height="25" Width="75" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Text="{Binding PatternLastIndexText}"
+                    Text="{Binding PatternLastIndexText, UpdateSourceTrigger=PropertyChanged}"
                     />
                 <CheckBox 
                     Grid.Column="8"
@@ -187,7 +187,7 @@
                 <TextBox 
                     Grid.Column="2" Grid.Row="0"
                     Height="25" Width="150" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Text="{Binding PatternCustomDownloadFolderNameText}"
+                    Text="{Binding PatternCustomDownloadFolderNameText, UpdateSourceTrigger=PropertyChanged}"
                     />
             </Grid>
 

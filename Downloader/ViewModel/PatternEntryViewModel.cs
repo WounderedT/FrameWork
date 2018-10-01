@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -494,18 +495,26 @@ namespace Downloader.ViewModel
             set { _patternKeysList = value; }
         }
 
-        public PatternEntryViewModel(Pattern pattern, Visibility customDirVisibility = Visibility.Collapsed)
+        public PatternEntryViewModel(Pattern pattern)
         {
             _pattern = pattern;
             PatternKeysList = new ObservableCollection<PatternKeyViewModel>();
-            PatternCustomDownloadFolderInputVisibility = customDirVisibility;
             PatternDownloadStatusVisibility = Visibility.Collapsed;
         }
 
         public Dictionary<string, string> GetDownloadLinks(string commonDownloadPath)
         {
             Dictionary<string,string> list = new Dictionary<string,string>();
-            _patternDownloadLinkInternal = _patternDownloadLink;
+            if (_isDefaultIndexerVisible)
+            {
+                _patternDownloadLinkInternal = _patternDownloadLink;
+            }
+            else
+            {
+                MergeLinks();
+                if(!_patternDownloadLinkInternal.Contains(Pattern.Indexer))
+                    InsertToPattern(_patternDownloadLinkInternal, Pattern.Indexer);
+            }
             UpdateLastIndexMag();
 
             var intervalKeys = GetIntervalKeys();
@@ -549,9 +558,19 @@ namespace Downloader.ViewModel
             PatternDownloadStatusVisibility = Visibility.Visible;
         }
 
+        public PatternEntryViewModel Clone()
+        {
+            var formatter = new BinaryFormatter();
+            MemoryStream stream = new MemoryStream();
+            formatter.Serialize(stream, this);
+            stream.Position = 0;
+            PatternEntryViewModel entryViewModel = (PatternEntryViewModel)formatter.Deserialize(stream);
+            return entryViewModel;
+        }
+
         private Dictionary<string, string> GetDownloadLink(string commonDownloadPath, string intervalKeyName = "", int? intervalIndex = null)
         {
-            Dictionary<string, string> list = new Dictionary<string, string>();
+            Dictionary<string, string> collection = new Dictionary<string, string>();
             string extension = GetImageExtension();
             StringBuilder name = new StringBuilder();
             StringBuilder builder = new StringBuilder();
@@ -576,9 +595,9 @@ namespace Downloader.ViewModel
 
                 link = link.Replace(Pattern.Indexer, GetImageIndex(index));
 
-                list.Add(link, Path.Combine(downloadPath, link.Substring(link.LastIndexOf('/') + 1)));
+                collection.Add(link, Path.Combine(downloadPath, link.Substring(link.LastIndexOf('/') + 1)));
             }
-            return list;
+            return collection;
         }
 
         private string GetImageIndex(int index)

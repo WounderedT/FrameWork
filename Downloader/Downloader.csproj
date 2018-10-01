@@ -108,6 +108,9 @@
   <ItemGroup>
     <Resource Include="Resources\Images\save_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\open_dir_icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)\FrameWork\bin\Debug\plugins" /Y</PostBuildEvent>

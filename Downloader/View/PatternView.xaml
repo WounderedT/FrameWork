@@ -45,8 +45,20 @@
             Grid.Row="4"
             Height="25" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0"
             Content="+" FontSize="25" Padding="0,-2,0,0" 
-            Command="{Binding AddPatternEntryInstance}"
-            />
+            Command="{Binding AddPatternEntryInstanceNew}"
+            ToolTip="Add new downloader entry &#x0a;Hold SHIFT: Duplicate previous entry"
+            >
+            <Button.InputBindings>
+                <MouseBinding Gesture="Shift+LeftClick" Command="{Binding AddPatternEntryInstanceDuplicate}"/>
+            </Button.InputBindings>
+            <!--<Button.ToolTip>
+                <TextBlock>
+                    Add new downloader entry
+                    <LineBreak/>
+                    Hold SHIFT: Duplicate previous entry
+                </TextBlock>
+            </Button.ToolTip>-->
+        </Button>
 
         <Grid Grid.Row="6" >
             <Grid.ColumnDefinitions>
@@ -55,14 +67,16 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label 
+            <Label Width="90"
                 Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                 Content="Download Path"
                 />
             <TextBox 
                 Grid.Column="2" 
-                Height="25" Width="300" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Height="25" Width="415" HorizontalAlignment="Left" VerticalAlignment="Center"
                 Text="{Binding PatternCommondDownloadFolderPathText}"
                 />
             <Button 
@@ -70,6 +84,14 @@
                 Height="25" Width="25" HorizontalAlignment="Left" VerticalAlignment="Center"
                 Content="..." Command="{Binding OpenFileBrowser}"
                 />
+            <Button 
+                Grid.Column="6"
+                Height="25" Width="25" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Command="{Binding OpenDownloadDirectory}">
+                <StackPanel>
+                    <Image Source="/Downloader;component/Resources/Images/open_dir_icon.png" />
+                </StackPanel>
+            </Button>
         </Grid>
         
     </Grid>

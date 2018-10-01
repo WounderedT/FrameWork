@@ -156,6 +156,7 @@ namespace Downloader.ViewModel
 
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Binder = new Binder();
+                AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(MyResolveEventHandler);
                 var pluginViewModelState = (Dictionary<string, Dictionary<string, object>>)formatter.Deserialize(ms);
                 PatternEntries = new ObservableCollection<PatternViewModel>();
 
@@ -235,7 +236,7 @@ namespace Downloader.ViewModel
                             }
                         }
                         if(!canceled)
-                            entry.UpdateDownloadStatus(DownloadStatus.Error);
+                            entry.UpdateDownloadStatus(DownloadStatus.OK);
                     }
                     pattern.PatterViewIsEnabled = true;
                 }
@@ -257,7 +258,7 @@ namespace Downloader.ViewModel
         {
             var confirmationUC = new AddNewPatternViewModel();
             confirmationUC.OKAddNewPatternAction += SaveNewPattern;
-            confirmationUC.OKAddNewPatternAction += CancelNewPattern;
+            confirmationUC.CancelAddNewPatternAction += CancelNewPattern;
             SavePatternWindow.Add(confirmationUC);
             _pluginRequestOrigin = sender;
         }
@@ -383,6 +384,11 @@ namespace Downloader.ViewModel
             float step = 1f / totalImagesNumber;
             _currentProgress = 1 - totalImagesNumber * step;
             return step;
+        }
+
+        private Assembly MyResolveEventHandler(object sender, ResolveEventArgs args)
+        {
+            return typeof(DownloaderViewModel).Assembly;
         }
     }
 
