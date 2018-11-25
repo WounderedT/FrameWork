@@ -18,17 +18,21 @@ using System.Windows.Input;
 
 namespace Downloader.ViewModel
 {
-    public class DownloaderViewModel: ITab
-    { 
+    public class DownloaderViewModel: ITab, INotifyPropertyChanged
+    {
+        private const byte _threadsCount = 10;
+
+        [NonSerialized]
+        private Boolean _isDownloadButtonEnabled = false;
+        [NonSerialized]
+        private bool _isBusy = false;
+
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler ProgressReportStart;
         public event EventHandler ProgressReportUpdate;
         public event EventHandler ProgressReportComplete;
         public event Func<object, EventArgs, Task> ReadFromFileRequest;
         public event Func<object, EventArgs, Task> WriteToFileRequest;
-
-        private bool _isBusy = false;
-        private const byte _threadsCount = 10;
 
         private RelayCommand _downloadImagesAction;
 
@@ -70,6 +74,19 @@ namespace Downloader.ViewModel
                 if (PatternEntries.First().PatternEntries.Count > 0)
                     return true;
                 return false;
+            }
+        }
+
+        public Boolean IsDownloadButtonEnabled
+        {
+            get { return _isDownloadButtonEnabled; }
+            set
+            {
+                if(_isDownloadButtonEnabled != value)
+                {
+                    _isDownloadButtonEnabled = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsDownloadButtonEnabled"));
+                }
             }
         }
 
@@ -145,7 +162,10 @@ namespace Downloader.ViewModel
             if (args.InOutData == null)
             {
                 PatternEntries = new ObservableCollection<PatternViewModel>();
-                PatternEntries.Add(new PatternViewModel(Patterns, this));
+                var entry = new PatternViewModel(Patterns, this);
+                entry.SelectedPattern = Pattern.Default;
+                entry.PatternChanged += OnPatternEntryChanged;
+                PatternEntries.Add(entry);
                 return;
             }
             await Task.Run(() =>
@@ -163,6 +183,7 @@ namespace Downloader.ViewModel
                 foreach(string key in pluginViewModelState.Keys)
                 {
                     PatternViewModel patternView = new PatternViewModel(Patterns, this);
+                    patternView.PatternChanged += OnPatternEntryChanged;
                     patternView.SelectedPattern = key;
                     patternView.PatternEntries.Clear();
                     patternView.PatternCommondDownloadFolderPathText = (string)pluginViewModelState[key]["PatternCommondDownloadFolderPath"];
@@ -195,6 +216,13 @@ namespace Downloader.ViewModel
                     pattern.PatterViewIsEnabled = false;
                     foreach(PatternEntryViewModel entry in pattern.PatternEntries)
                     {
+                        if (!entry.Validate())
+                        {
+                            entry.UpdateDownloadStatus(DownloadStatus.Error);
+                            entry.PatternDownloadStatusToolTip = entry.ValidationError;
+                            continue;
+                        }
+
                         bool canceled = false;
                         entry.UpdateDownloadStatus(DownloadStatus.Inprogress);
                         var links = entry.GetDownloadLinks(pattern.PatternCommondDownloadFolderPathText);
@@ -341,7 +369,7 @@ namespace Downloader.ViewModel
 
         private Pattern GetDefaultPattern()
         {
-            Pattern pattern = new Pattern(true);
+            Pattern pattern = new Pattern();
             pattern.GlobalFileNameVisibility = Visibility.Visible;
             return pattern;
         }
@@ -384,6 +412,25 @@ namespace Downloader.ViewModel
             float step = 1f / totalImagesNumber;
             _currentProgress = 1 - totalImagesNumber * step;
             return step;
+        }
+
+        private void OnPatternEntryChanged(object sender, EventArgs args)
+        {
+            if(!(sender as PatternViewModel).IsValid)
+            {
+                IsDownloadButtonEnabled = false;
+                return;
+            }
+
+            foreach (var entry in PatternEntries)
+            {
+                if (!entry.IsValid)
+                {
+                    IsDownloadButtonEnabled = false;
+                    return;
+                }
+            }
+            IsDownloadButtonEnabled = true;
         }
 
         private Assembly MyResolveEventHandler(object sender, ResolveEventArgs args)

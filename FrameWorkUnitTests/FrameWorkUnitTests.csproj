@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AuthentificationUnitTests.cs" />
+    <Compile Include="CommonInit.cs" />
     <Compile Include="MainWindowViewModelUnitTests.cs" />
     <Compile Include="IOProxyUnitTests.cs" />
     <Compile Include="NewPasswordViewModelUnitTests.cs" />
@@ -87,6 +88,9 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y "$(SolutionDir)FrameWork\bin\Debug\Crypto.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

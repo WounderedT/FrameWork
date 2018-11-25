@@ -17,14 +17,13 @@ namespace FrameWorkUnitTests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            if (Application.Current == null)
-            { new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; }
+            CommonInit.Init();
+        }
 
-            if (_currentDir.Contains("\\FrameWorkUnitTests\\"))
-            {
-                var pathArray = _currentDir.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
-                Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
-            }
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            CommonInit.CleanUp();
         }
 
         [TestMethod]
@@ -59,13 +58,6 @@ namespace FrameWorkUnitTests
             {
                 Assert.AreEqual(tabWidth, tab.HeaderWidth);
             }
-        }
-
-        [ClassCleanup]
-        public static void ClassCleanUp()
-        {
-            Directory.SetCurrentDirectory(_currentDir);
-            Application.Current.Shutdown();
         }
     }
 }

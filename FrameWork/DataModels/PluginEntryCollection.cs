@@ -26,7 +26,7 @@ namespace FrameWork.DataModels
         private static Dictionary<string, PluginEntry> GetAvailablePlugins()
         {
             Dictionary<string, PluginEntry> initPLugins = new Dictionary<string, PluginEntry>();
-            foreach (string pluginDll in Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), "plugins"), "*.dll"))
+            foreach (string pluginDll in Directory.GetFiles(IOProxy.PluginsDirectory, "*.dll"))
             {
                 var DLL = Assembly.LoadFile(pluginDll);
                 BitmapSource image = GetPLuginPreviewImage(DLL);

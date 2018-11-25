@@ -228,12 +228,11 @@ namespace FrameWork.ViewModel
 
         private string CheckResources()
         {
-            string currentDir = Directory.GetCurrentDirectory();
             string delemiter = " and ";
             StringBuilder builder = new StringBuilder();
-            if (!File.Exists(Path.Combine(currentDir, Settings.CryptographyLibFileName)))
+            if (!File.Exists(Path.Combine(IOProxy.WorkDirectory, Settings.CryptographyLibFileName)))
                 builder.Append(Settings.CryptographyLibFileName);
-            if (!File.Exists(Path.Combine(currentDir, Settings.InterfacesLibFileName)))
+            if (!File.Exists(Path.Combine(IOProxy.WorkDirectory, Settings.InterfacesLibFileName)))
             {
                 if(builder.Length > 0)
                     builder.Append(delemiter);

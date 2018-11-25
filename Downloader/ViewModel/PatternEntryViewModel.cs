@@ -32,8 +32,6 @@ namespace Downloader.ViewModel
 
         private int _patternFirstIndex;
         private int _patternLastIndex;
-        private int _patternFirstIndexOld;
-        private int _patternLastIndexOld;
         private int _lastKeyIndex;
 
         private bool _isDefaultIndexerVisible;
@@ -50,6 +48,8 @@ namespace Downloader.ViewModel
         private string _patternDownloadStatusToolTip;
         [NonSerialized]
         private int _lastIndMag;
+        [NonSerialized]
+        private String _validationError;
 
         [NonSerialized]
         private RelayCommand _patternSaveAction;
@@ -145,25 +145,19 @@ namespace Downloader.ViewModel
             get { return _patternFirstIndexText; }
             set
             {
-                _patternFirstIndexOld = _patternFirstIndex;
-                if (_patternFirstIndexText != value && int.TryParse(value, out _patternFirstIndex) && _patternFirstIndex >= 0)
+                if(_patternFirstIndexText != value)
                 {
-                    if (_patternLastIndex > 0)
+                    if (String.IsNullOrEmpty(value))
                     {
-                        if (_patternFirstIndex <= _patternLastIndex)
-                        {
-                            _patternFirstIndexText = value;
-                            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternFirstIndexText"));
-                        }
-                        else
-                            _patternFirstIndex = _patternFirstIndexOld;
+                        _patternFirstIndexText = value;
+                        _patternFirstIndex = 0;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternFirstIndexText"));
                     }
-                    else
+                    else if(int.TryParse(value, out _patternFirstIndex) && _patternFirstIndex >= 0)
                     {
                         _patternFirstIndexText = value;
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternFirstIndexText"));
                     }
-                    
                 }
             }
         }
@@ -173,14 +167,20 @@ namespace Downloader.ViewModel
             get { return _patternLastIndexText; }
             set
             {
-                _patternLastIndexOld = _patternLastIndex;
-                if (_patternLastIndexText != value && int.TryParse(value, out _patternLastIndex) && _patternLastIndex >= _patternFirstIndex)
+                if (_patternLastIndexText != value)
                 {
-                    _patternLastIndexText = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternLastIndexText"));
+                    if (String.IsNullOrEmpty(value))
+                    {
+                        _patternLastIndexText = value;
+                        _patternLastIndex = 0;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternLastIndexText"));
+                    }
+                    else if (int.TryParse(value, out _patternLastIndex) && _patternLastIndex >= 0)
+                    {
+                        _patternLastIndexText = value;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternLastIndexText"));
+                    }
                 }
-                else
-                    _patternLastIndex = _patternLastIndexOld;
             }
         }
 
@@ -464,6 +464,12 @@ namespace Downloader.ViewModel
             }
         }
 
+        public String ValidationError
+        {
+            get { return _validationError; }
+            set { _validationError = value; }
+        }
+
         private bool IsDefaultIndexerVisible
         {
             get { return _isDefaultIndexerVisible; }
@@ -477,6 +483,11 @@ namespace Downloader.ViewModel
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddIndexerVisibility"));
                 }
             }
+        }
+
+        public Boolean IsValid
+        {
+            get { return String.IsNullOrEmpty(_validationError); }
         }
 
         public int PatternFirstIndex
@@ -513,7 +524,7 @@ namespace Downloader.ViewModel
             {
                 MergeLinks();
                 if(!_patternDownloadLinkInternal.Contains(Pattern.Indexer))
-                    InsertToPattern(_patternDownloadLinkInternal, Pattern.Indexer);
+                    _patternDownloadLinkInternal = InsertToPattern(_patternDownloadLinkInternal, Pattern.Indexer);
             }
             UpdateLastIndexMag();
 
@@ -566,6 +577,16 @@ namespace Downloader.ViewModel
             stream.Position = 0;
             PatternEntryViewModel entryViewModel = (PatternEntryViewModel)formatter.Deserialize(stream);
             return entryViewModel;
+        }
+
+        public Boolean Validate()
+        {
+            _validationError = String.Empty;
+            if (!ValidateDownloadLink())
+                return false;
+            if (!ValidateImageIndexes())
+                return false;
+            return true;
         }
 
         private Dictionary<string, string> GetDownloadLink(string commonDownloadPath, string intervalKeyName = "", int? intervalIndex = null)
@@ -862,14 +883,6 @@ namespace Downloader.ViewModel
             }
         }
 
-        private string GetIndexValue(int index)
-        {
-            if (_enableZeroPrefix)
-                return string.Concat(Enumerable.Repeat("0", _patternLastIndex.ToString().Length - index.ToString().Length)) + index.ToString();
-            else
-                return index.ToString();
-        }
-        
         private string GetImageExtension()
         {
             if (string.IsNullOrEmpty(_pattern.Extension))
@@ -979,6 +992,47 @@ namespace Downloader.ViewModel
             else
                 return str + value;
         }
+
+        #region Internal Validation Methods
+
+        private Boolean ValidateDownloadLink()
+        {
+            if (String.IsNullOrEmpty(_patternDownloadLink))
+            {
+                _validationError = "Download link cannot be empty";
+                return false;
+            }
+            Uri uriResult;
+            if (!(Uri.TryCreate(_patternDownloadLink, UriKind.Absolute, out uriResult) 
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+            {
+                _validationError = "Invalid download link";
+                return false;
+            }
+            return true;
+        }
+
+        private Boolean ValidateImageIndexes()
+        {
+            if (String.IsNullOrEmpty(_patternFirstIndexText))
+            {
+                _validationError = "Firts image index cannot be empty";
+                return false;
+            }
+            if (String.IsNullOrEmpty(_patternLastIndexText))
+            {
+                _validationError = "Last image index cannot be empty";
+                return false;
+            }
+            if (_patternFirstIndex > _patternLastIndex)
+            {
+                _validationError = "Firts image index cannot be greater than last";
+                return false;
+            }
+            return true;
+        }
+
+        #endregion
 
         protected virtual void OnEntryClose(EventArgs args)
         {

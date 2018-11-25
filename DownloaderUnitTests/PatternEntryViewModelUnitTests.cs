@@ -65,7 +65,7 @@ namespace DownloaderUnitTests
         [DataTestMethod]
         public void MergeLinkTest(string internalLink, string newLink, string result)
         {
-            var privateObj = new PrivateObject(typeof(PatternEntryViewModel), new[] { typeof(Pattern), typeof(Visibility) }, new object []{ new Pattern(), Visibility.Collapsed });
+            var privateObj = new PrivateObject(typeof(PatternEntryViewModel), new[] { typeof(Pattern) }, new object []{ new Pattern() });
             privateObj.SetField("_patternDownloadLinkInternal", internalLink);
             privateObj.SetField("_patternDownloadLink", newLink);
 

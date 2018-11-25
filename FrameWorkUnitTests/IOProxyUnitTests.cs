@@ -20,22 +20,19 @@ namespace FrameWorkUnitTests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            if (Application.Current == null)
-            { new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; }
-
-            if (_currentDir.Contains("\\FrameWorkUnitTests\\"))
-            {
-                var pathArray = _currentDir.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
-                Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
-            }
-
-            Application.ResourceAssembly = System.Reflection.Assembly.GetAssembly(typeof(MainWindow));
-            Settings.LoadSettings();
+            CommonInit.Init();
+            CommonInit.LoadSettings();
 
             Random rand = new Random();
             rand.NextBytes(testArray);
             testStream.Write(testArray, 0, testArray.Length);
             testStream.Position = 0;
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            CommonInit.CleanUp();
         }
 
         [TestMethod()]
@@ -86,13 +83,6 @@ namespace FrameWorkUnitTests
                 Assert.IsInstanceOfType(ex, typeof(NullReferenceException));
             }
             
-        }
-
-        [ClassCleanup]
-        public static void ClassCleanUp()
-        {
-            //Directory.SetCurrentDirectory(_currentDir);
-            //Application.Current.Shutdown();
         }
 
         private bool CompareStreams(MemoryStream stream1, MemoryStream stream2)

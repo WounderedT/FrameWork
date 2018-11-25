@@ -14,6 +14,19 @@ namespace FrameWorkUnitTests
 
         private FrameWork.ViewModel.NewPasswordViewModel viewModel = new FrameWork.ViewModel.NewPasswordViewModel();
 
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
+        {
+            CommonInit.Init();
+            CommonInit.LoadSettings();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            CommonInit.CleanUp();
+        }
+
         [TestMethod]
         public void ValidateNewPasswordTest()
         {

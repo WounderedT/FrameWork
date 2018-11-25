@@ -30,8 +30,7 @@ namespace FrameWork
             while(ex.InnerException != null)
                 ex = ex.InnerException;
             string additionalInfo = string.Empty;
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DateTime.Now.ToString("ddMMyyyy-HHmmss",
-                System.Globalization.CultureInfo.InvariantCulture));
+            string filePath = IOProxy.ErrorLogFilePath;
             try
             {
                 File.WriteAllText(filePath, ex.Message + Environment.NewLine + ex.StackTrace);
@@ -41,7 +40,7 @@ namespace FrameWork
                 additionalInfo = "Exception stacktrace could not be written to " + filePath + " : " + fileWriteEx.Message;
             }
             string messageText = "Something went wrong and application will shut down now. " + Environment.NewLine + additionalInfo;
-            string windowTitle = "Ups! This is embarrassing... :(";
+            string windowTitle = "Ops! This is embarrassing... :(";
             MessageBox.Show(messageText, windowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

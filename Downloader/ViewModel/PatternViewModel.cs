@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Downloader.ViewModel
         private List<Pattern> _patterns;
         private string _selectedPattern;
         private string _patternCommondDownloadFolderPathText;
+        private Boolean _isValid;
         private RelayCommand _addPatternEntryInstanceNew;
         private RelayCommand _addPatternEntryInstanceDuplicate;
         private RelayCommand _openFileBrowser;
@@ -28,6 +30,7 @@ namespace Downloader.ViewModel
         private bool _patternViewIsEnabled = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler PatternChanged; 
 
         public bool PatterViewIsEnabled
         {
@@ -115,9 +118,16 @@ namespace Downloader.ViewModel
                 if(_patternCommondDownloadFolderPathText != value)
                 {
                     _patternCommondDownloadFolderPathText = value;
+                    _isValid = ValidateDownloadPath();
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PatternCommondDownloadFolderPathText"));
+                    PatternChanged?.Invoke(this, new EventArgs());
                 }
             }
+        }
+
+        public Boolean IsValid
+        {
+            get { return _isValid; }
         }
 
         public PatternViewModel(List<Pattern> patterns, DownloaderViewModel sender)
@@ -177,8 +187,31 @@ namespace Downloader.ViewModel
 
         private void ShowDownloadDirectory()
         {
-            if (!string.IsNullOrEmpty(PatternCommondDownloadFolderPathText))
-                System.Diagnostics.Process.Start(PatternCommondDownloadFolderPathText);
+            if (string.IsNullOrEmpty(PatternCommondDownloadFolderPathText))
+                return;
+            if (!Path.IsPathRooted(PatternCommondDownloadFolderPathText))
+                return;
+
+            String path = PatternCommondDownloadFolderPathText;
+            while (true)
+            {
+                if (Directory.Exists(path))
+                {
+                    System.Diagnostics.Process.Start(path);
+                    return;
+                }
+                else
+                {
+                    if(Directory.GetParent(path) != null)
+                    {
+                        path = Directory.GetParent(path).FullName;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
         }
 
         private void ClosePatternEntry(object sender, EventArgs args)
@@ -193,6 +226,16 @@ namespace Downloader.ViewModel
             else
                 if(PatternEntries.Count > 1)
                     PatternEntries[0].PatternCustomDownloadFolderInputVisibility = Visibility.Visible;
+        }
+
+        private Boolean ValidateDownloadPath()
+        {
+            if(string.IsNullOrEmpty(_patternCommondDownloadFolderPathText))
+                return false;
+            if (!Path.IsPathRooted(_patternCommondDownloadFolderPathText))
+                return false;
+
+            return Directory.Exists(Path.GetPathRoot(_patternCommondDownloadFolderPathText));
         }
     }
 }

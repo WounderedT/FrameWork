@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Label Width="90"
+                <Label Width="auto" MinWidth="90"
                     Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                     Content="Download Link"
                     />

@@ -36,7 +36,7 @@ namespace FrameWork
 
         static Authentification()
         {
-            CryptoLibPath = Path.Combine(Directory.GetCurrentDirectory(), "Crypto.dll");
+            CryptoLibPath = Path.Combine(IOProxy.WorkDirectory, "Crypto.dll");
             var DLL = Assembly.LoadFile(CryptoLibPath);
             foreach (Type type in DLL.GetExportedTypes())
             {

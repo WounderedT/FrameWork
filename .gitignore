@@ -250,4 +250,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
 /Downloader/ViewModel/PredefinedPatterns.cs
+*.exe.lnk

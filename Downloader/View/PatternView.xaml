@@ -70,14 +70,14 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Width="90"
+            <Label Width="auto" MinWidth="90"
                 Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                 Content="Download Path"
                 />
             <TextBox 
                 Grid.Column="2" 
                 Height="25" Width="415" HorizontalAlignment="Left" VerticalAlignment="Center"
-                Text="{Binding PatternCommondDownloadFolderPathText}"
+                Text="{Binding PatternCommondDownloadFolderPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 />
             <Button 
                 Grid.Column="4"

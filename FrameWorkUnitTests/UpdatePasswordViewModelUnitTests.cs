@@ -26,27 +26,14 @@ namespace FrameWorkUnitTests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            if (Application.Current == null)
-            { new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; }
+            CommonInit.Init();
+            CommonInit.LoadSettings();
+        }
 
-            if (_currentDir.Contains("\\FrameWorkUnitTests\\"))
-            {
-                var pathArray = _currentDir.Split(new string[] { "FrameWorkUnitTests" }, StringSplitOptions.None);
-                Directory.SetCurrentDirectory(pathArray[0] + "FrameWork" + pathArray[1]);
-            }
-
-            Application.ResourceAssembly = System.Reflection.Assembly.GetAssembly(typeof(MainWindow));
-            Settings.LoadSettings();
-
-            if (File.Exists(".key_backup"))
-                File.Delete(".key_backup");
-            if (File.Exists(".bak_key_backup"))
-                File.Delete(".bak_key_backup");
-
-            if (IOProxy.Exists(".key"))
-                File.Move(IOProxy.FileNameToCode(".key"), ".key_backup");
-            if (IOProxy.Exists(".bak_key"))
-                File.Move(IOProxy.FileNameToCode(".bak_key"), ".bak_key_backup");
+        [ClassCleanup]
+        public static void ClassCleanUp()
+        {
+            CommonInit.CleanUp();
         }
 
         [TestMethod]
@@ -97,21 +84,6 @@ namespace FrameWorkUnitTests
             viewModel.CheckPassword = new PasswordString(string1);
             Assert.IsTrue(viewModel.OnSubmitPassword());
             CheckUIErrors();
-        }
-
-        [ClassCleanup]
-        public static void ClassCleanUp()
-        {
-            if (IOProxy.Exists(".key"))
-                File.Delete(IOProxy.FileNameToCode(".key"));
-            if (IOProxy.Exists(".bak_key"))
-                File.Delete(IOProxy.FileNameToCode(".bak_key"));
-
-            File.Move(".key_backup", IOProxy.FileNameToCode(".key"));
-            File.Move(".bak_key_backup", IOProxy.FileNameToCode(".bak_key"));
-
-            Directory.SetCurrentDirectory(_currentDir);
-            Application.Current.Shutdown();
         }
 
         private void CheckUIErrors(string checkError = "", Visibility checkErrorVisibility = Visibility.Hidden, 

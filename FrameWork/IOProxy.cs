@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,6 +10,36 @@ namespace FrameWork
 {
     public static class IOProxy
     {
+        private static String _workDir;
+
+        public static String WorkDirectory
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_workDir))
+                {
+                    var location = Assembly.GetCallingAssembly().Location;
+                    _workDir = Path.GetDirectoryName(location);
+                }
+                return _workDir;
+            }
+        }
+
+        public static String ErrorLogFilePath
+        {
+            get
+            {
+                var logDirPath = Path.Combine(WorkDirectory, "logs");
+                Directory.CreateDirectory(logDirPath);
+                return Path.Combine(logDirPath, DateTime.Now.ToString("ddMMyyyy-HHmmss", System.Globalization.CultureInfo.InvariantCulture) + ".log");
+            }
+        }
+
+        public static String PluginsDirectory
+        {
+            get { return Path.Combine(WorkDirectory, "plugins"); }
+        }
+
         public static MemoryStream GetMemoryStreamFromFile(string filename)
         {
             string filePath = RelativeToAbsolute(filename);
@@ -79,19 +110,14 @@ namespace FrameWork
             return BitConverter.ToString(bytes).Replace("-", string.Empty);
         }
 
-        private static string RelativeToAbsolute(string filePath)
+        public static string RelativeToAbsolute(string filePath)
         {
-            if (!filePath.Contains(@":\")) //could be replaced by Path.IsPathRooted
+            if (!Path.IsPathRooted(filePath)) //could be replaced by Path.IsPathRooted
             {
-                string[] subpath = filePath.Split('\\');
-                string fileName = FileNameToCode(subpath[subpath.Length - 1]);
-                if (subpath.Length > 1)
-                    subpath = subpath.Where(w => w != string.Empty && w != subpath[subpath.Length - 1]).ToArray();
-                else
-                    subpath[0] = string.Empty;
-                filePath = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine(subpath));
-                Directory.CreateDirectory(filePath);
-                return Path.Combine(filePath, fileName);
+                String fileName = FileNameToCode(Path.GetFileName(filePath));
+                String absoluteDir = Path.Combine(WorkDirectory, Path.GetDirectoryName(filePath));
+                Directory.CreateDirectory(Path.GetDirectoryName(absoluteDir));
+                return Path.Combine(absoluteDir, fileName);
             }
             else
                 return filePath;

@@ -13,6 +13,7 @@ namespace Downloader
     public class Pattern
     {
         private const int HalfKeyLength = 4;
+        public const String Default = "Default";
 
         public static string KeySeparator { get; } = "#@#_{0}_#@#";
         
@@ -49,7 +50,7 @@ namespace Downloader
         {
             get
             {
-                if (Name.Equals("Default"))
+                if (Name.Equals(Default))
                     return true;
                 if (EditMode && IsChanged)
                     return true;
@@ -62,7 +63,7 @@ namespace Downloader
         {
             get
             {
-                if (Name.Equals("Default"))
+                if (Name.Equals(Default))
                     return false;
                 else
                     return true;
@@ -73,18 +74,18 @@ namespace Downloader
         {
             get
             {
-                if (Name.Equals("Default"))
+                if (Name.Equals(Default))
                     return false;
                 else
                     return true;
             }
         }
 
-        public Pattern(bool changable = true)
+        public Pattern(String name = Default, bool changable = true)
         {
             CanChange = changable;
             Keys = new List<PatternKeyViewModel>();
-            Name = "Default";
+            Name = name;
         }
 
         public static string UpdateLink()
