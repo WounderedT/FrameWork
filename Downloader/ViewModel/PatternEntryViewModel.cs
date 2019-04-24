@@ -638,7 +638,7 @@ namespace Downloader.ViewModel
         {
             int res = _patternLastIndex;
             _lastIndMag = 1;
-            while (res > 10)
+            while (res >= 10)
             {
                 res /= 10;
                 _lastIndMag++;

@@ -118,6 +118,12 @@ namespace Downloader.ViewModel
         public ObservableCollection<AddNewPatternViewModel> SavePatternWindow { get; set; }
         public ObservableCollection<PatternViewModel> PatternEntries { get; set; }
 
+        static DownloaderViewModel()
+        {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        }
+
         public async Task DumpAsync()
         {
             if (!isChanged)
